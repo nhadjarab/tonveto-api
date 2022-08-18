@@ -22,5 +22,6 @@ model User {
   email String @unique
   birth_date DateTime
   phone_number String
+  profile_complete Boolean @default(false)
 }
 
