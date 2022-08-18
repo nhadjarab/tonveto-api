@@ -44,6 +44,14 @@ app.post("/login", (req, res) => __awaiter(void 0, void 0, void 0, function* () 
     }
 }));
 // ===========USER ROUTES============
+app.get("/user/:id", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        (0, user_1.getUser)(req, res, prisma);
+    }
+    catch (e) {
+        console.log(e);
+    }
+}));
 app.put("/user/:id", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         (0, user_1.updateUser)(req, res, prisma);

@@ -6,7 +6,7 @@ import dotenv from "dotenv";
 
 // Methods import
 import { register, login } from "./controllers/authentication/authentication";
-import { updateUser } from "./controllers/user/user";
+import { getUser, updateUser } from "./controllers/user/user";
 
 const prisma = new PrismaClient();
 
@@ -41,6 +41,16 @@ app.post("/login", async (req: Request, res: Response) => {
 });
 
 // ===========USER ROUTES============
+
+app.get("/user/:id", async (req: Request, res: Response) => {
+  try {
+    getUser(req, res, prisma);
+  } catch (e) {
+    console.log(e);
+  }
+})
+
+
 app.put("/user/:id" , async (req: Request, res: Response) => {
   try {
 

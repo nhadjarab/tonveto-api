@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.updateUser = void 0;
+exports.getUser = exports.updateUser = void 0;
 const authentication_1 = require("../authentication/authentication");
 const updateUser = (req, res, prisma) => __awaiter(void 0, void 0, void 0, function* () {
     try {
@@ -38,4 +38,22 @@ const updateUser = (req, res, prisma) => __awaiter(void 0, void 0, void 0, funct
     }
 });
 exports.updateUser = updateUser;
+const getUser = (req, res, prisma) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const { id } = req.params;
+        const payload = (0, authentication_1.handleTokenVerification)(req, res);
+        if (payload.userId != id)
+            return res.status(401).json("Unauthorized");
+        const userProfile = yield prisma.user.findUnique({
+            where: {
+                id,
+            }
+        });
+        res.status(200).json(userProfile);
+    }
+    catch (e) {
+        res.status(500).json(e);
+    }
+});
+exports.getUser = getUser;
 //# sourceMappingURL=user.js.map

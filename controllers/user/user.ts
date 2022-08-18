@@ -47,3 +47,30 @@ export const updateUser = async (
     res.status(500).json(e);
   }
 };
+
+export const getUser = async (
+  req: Request,
+  res: Response,
+  prisma: PrismaClient
+) => {
+  try {
+    const { id } = req.params;
+
+    const payload: JWTPayload = handleTokenVerification(req, res) as JWTPayload;
+
+    if (payload.userId != id) return res.status(401).json("Unauthorized");
+
+    const userProfile = await prisma.user.findUnique({
+      where: {
+        id,
+      }
+    })
+    
+
+
+
+    res.status(200).json(userProfile);
+  } catch (e) {
+    res.status(500).json(e);
+  }
+};
