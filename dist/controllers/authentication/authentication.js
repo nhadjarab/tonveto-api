@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.verifyToken = exports.generateToken = exports.login = exports.register = void 0;
+exports.handleTokenVerification = exports.verifyToken = exports.generateToken = exports.login = exports.register = void 0;
 const fs_1 = __importDefault(require("fs"));
 const jsonwebtoken_1 = require("jsonwebtoken");
 const bcrypt_1 = __importDefault(require("bcrypt"));
@@ -21,7 +21,6 @@ const public_key = fs_1.default.readFileSync(__dirname + "/vetolib.rsa.pub");
 const register = (req, res, prisma) => __awaiter(void 0, void 0, void 0, function* () {
     const { email, password } = req.body;
     const hash = bcrypt_1.default.hashSync(password, 10);
-    console.log("hash", hash);
     prisma.auth
         .create({
         data: {
@@ -86,4 +85,21 @@ const verifyToken = (token) => {
     return (0, jsonwebtoken_1.verify)(token, public_key, { algorithms: ["RS256"] });
 };
 exports.verifyToken = verifyToken;
+const handleTokenVerification = (req, res) => {
+    var _a;
+    const token = (_a = req === null || req === void 0 ? void 0 : req.headers["authorization"]) === null || _a === void 0 ? void 0 : _a.split(" ")[1];
+    let payload;
+    if (!token)
+        return res.status(401).end();
+    try {
+        payload = (0, exports.verifyToken)(token);
+        return payload;
+    }
+    catch (e) {
+        if (e instanceof jsonwebtoken_1.JsonWebTokenError)
+            return res.status(401).end();
+        return res.status(400).end();
+    }
+};
+exports.handleTokenVerification = handleTokenVerification;
 //# sourceMappingURL=authentication.js.map

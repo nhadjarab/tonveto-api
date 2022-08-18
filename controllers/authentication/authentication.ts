@@ -3,7 +3,7 @@ import { Request, Response } from "express";
 
 import fs from "fs";
 
-import { verify, sign } from "jsonwebtoken";
+import { verify, sign, JsonWebTokenError } from "jsonwebtoken";
 import bcrypt from "bcrypt";
 import User from "../../models/User";
 import path from "path";
@@ -19,7 +19,6 @@ export const register = async (
   const { email, password } = req.body;
 
   const hash = bcrypt.hashSync(password, 10);
-  console.log("hash", hash);
 
   prisma.auth
     .create({
@@ -90,4 +89,25 @@ export const generateToken = (userId: string): string => {
 
 export const verifyToken = (token: string) => {
   return verify(token, public_key, { algorithms: ["RS256"] });
+};
+
+export const handleTokenVerification = (
+  req: Request,
+  res: Response
+)=> {
+  const token = req?.headers["authorization"]?.split(" ")[1];
+
+  let payload;
+
+  if (!token) return res.status(401).end();
+
+  try {
+    payload = verifyToken(token);
+
+
+    return payload;
+  } catch (e) {
+    if (e instanceof JsonWebTokenError) return res.status(401).end();
+    return res.status(400).end();
+  }
 };

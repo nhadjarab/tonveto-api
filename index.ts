@@ -6,6 +6,7 @@ import dotenv from "dotenv";
 
 // Methods import
 import { register, login } from "./controllers/authentication/authentication";
+import { updateUser } from "./controllers/user/user";
 
 const prisma = new PrismaClient();
 
@@ -19,6 +20,9 @@ const port = process.env.PORT;
 app.get("/", (req: Request, res: Response) => {
   res.send("Express + TypeScript Server");
 });
+
+
+// ===========AUTHENTICATION ROUTES============
 
 app.post("/register", async (req: Request, res: Response) => {
   try {
@@ -35,6 +39,17 @@ app.post("/login", async (req: Request, res: Response) => {
     console.log(e);
   }
 });
+
+// ===========USER ROUTES============
+app.put("/user/:id" , async (req: Request, res: Response) => {
+  try {
+
+    updateUser(req, res, prisma);
+  } catch (e) {
+    console.log(e);
+  }
+})
+
 
 app.listen(port || 3005, () => {
   console.log(

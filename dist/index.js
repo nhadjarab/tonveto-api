@@ -17,6 +17,7 @@ const client_1 = require("@prisma/client");
 const dotenv_1 = __importDefault(require("dotenv"));
 // Methods import
 const authentication_1 = require("./controllers/authentication/authentication");
+const user_1 = require("./controllers/user/user");
 const prisma = new client_1.PrismaClient();
 dotenv_1.default.config();
 const app = (0, express_1.default)();
@@ -25,6 +26,7 @@ const port = process.env.PORT;
 app.get("/", (req, res) => {
     res.send("Express + TypeScript Server");
 });
+// ===========AUTHENTICATION ROUTES============
 app.post("/register", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         (0, authentication_1.register)(req, res, prisma);
@@ -36,6 +38,15 @@ app.post("/register", (req, res) => __awaiter(void 0, void 0, void 0, function* 
 app.post("/login", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         (0, authentication_1.login)(req, res, prisma);
+    }
+    catch (e) {
+        console.log(e);
+    }
+}));
+// ===========USER ROUTES============
+app.put("/user/:id", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        (0, user_1.updateUser)(req, res, prisma);
     }
     catch (e) {
         console.log(e);
