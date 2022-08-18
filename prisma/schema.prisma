@@ -16,12 +16,11 @@ model Auth {
 }
 
 model User {
-  id String @unique @id
-  firstName String
-  lastName String
+  id String @unique @id @default(cuid())
+  first_name String  
+  last_name String
   email String @unique
   birth_date DateTime
   phone_number String
-  fully_registered Boolean
 }
 
