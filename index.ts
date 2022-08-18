@@ -21,11 +21,19 @@ app.get("/", (req: Request, res: Response) => {
 });
 
 app.post("/register", async (req: Request, res: Response) => {
-  register(req, res, prisma);
+  try {
+    register(req, res, prisma);
+  } catch (e) {
+    console.log(e);
+  }
 });
 
 app.post("/login", async (req: Request, res: Response) => {
-  login(req, res, prisma);
+  try {
+    login(req, res, prisma);
+  } catch (e) {
+    console.log(e);
+  }
 });
 
 app.listen(port || 3005, () => {
@@ -33,4 +41,3 @@ app.listen(port || 3005, () => {
     `⚡️[server]: Server is running at https://localhost:${port || 3005}`
   );
 });
-

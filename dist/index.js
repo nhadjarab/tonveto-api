@@ -26,10 +26,20 @@ app.get("/", (req, res) => {
     res.send("Express + TypeScript Server");
 });
 app.post("/register", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    (0, authentication_1.register)(req, res, prisma);
+    try {
+        (0, authentication_1.register)(req, res, prisma);
+    }
+    catch (e) {
+        console.log(e);
+    }
 }));
 app.post("/login", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    (0, authentication_1.login)(req, res, prisma);
+    try {
+        (0, authentication_1.login)(req, res, prisma);
+    }
+    catch (e) {
+        console.log(e);
+    }
 }));
 app.listen(port || 3005, () => {
     console.log(`⚡️[server]: Server is running at https://localhost:${port || 3005}`);
