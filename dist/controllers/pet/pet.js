@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.addPet = void 0;
+exports.deletePet = exports.getPet = exports.updatePet = exports.addPet = void 0;
 const authentication_1 = require("../authentication/authentication");
 const addPet = (req, res, prisma) => __awaiter(void 0, void 0, void 0, function* () {
     try {
@@ -43,4 +43,77 @@ const addPet = (req, res, prisma) => __awaiter(void 0, void 0, void 0, function*
     }
 });
 exports.addPet = addPet;
+const updatePet = (req, res, prisma) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const { id } = req.params;
+        const { sex, name, birth_date, species, breed, crossbreed, sterilised, owner_id, } = req.body;
+        const payload = (0, authentication_1.handleTokenVerification)(req, res);
+        if (payload.userId != owner_id)
+            return res.status(401).json("Unauthorized");
+        const newPet = yield prisma.pet.update({
+            where: {
+                id,
+            },
+            data: {
+                sex,
+                name,
+                birth_date,
+                species,
+                breed,
+                crossbreed,
+                sterilised,
+                owner_id,
+            },
+        });
+        if (!newPet)
+            res.status(404).json("Pet not found");
+        res.status(200).json(newPet);
+    }
+    catch (e) {
+        console.log(e);
+    }
+});
+exports.updatePet = updatePet;
+const getPet = (req, res, prisma) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const { id } = req.params;
+        const { owner_id } = req.body;
+        const payload = (0, authentication_1.handleTokenVerification)(req, res);
+        if (payload.userId != owner_id)
+            return res.status(401).json("Unauthorized");
+        const pet = yield prisma.pet.findUnique({
+            where: {
+                id,
+            },
+        });
+        if (!pet)
+            return res.status(404).json("Pet not found");
+        res.status(200).json(pet);
+    }
+    catch (e) {
+        console.log(e);
+    }
+});
+exports.getPet = getPet;
+const deletePet = (req, res, prisma) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const { id } = req.params;
+        const { owner_id } = req.body;
+        const payload = (0, authentication_1.handleTokenVerification)(req, res);
+        if (payload.userId != owner_id)
+            return res.status(401).json("Unauthorized");
+        const pet = yield prisma.pet.delete({
+            where: {
+                id,
+            },
+        });
+        if (!pet)
+            return res.status(404).json("Pet not found");
+        res.status(200).json("Pet deleted successfully");
+    }
+    catch (e) {
+        console.log(e);
+    }
+});
+exports.deletePet = deletePet;
 //# sourceMappingURL=pet.js.map

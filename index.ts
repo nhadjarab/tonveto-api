@@ -6,7 +6,7 @@ import dotenv from "dotenv";
 // Methods import
 import { register, login } from "./controllers/authentication/authentication";
 import { getUser, updateUser } from "./controllers/user/user";
-import { addPet } from "./controllers/pet/pet";
+import { addPet, deletePet, getPet, updatePet } from "./controllers/pet/pet";
 
 const prisma = new PrismaClient();
 
@@ -61,6 +61,30 @@ app.put("/user/:id", async (req: Request, res: Response) => {
 app.post("/pet", async (req: Request, res: Response) => {
   try {
     addPet(req, res, prisma);
+  } catch (e) {
+    console.log(e);
+  }
+});
+
+app.put("/pet/:id", async (req: Request, res: Response) => {
+  try {
+    updatePet(req, res, prisma);
+  } catch (e) {
+    console.log(e);
+  }
+});
+
+app.get("/pet/:id", async (req: Request, res: Response) => {
+  try {
+    getPet(req, res, prisma);
+  } catch (e) {
+    console.log(e);
+  }
+});
+
+app.delete("/pet/:id", async (req: Request, res: Response) => {
+  try {
+    deletePet(req, res, prisma);
   } catch (e) {
     console.log(e);
   }

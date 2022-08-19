@@ -70,6 +70,30 @@ app.post("/pet", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         console.log(e);
     }
 }));
+app.put("/pet/:id", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        (0, pet_1.updatePet)(req, res, prisma);
+    }
+    catch (e) {
+        console.log(e);
+    }
+}));
+app.get("/pet/:id", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        (0, pet_1.getPet)(req, res, prisma);
+    }
+    catch (e) {
+        console.log(e);
+    }
+}));
+app.delete("/pet/:id", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        (0, pet_1.deletePet)(req, res, prisma);
+    }
+    catch (e) {
+        console.log(e);
+    }
+}));
 app.listen(port || 3005, () => {
     console.log(`⚡️[server]: Server is running at https://localhost:${port || 3005}`);
 });
