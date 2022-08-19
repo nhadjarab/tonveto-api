@@ -1,12 +1,12 @@
 import express, { Express, Request, Response } from "express";
 import { PrismaClient } from "@prisma/client";
-import bcrypt from "bcrypt";
 
 import dotenv from "dotenv";
 
 // Methods import
 import { register, login } from "./controllers/authentication/authentication";
 import { getUser, updateUser } from "./controllers/user/user";
+import { addPet } from "./controllers/pet/pet";
 
 const prisma = new PrismaClient();
 
@@ -20,7 +20,6 @@ const port = process.env.PORT;
 app.get("/", (req: Request, res: Response) => {
   res.send("Express + TypeScript Server");
 });
-
 
 // ===========AUTHENTICATION ROUTES============
 
@@ -48,18 +47,24 @@ app.get("/user/:id", async (req: Request, res: Response) => {
   } catch (e) {
     console.log(e);
   }
-})
+});
 
-
-app.put("/user/:id" , async (req: Request, res: Response) => {
+app.put("/user/:id", async (req: Request, res: Response) => {
   try {
-
     updateUser(req, res, prisma);
   } catch (e) {
     console.log(e);
   }
-})
+});
 
+// ===========USER ROUTES============
+app.post("/pet", async (req: Request, res: Response) => {
+  try {
+    addPet(req, res, prisma);
+  } catch (e) {
+    console.log(e);
+  }
+});
 
 app.listen(port || 3005, () => {
   console.log(

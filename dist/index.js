@@ -18,6 +18,7 @@ const dotenv_1 = __importDefault(require("dotenv"));
 // Methods import
 const authentication_1 = require("./controllers/authentication/authentication");
 const user_1 = require("./controllers/user/user");
+const pet_1 = require("./controllers/pet/pet");
 const prisma = new client_1.PrismaClient();
 dotenv_1.default.config();
 const app = (0, express_1.default)();
@@ -55,6 +56,15 @@ app.get("/user/:id", (req, res) => __awaiter(void 0, void 0, void 0, function* (
 app.put("/user/:id", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         (0, user_1.updateUser)(req, res, prisma);
+    }
+    catch (e) {
+        console.log(e);
+    }
+}));
+// ===========USER ROUTES============
+app.post("/pet", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        (0, pet_1.addPet)(req, res, prisma);
     }
     catch (e) {
         console.log(e);

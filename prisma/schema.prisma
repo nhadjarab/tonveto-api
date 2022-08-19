@@ -15,6 +15,19 @@ model Auth {
   passwordHash String
 }
 
+model Pet {
+ id String @unique @id @default(cuid())
+ sex String
+ name String
+ birth_date String
+ species String
+ breed String
+ crossbreed Boolean
+ sterilised Boolean
+ owner User @relation(fields: [owner_id] , references: [id])
+ owner_id String  
+}
+
 model User {
   id String @unique @id @default(cuid())
   first_name String  
@@ -23,5 +36,6 @@ model User {
   birth_date String
   phone_number String
   profile_complete Boolean @default(false)
+  pets Pet[] 
 }
 
