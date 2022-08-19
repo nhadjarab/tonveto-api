@@ -19,6 +19,7 @@ const dotenv_1 = __importDefault(require("dotenv"));
 const authentication_1 = require("./controllers/authentication/authentication");
 const user_1 = require("./controllers/user/user");
 const pet_1 = require("./controllers/pet/pet");
+const appointment_1 = require("./controllers/appointment/appointment");
 const prisma = new client_1.PrismaClient();
 dotenv_1.default.config();
 const app = (0, express_1.default)();
@@ -61,7 +62,7 @@ app.put("/user/:id", (req, res) => __awaiter(void 0, void 0, void 0, function* (
         console.log(e);
     }
 }));
-// ===========USER ROUTES============
+// ===========Pet ROUTES============
 app.post("/pet", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         (0, pet_1.addPet)(req, res, prisma);
@@ -89,6 +90,39 @@ app.get("/pet/:id", (req, res) => __awaiter(void 0, void 0, void 0, function* ()
 app.delete("/pet/:id", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         (0, pet_1.deletePet)(req, res, prisma);
+    }
+    catch (e) {
+        console.log(e);
+    }
+}));
+// ===========Appointment ROUTERS============
+app.post("/appointment", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        (0, appointment_1.addAppointment)(req, res, prisma);
+    }
+    catch (e) {
+        console.log(e);
+    }
+}));
+app.put("/appointment/:id", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        (0, appointment_1.updateAppointment)(req, res, prisma);
+    }
+    catch (e) {
+        console.log(e);
+    }
+}));
+app.get("/appointment/:id", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        (0, appointment_1.getAppointment)(req, res, prisma);
+    }
+    catch (e) {
+        console.log(e);
+    }
+}));
+app.delete("/appointment/:id", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        (0, appointment_1.cancelAppointments)(req, res, prisma);
     }
     catch (e) {
         console.log(e);

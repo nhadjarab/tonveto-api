@@ -7,6 +7,7 @@ import dotenv from "dotenv";
 import { register, login } from "./controllers/authentication/authentication";
 import { getUser, updateUser } from "./controllers/user/user";
 import { addPet, deletePet, getPet, updatePet } from "./controllers/pet/pet";
+import { addAppointment, cancelAppointments, getAppointment, updateAppointment } from "./controllers/appointment/appointment";
 
 const prisma = new PrismaClient();
 
@@ -57,7 +58,7 @@ app.put("/user/:id", async (req: Request, res: Response) => {
   }
 });
 
-// ===========USER ROUTES============
+// ===========Pet ROUTES============
 app.post("/pet", async (req: Request, res: Response) => {
   try {
     addPet(req, res, prisma);
@@ -85,6 +86,39 @@ app.get("/pet/:id", async (req: Request, res: Response) => {
 app.delete("/pet/:id", async (req: Request, res: Response) => {
   try {
     deletePet(req, res, prisma);
+  } catch (e) {
+    console.log(e);
+  }
+});
+
+// ===========Appointment ROUTERS============
+app.post("/appointment", async (req: Request, res: Response) => {
+  try {
+    addAppointment(req, res, prisma);
+  } catch (e) {
+    console.log(e);
+  }
+});
+
+app.put("/appointment/:id", async (req: Request, res: Response) => {
+  try {
+    updateAppointment(req, res, prisma);
+  } catch (e) {
+    console.log(e);
+  }
+});
+
+app.get("/appointment/:id", async (req: Request, res: Response) => {
+  try {
+    getAppointment(req, res, prisma);
+  } catch (e) {
+    console.log(e);
+  }
+});
+
+app.delete("/appointment/:id", async (req: Request, res: Response) => {
+  try {
+    cancelAppointments(req, res, prisma);
   } catch (e) {
     console.log(e);
   }

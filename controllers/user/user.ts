@@ -66,6 +66,7 @@ export const getUser = async (
       },
       include: {
         pets: true,
+        appointments: true,
       }
     })
     

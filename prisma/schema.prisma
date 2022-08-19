@@ -11,31 +11,65 @@ datasource db {
 }
 
 model Auth {
-  email String @unique @id
+  email        String @id @unique
   passwordHash String
 }
 
 model Pet {
- id String @unique @id @default(cuid())
- sex String
- name String
- birth_date String
- species String
- breed String
- crossbreed Boolean
- sterilised Boolean
- owner User @relation(fields: [owner_id] , references: [id])
- owner_id String  
+  id         String  @id @unique @default(cuid())
+  sex        String
+  name       String
+  birth_date String
+  species    String
+  breed      String
+  crossbreed Boolean
+  sterilised Boolean
+  owner      User    @relation(fields: [owner_id], references: [id])
+  owner_id   String
+  appointments Appointment[]
 }
 
 model User {
-  id String @unique @id @default(cuid())
-  first_name String  
-  last_name String
-  email String @unique
-  birth_date String
-  phone_number String
+  id               String  @id @unique @default(cuid())
+  first_name       String
+  last_name        String
+  email            String  @unique
+  birth_date       String
+  phone_number     String
   profile_complete Boolean @default(false)
-  pets Pet[] 
+  pets             Pet[]
+  appointments Appointment[]
 }
 
+model Vet {
+  id                   String      @id @unique @default(cuid())
+  first_name           String
+  last_name            String
+  email                String      @unique
+  birth_date           String
+  phone_number         String
+  identification_order Int         @unique
+  profile_complete     Boolean     @default(false)
+  specialities         Specialty[]
+  bank_details         String
+  appointments         Appointment[]
+}
+
+model Specialty {
+  id     String @id @unique @default(cuid())
+  name   String
+  vet    Vet    @relation(fields: [vet_id], references: [id])
+  vet_id String
+}
+
+model Appointment {
+  id        String  @id @unique @default(cuid())
+  date       String
+  time       String
+  pet        Pet     @relation(fields: [pet_id], references: [id])
+  pet_id     String
+  vet        Vet     @relation(fields: [vet_id], references: [id])
+  vet_id     String
+  user  User @relation(fields: [user_id], references: [id])
+  user_id String
+}
