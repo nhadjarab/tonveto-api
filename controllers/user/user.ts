@@ -63,6 +63,9 @@ export const getUser = async (
     const userProfile = await prisma.user.findUnique({
       where: {
         id,
+      },
+      include: {
+        pets: true,
       }
     })
     

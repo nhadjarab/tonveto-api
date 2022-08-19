@@ -47,6 +47,9 @@ const getUser = (req, res, prisma) => __awaiter(void 0, void 0, void 0, function
         const userProfile = yield prisma.user.findUnique({
             where: {
                 id,
+            },
+            include: {
+                pets: true,
             }
         });
         res.status(200).json(userProfile);
