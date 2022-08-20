@@ -21,11 +21,12 @@ const user_1 = require("./controllers/user/user");
 const pet_1 = require("./controllers/pet/pet");
 const appointment_1 = require("./controllers/appointment/appointment");
 const vet_1 = require("./controllers/vet/vet");
+const clinic_1 = require("./controllers/clinic/clinic");
 const prisma = new client_1.PrismaClient();
 dotenv_1.default.config();
 const app = (0, express_1.default)();
 app.use(express_1.default.json());
-const port = process.env.PORT;
+const port = process.env.PORT || 3005;
 app.get("/", (req, res) => {
     res.send("Express + TypeScript Server");
 });
@@ -91,6 +92,55 @@ app.get("/vet/:id", (req, res) => __awaiter(void 0, void 0, void 0, function* ()
 app.put("/vet/:id", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         (0, vet_1.updateVet)(req, res, prisma);
+    }
+    catch (e) {
+        console.log(e);
+    }
+}));
+// ===========Clinic ROUTES============
+app.post("/clinic", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        (0, clinic_1.createClinic)(req, res, prisma);
+    }
+    catch (e) {
+        console.log(e);
+    }
+}));
+app.put("/clinic/:id", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        (0, clinic_1.updateClinic)(req, res, prisma);
+    }
+    catch (e) {
+        console.log(e);
+    }
+}));
+app.get("/clinic/:id", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        (0, clinic_1.getClinic)(req, res, prisma);
+    }
+    catch (e) {
+        console.log(e);
+    }
+}));
+app.delete("/clinic/:id", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        (0, clinic_1.deleteClinic)(req, res, prisma);
+    }
+    catch (e) {
+        console.log(e);
+    }
+}));
+app.post("/clinic/vet", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        (0, clinic_1.addVetToClinic)(req, res, prisma);
+    }
+    catch (e) {
+        console.log(e);
+    }
+}));
+app.delete("/clinic/vet/:id", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        (0, clinic_1.removeVetFromClinic)(req, res, prisma);
     }
     catch (e) {
         console.log(e);
@@ -162,7 +212,7 @@ app.delete("/appointment/:id", (req, res) => __awaiter(void 0, void 0, void 0, f
         console.log(e);
     }
 }));
-app.listen(port || 3005, () => {
-    console.log(`⚡️[server]: Server is running at https://localhost:${port || 3005}`);
+app.listen(port, () => {
+    console.log(`⚡️[server]: Server is running at https://localhost:${port}`);
 });
 //# sourceMappingURL=index.js.map

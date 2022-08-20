@@ -4,11 +4,29 @@ import { PrismaClient } from "@prisma/client";
 import dotenv from "dotenv";
 
 // Methods import
-import { register, login, registerVet, loginVet } from "./controllers/authentication/authentication";
+import {
+  register,
+  login,
+  registerVet,
+  loginVet,
+} from "./controllers/authentication/authentication";
 import { getUser, updateUser } from "./controllers/user/user";
 import { addPet, deletePet, getPet, updatePet } from "./controllers/pet/pet";
-import { addAppointment, cancelAppointments, getAppointment, updateAppointment } from "./controllers/appointment/appointment";
+import {
+  addAppointment,
+  cancelAppointments,
+  getAppointment,
+  updateAppointment,
+} from "./controllers/appointment/appointment";
 import { getVet, updateVet } from "./controllers/vet/vet";
+import {
+  addVetToClinic,
+  createClinic,
+  deleteClinic,
+  getClinic,
+  removeVetFromClinic,
+  updateClinic,
+} from "./controllers/clinic/clinic";
 
 const prisma = new PrismaClient();
 
@@ -17,7 +35,7 @@ dotenv.config();
 const app: Express = express();
 app.use(express.json());
 
-const port = process.env.PORT;
+const port = process.env.PORT || 3005;
 
 app.get("/", (req: Request, res: Response) => {
   res.send("Express + TypeScript Server");
@@ -93,6 +111,55 @@ app.put("/vet/:id", async (req: Request, res: Response) => {
   }
 });
 
+// ===========Clinic ROUTES============
+app.post("/clinic", async (req: Request, res: Response) => {
+  try {
+    createClinic(req, res, prisma);
+  } catch (e) {
+    console.log(e);
+  }
+});
+
+app.put("/clinic/:id", async (req: Request, res: Response) => {
+  try {
+    updateClinic(req, res, prisma);
+  } catch (e) {
+    console.log(e);
+  }
+});
+
+app.get("/clinic/:id", async (req: Request, res: Response) => {
+  try {
+    getClinic(req, res, prisma);
+  } catch (e) {
+    console.log(e);
+  }
+});
+
+app.delete("/clinic/:id", async (req: Request, res: Response) => {
+  try {
+    deleteClinic(req, res, prisma);
+  } catch (e) {
+    console.log(e);
+  }
+});
+
+app.post("/clinic/vet", async (req: Request, res: Response) => {
+  try {
+    addVetToClinic(req, res, prisma);
+  } catch (e) {
+    console.log(e);
+  }
+});
+
+app.delete("/clinic/vet/:id", async (req: Request, res: Response) => {
+  try {
+    removeVetFromClinic(req, res, prisma);
+  } catch (e) {
+    console.log(e);
+  }
+});
+
 // ===========Pet ROUTES============
 app.post("/pet", async (req: Request, res: Response) => {
   try {
@@ -159,8 +226,8 @@ app.delete("/appointment/:id", async (req: Request, res: Response) => {
   }
 });
 
-app.listen(port || 3005, () => {
+app.listen(port, () => {
   console.log(
-    `⚡️[server]: Server is running at https://localhost:${port || 3005}`
+    `⚡️[server]: Server is running at https://localhost:${port}`
   );
 });

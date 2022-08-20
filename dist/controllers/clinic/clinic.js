@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.addVetToClinic = exports.deleteClinic = exports.getClinic = exports.updateClinic = exports.createClinic = void 0;
+exports.removeVetFromClinic = exports.addVetToClinic = exports.deleteClinic = exports.getClinic = exports.updateClinic = exports.createClinic = void 0;
 const authentication_1 = require("../authentication/authentication");
 const createClinic = (req, res, prisma) => __awaiter(void 0, void 0, void 0, function* () {
     try {
@@ -40,6 +40,7 @@ const createClinic = (req, res, prisma) => __awaiter(void 0, void 0, void 0, fun
             data: {
                 clinic_id: newClinic.id,
                 vet_id: owner_id,
+                approved: true,
             },
         });
         res.status(200).json(newClinic);
@@ -111,7 +112,7 @@ const getClinic = (req, res, prisma) => __awaiter(void 0, void 0, void 0, functi
                         vet: true,
                     },
                     where: {
-                        approved: true,
+                    // approved: true,
                     },
                 },
                 owner: true,
@@ -137,19 +138,16 @@ const deleteClinic = (req, res, prisma) => __awaiter(void 0, void 0, void 0, fun
             where: {
                 id,
             },
-            include: {
-                vets: {
-                    include: {
-                        vet: true,
-                    },
-                },
-                owner: true,
-            },
         });
         if (!clinic)
             return res.status(404).json("Clinic does not exist");
         if (clinic.owner_id != logged_in_id)
             return res.status(401).json("Unauthorized");
+        const deleteRelation = yield prisma.vetClinic.deleteMany({
+            where: {
+                clinic_id: id,
+            },
+        });
         const deletedClinic = yield prisma.clinic.delete({
             where: { id },
         });
@@ -195,4 +193,53 @@ const addVetToClinic = (req, res, prisma) => __awaiter(void 0, void 0, void 0, f
     }
 });
 exports.addVetToClinic = addVetToClinic;
+const removeVetFromClinic = (req, res, prisma) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const { id } = req.params;
+        const { logged_in_id, vet_id } = req.body;
+        const payload = (0, authentication_1.handleTokenVerification)(req, res);
+        if (payload.userId != logged_in_id)
+            return res.status(401).json("Unauthorized");
+        const clinic = yield prisma.clinic.findUnique({
+            where: {
+                id,
+            },
+            include: {
+                vets: {
+                    include: {
+                        vet: true,
+                    },
+                    where: {
+                    // approved: true,
+                    },
+                },
+                owner: true,
+            },
+        });
+        if (!clinic)
+            return res.status(404).json("Clinic does not exist");
+        if (clinic.owner_id != logged_in_id)
+            return res.status(401).json("Unauthorized");
+        const vet = yield prisma.vet.findUnique({
+            where: {
+                id: vet_id,
+            },
+        });
+        if (!vet)
+            return res.status(404).json("Vet does not exist");
+        const vetClinic = yield prisma.vetClinic.delete({
+            where: {
+                vet_id_clinic_id: {
+                    clinic_id: id,
+                    vet_id: vet_id,
+                },
+            },
+        });
+        res.status(200).json(`Vet removed from clinic : ${clinic.name}`);
+    }
+    catch (e) {
+        console.log(e);
+    }
+});
+exports.removeVetFromClinic = removeVetFromClinic;
 //# sourceMappingURL=clinic.js.map
