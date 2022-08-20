@@ -30,15 +30,17 @@ model Pet {
 }
 
 model User {
-  id               String        @id @unique @default(cuid())
+  id               String  @id @unique @default(cuid())
   first_name       String
   last_name        String
-  email            String        @unique
+  email            String  @unique
   birth_date       String
   phone_number     String
-  profile_complete Boolean       @default(false)
-  pets             Pet[]
-  appointments     Appointment[]
+  profile_complete Boolean @default(false)
+  type             String  @default("user")
+
+  pets         Pet[]
+  appointments Appointment[]
 }
 
 model Vet {
@@ -50,18 +52,21 @@ model Vet {
   phone_number         String
   identification_order Int           @unique
   profile_complete     Boolean       @default(false)
+  type                 String        @default("vet")
   specialities         Specialty[]
   bank_details         String
   appointments         Appointment[]
   clinics              VetClinic[]
+  Clinic               Clinic[]
 }
 
 model VetClinic {
-  id        String @unique @default(cuid())
-  vet       Vet    @relation(fields: [vet_id], references: [id])
+  id        String  @unique @default(cuid())
+  vet       Vet     @relation(fields: [vet_id], references: [id])
   vet_id    String
-  clinic    Clinic @relation(fields: [clinic_id], references: [id])
+  clinic    Clinic  @relation(fields: [clinic_id], references: [id])
   clinic_id String
+  approved  Boolean @default(false)
 
   @@id([vet_id, clinic_id])
 }
@@ -74,12 +79,14 @@ model Specialty {
 }
 
 model Clinic {
-  id           String @id @unique @default(cuid())
+  id           String      @id @unique @default(cuid())
   name         String
   address      String
   city         String
   country      String
   phone_number String
+  owner_id     String
+  owner        Vet         @relation(fields: [owner_id], references: [id])
   vets         VetClinic[]
 }
 

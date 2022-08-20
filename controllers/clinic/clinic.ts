@@ -1,0 +1,237 @@
+import { PrismaClient } from "@prisma/client";
+import { Request, Response } from "express";
+import { handleTokenVerification } from "../authentication/authentication";
+
+export const createClinic = async (
+  req: Request,
+  res: Response,
+  prisma: PrismaClient
+) => {
+  try {
+    const { name, address, city, country, phone_number, owner_id } = req.body;
+
+    const payload: JWTPayload = handleTokenVerification(req, res) as JWTPayload;
+
+    if (payload.userId != owner_id) return res.status(401).json("Unauthorized");
+
+    const isUserVet = await prisma.vet.findUnique({
+      where: {
+        id: owner_id,
+      },
+    });
+
+    if (!isUserVet) return res.status(404).json("Vet does not exist");
+    if (isUserVet.type != "vet") return res.status(401).json("Unauthorized");
+
+    const newClinic = await prisma.clinic.create({
+      data: {
+        name,
+        address,
+        city,
+        country,
+        phone_number,
+        owner_id,
+      },
+    });
+
+    const clinicVet = await prisma.vetClinic.create({
+      data: {
+        clinic_id: newClinic.id,
+        vet_id: owner_id,
+      },
+    });
+
+    res.status(200).json(newClinic);
+  } catch (e) {
+    console.log(e);
+  }
+};
+
+export const updateClinic = async (
+  req: Request,
+  res: Response,
+  prisma: PrismaClient
+) => {
+  try {
+    const { id } = req.params;
+
+    const {
+      name,
+      address,
+      city,
+      country,
+      phone_number,
+      owner_id,
+      logged_in_id,
+    } = req.body;
+
+    const payload: JWTPayload = handleTokenVerification(req, res) as JWTPayload;
+
+    if (payload.userId != logged_in_id)
+      return res.status(401).json("Unauthorized");
+
+    const isUserVet = await prisma.vet.findUnique({
+      where: {
+        id: owner_id,
+      },
+    });
+
+    if (!isUserVet) return res.status(404).json("Vet does not exist");
+    if (isUserVet.type != "vet") return res.status(401).json("Unauthorized");
+
+    const clinic = await prisma.clinic.findUnique({
+      where: {
+        id,
+      },
+    });
+
+    if (!clinic) return res.status(404).json("Clinic does not exist");
+
+    if (clinic.owner_id != logged_in_id)
+      return res.status(401).json("Unauthorized");
+
+    const newClinic = await prisma.clinic.update({
+      where: {
+        id,
+      },
+      data: {
+        name,
+        address,
+        city,
+        country,
+        phone_number,
+        owner_id,
+      },
+    });
+
+    res.status(200).json(newClinic);
+  } catch (e) {
+    console.log(e);
+  }
+};
+
+export const getClinic = async (
+  req: Request,
+  res: Response,
+  prisma: PrismaClient
+) => {
+  try {
+    const { id } = req.params;
+    const { logged_in_id } = req.body;
+
+    const payload: JWTPayload = handleTokenVerification(req, res) as JWTPayload;
+
+    if (payload.userId != logged_in_id)
+      return res.status(401).json("Unauthorized");
+
+    const clinic = await prisma.clinic.findUnique({
+      where: {
+        id,
+      },
+      include: {
+        vets: {
+          include: {
+            vet: true,
+          },
+          where: {
+            approved: true,
+          },
+        },
+        owner: true,
+      },
+    });
+
+    if (!clinic) return res.status(404).json("Clinic does not exist");
+
+    res.status(200).json(clinic);
+  } catch (e) {
+    console.log(e);
+  }
+};
+
+export const deleteClinic = async (
+  req: Request,
+  res: Response,
+  prisma: PrismaClient
+) => {
+  try {
+    const { id } = req.params;
+    const { logged_in_id } = req.body;
+
+    const payload: JWTPayload = handleTokenVerification(req, res) as JWTPayload;
+
+    if (payload.userId != logged_in_id)
+      return res.status(401).json("Unauthorized");
+
+    const clinic = await prisma.clinic.findUnique({
+      where: {
+        id,
+      },
+      include: {
+        vets: {
+          include: {
+            vet: true,
+          },
+        },
+        owner: true,
+      },
+    });
+
+    if (!clinic) return res.status(404).json("Clinic does not exist");
+
+    if (clinic.owner_id != logged_in_id)
+      return res.status(401).json("Unauthorized");
+
+    const deletedClinic = await prisma.clinic.delete({
+      where: { id },
+    });
+
+    res.status(200).json(deletedClinic);
+  } catch (e) {
+    console.log(e);
+  }
+};
+
+export const addVetToClinic = async (
+  req: Request,
+  res: Response,
+  prisma: PrismaClient
+) => {
+  try {
+    const { logged_in_id, vet_id, clinic_id } = req.body;
+
+    const payload: JWTPayload = handleTokenVerification(req, res) as JWTPayload;
+
+    if (payload.userId != logged_in_id)
+      return res.status(401).json("Unauthorized");
+
+    const clinic = await prisma.clinic.findUnique({
+      where: {
+        id: clinic_id,
+      },
+    });
+
+    if (!clinic) return res.status(404).json("Clinic does not exist");
+    if (clinic.owner_id != logged_in_id)
+      return res.status(401).json("Unauthorized");
+
+    const vet = await prisma.vet.findUnique({
+      where: {
+        id: vet_id,
+      },
+    });
+
+    if (!vet) return res.status(404).json("Vet does not exist");
+
+    const vetClinic = await prisma.vetClinic.create({
+      data: {
+        vet_id: vet_id,
+        clinic_id: clinic_id,
+      },
+    });
+
+    res.status(200).json(`Vet added to clinic : ${clinic.name}`);
+  } catch (e) {
+    console.log(e);
+  }
+};
