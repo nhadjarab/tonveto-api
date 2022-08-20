@@ -54,6 +54,9 @@ const getVet = (req, res, prisma) => __awaiter(void 0, void 0, void 0, function*
             include: {
                 specialities: true,
                 appointments: true,
+                clinics: {
+                    include: { clinic: true },
+                },
             },
         });
         res.status(200).json(vetProfile);

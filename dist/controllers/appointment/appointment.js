@@ -104,9 +104,9 @@ exports.updateAppointment = updateAppointment;
 const getAppointment = (req, res, prisma) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { id } = req.params;
-        const { user_id } = req.body;
+        const { logged_in_id } = req.body;
         const payload = (0, authentication_1.handleTokenVerification)(req, res);
-        if (payload.userId != user_id)
+        if (payload.userId != logged_in_id)
             return res.status(401).json("Unauthorized");
         const appointment = yield prisma.appointment.findUnique({
             where: {

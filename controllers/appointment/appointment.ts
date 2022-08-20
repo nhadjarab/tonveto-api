@@ -124,11 +124,11 @@ export const getAppointment = async (
 ) => {
   try {
     const { id } = req.params;
-    const { user_id } = req.body;
+    const { logged_in_id } = req.body;
 
     const payload: JWTPayload = handleTokenVerification(req, res) as JWTPayload;
 
-    if (payload.userId != user_id) return res.status(401).json("Unauthorized");
+    if (payload.userId != logged_in_id) return res.status(401).json("Unauthorized");
 
     const appointment = await prisma.appointment.findUnique({
       where: {

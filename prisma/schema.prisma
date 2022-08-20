@@ -16,43 +16,54 @@ model Auth {
 }
 
 model Pet {
-  id         String  @id @unique @default(cuid())
-  sex        String
-  name       String
-  birth_date String
-  species    String
-  breed      String
-  crossbreed Boolean
-  sterilised Boolean
-  owner      User    @relation(fields: [owner_id], references: [id])
-  owner_id   String
+  id           String        @id @unique @default(cuid())
+  sex          String
+  name         String
+  birth_date   String
+  species      String
+  breed        String
+  crossbreed   Boolean
+  sterilised   Boolean
+  owner        User          @relation(fields: [owner_id], references: [id])
+  owner_id     String
   appointments Appointment[]
 }
 
 model User {
-  id               String  @id @unique @default(cuid())
+  id               String        @id @unique @default(cuid())
   first_name       String
   last_name        String
-  email            String  @unique
+  email            String        @unique
   birth_date       String
   phone_number     String
-  profile_complete Boolean @default(false)
+  profile_complete Boolean       @default(false)
   pets             Pet[]
-  appointments Appointment[]
+  appointments     Appointment[]
 }
 
 model Vet {
-  id                   String      @id @unique @default(cuid())
+  id                   String        @id @unique @default(cuid())
   first_name           String
   last_name            String
-  email                String      @unique
+  email                String        @unique
   birth_date           String
   phone_number         String
-  identification_order Int         @unique
-  profile_complete     Boolean     @default(false)
+  identification_order Int           @unique
+  profile_complete     Boolean       @default(false)
   specialities         Specialty[]
   bank_details         String
   appointments         Appointment[]
+  clinics              VetClinic[]
+}
+
+model VetClinic {
+  id        String @unique @default(cuid())
+  vet       Vet    @relation(fields: [vet_id], references: [id])
+  vet_id    String
+  clinic    Clinic @relation(fields: [clinic_id], references: [id])
+  clinic_id String
+
+  @@id([vet_id, clinic_id])
 }
 
 model Specialty {
@@ -62,14 +73,24 @@ model Specialty {
   vet_id String
 }
 
+model Clinic {
+  id           String @id @unique @default(cuid())
+  name         String
+  address      String
+  city         String
+  country      String
+  phone_number String
+  vets         VetClinic[]
+}
+
 model Appointment {
-  id        String  @id @unique @default(cuid())
-  date       String
-  time       String
-  pet        Pet     @relation(fields: [pet_id], references: [id])
-  pet_id     String
-  vet        Vet     @relation(fields: [vet_id], references: [id])
-  vet_id     String
-  user  User @relation(fields: [user_id], references: [id])
+  id      String @id @unique @default(cuid())
+  date    String
+  time    String
+  pet     Pet    @relation(fields: [pet_id], references: [id])
+  pet_id  String
+  vet     Vet    @relation(fields: [vet_id], references: [id])
+  vet_id  String
+  user    User   @relation(fields: [user_id], references: [id])
   user_id String
 }
