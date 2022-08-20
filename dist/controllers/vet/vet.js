@@ -9,16 +9,16 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getUser = exports.updateUser = void 0;
+exports.getVet = exports.updateVet = void 0;
 const authentication_1 = require("../authentication/authentication");
-const updateUser = (req, res, prisma) => __awaiter(void 0, void 0, void 0, function* () {
+const updateVet = (req, res, prisma) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { id } = req.params;
-        const { first_name, last_name, email, birth_date, phone_number, profile_complete, } = req.body;
+        const { email, birth_date, first_name, last_name, phone_number, bank_details, identification_order, profile_complete, } = req.body;
         const payload = (0, authentication_1.handleTokenVerification)(req, res);
         if (payload.userId != id)
             return res.status(401).json("Unauthorized");
-        const userProfile = yield prisma.user.update({
+        const vetProfile = yield prisma.vet.update({
             where: {
                 id,
             },
@@ -28,37 +28,39 @@ const updateUser = (req, res, prisma) => __awaiter(void 0, void 0, void 0, funct
                 email,
                 birth_date,
                 phone_number,
+                bank_details,
+                identification_order,
                 profile_complete,
             },
         });
-        res.status(200).json(userProfile);
+        res.status(200).json(vetProfile);
     }
     catch (e) {
         res.status(500).json(e);
     }
 });
-exports.updateUser = updateUser;
-const getUser = (req, res, prisma) => __awaiter(void 0, void 0, void 0, function* () {
+exports.updateVet = updateVet;
+const getVet = (req, res, prisma) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { id } = req.params;
         const { logged_in_id } = req.body;
         const payload = (0, authentication_1.handleTokenVerification)(req, res);
         if (payload.userId != logged_in_id)
             return res.status(401).json("Unauthorized");
-        const userProfile = yield prisma.user.findUnique({
+        const vetProfile = yield prisma.vet.findUnique({
             where: {
                 id,
             },
             include: {
-                pets: true,
+                specialities: true,
                 appointments: true,
-            }
+            },
         });
-        res.status(200).json(userProfile);
+        res.status(200).json(vetProfile);
     }
     catch (e) {
         res.status(500).json(e);
     }
 });
-exports.getUser = getUser;
-//# sourceMappingURL=user.js.map
+exports.getVet = getVet;
+//# sourceMappingURL=vet.js.map

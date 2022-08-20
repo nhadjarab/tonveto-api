@@ -4,10 +4,11 @@ import { PrismaClient } from "@prisma/client";
 import dotenv from "dotenv";
 
 // Methods import
-import { register, login } from "./controllers/authentication/authentication";
+import { register, login, registerVet, loginVet } from "./controllers/authentication/authentication";
 import { getUser, updateUser } from "./controllers/user/user";
 import { addPet, deletePet, getPet, updatePet } from "./controllers/pet/pet";
 import { addAppointment, cancelAppointments, getAppointment, updateAppointment } from "./controllers/appointment/appointment";
+import { getVet, updateVet } from "./controllers/vet/vet";
 
 const prisma = new PrismaClient();
 
@@ -32,9 +33,25 @@ app.post("/register", async (req: Request, res: Response) => {
   }
 });
 
+app.post("/registerVet", async (req: Request, res: Response) => {
+  try {
+    registerVet(req, res, prisma);
+  } catch (e) {
+    console.log(e);
+  }
+});
+
 app.post("/login", async (req: Request, res: Response) => {
   try {
     login(req, res, prisma);
+  } catch (e) {
+    console.log(e);
+  }
+});
+
+app.post("/loginVet", async (req: Request, res: Response) => {
+  try {
+    loginVet(req, res, prisma);
   } catch (e) {
     console.log(e);
   }
@@ -53,6 +70,24 @@ app.get("/user/:id", async (req: Request, res: Response) => {
 app.put("/user/:id", async (req: Request, res: Response) => {
   try {
     updateUser(req, res, prisma);
+  } catch (e) {
+    console.log(e);
+  }
+});
+
+// ===========Vet ROUTES============
+
+app.get("/vet/:id", async (req: Request, res: Response) => {
+  try {
+    getVet(req, res, prisma);
+  } catch (e) {
+    console.log(e);
+  }
+});
+
+app.put("/vet/:id", async (req: Request, res: Response) => {
+  try {
+    updateVet(req, res, prisma);
   } catch (e) {
     console.log(e);
   }

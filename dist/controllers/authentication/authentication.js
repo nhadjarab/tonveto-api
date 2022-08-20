@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.handleTokenVerification = exports.verifyToken = exports.generateToken = exports.login = exports.register = void 0;
+exports.handleTokenVerification = exports.verifyToken = exports.generateToken = exports.loginVet = exports.login = exports.registerVet = exports.register = void 0;
 const fs_1 = __importDefault(require("fs"));
 const jsonwebtoken_1 = require("jsonwebtoken");
 const bcrypt_1 = __importDefault(require("bcrypt"));
@@ -51,6 +51,41 @@ const register = (req, res, prisma) => __awaiter(void 0, void 0, void 0, functio
     });
 });
 exports.register = register;
+const registerVet = (req, res, prisma) => __awaiter(void 0, void 0, void 0, function* () {
+    const { email, password } = req.body;
+    const hash = bcrypt_1.default.hashSync(password, 10);
+    prisma.auth
+        .create({
+        data: {
+            email,
+            passwordHash: hash,
+        },
+    })
+        .then(() => {
+        prisma.vet
+            .create({
+            data: {
+                email,
+                birth_date: new Date().toString(),
+                first_name: "",
+                last_name: "",
+                phone_number: "",
+                bank_details: "",
+                identification_order: 0,
+            },
+        })
+            .finally(() => {
+            res.status(200).json("Vet created");
+        })
+            .catch((err) => {
+            res.status(500).json(err);
+        });
+    })
+        .catch((e) => {
+        res.status(500).json("Vet not created");
+    });
+});
+exports.registerVet = registerVet;
 const login = (req, res, prisma) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { email, password } = req.body;
@@ -68,6 +103,9 @@ const login = (req, res, prisma) => __awaiter(void 0, void 0, void 0, function* 
             where: {
                 email,
             },
+            include: {
+                pets: true,
+            },
         });
         const jwtToken = (0, exports.generateToken)(userProfile === null || userProfile === void 0 ? void 0 : userProfile.id);
         res.status(200).json({ userProfile, jwtToken });
@@ -77,6 +115,36 @@ const login = (req, res, prisma) => __awaiter(void 0, void 0, void 0, function* 
     }
 });
 exports.login = login;
+const loginVet = (req, res, prisma) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const { email, password } = req.body;
+        const userAth = yield prisma.auth.findUnique({
+            where: {
+                email,
+            },
+        });
+        if (!userAth)
+            return res.status(404).json("Vet Not Found");
+        const isValid = bcrypt_1.default.compareSync(password, userAth.passwordHash);
+        if (!isValid)
+            return res.status(401).json("Wrong password");
+        const vetProfile = yield prisma.vet.findUnique({
+            where: {
+                email,
+            },
+            include: {
+                appointments: true,
+                specialities: true,
+            },
+        });
+        const jwtToken = (0, exports.generateToken)(vetProfile === null || vetProfile === void 0 ? void 0 : vetProfile.id);
+        res.status(200).json({ vetProfile, jwtToken });
+    }
+    catch (e) {
+        res.status(500).json(e);
+    }
+});
+exports.loginVet = loginVet;
 const generateToken = (userId) => {
     return (0, jsonwebtoken_1.sign)({ userId }, private_key, { algorithm: "RS256" });
 };

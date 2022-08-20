@@ -5,7 +5,7 @@ import User from "../../models/User";
 
 import { handleTokenVerification } from "../authentication/authentication";
 
-export const updateUser = async (
+export const updateVet = async (
   req: Request,
   res: Response,
   prisma: PrismaClient
@@ -14,11 +14,13 @@ export const updateUser = async (
     const { id } = req.params;
 
     const {
-      first_name,
-      last_name,
       email,
       birth_date,
+      first_name,
+      last_name,
       phone_number,
+      bank_details,
+      identification_order,
       profile_complete,
     } = req.body;
 
@@ -26,7 +28,7 @@ export const updateUser = async (
 
     if (payload.userId != id) return res.status(401).json("Unauthorized");
 
-    const userProfile = await prisma.user.update({
+    const vetProfile = await prisma.vet.update({
       where: {
         id,
       },
@@ -36,46 +38,43 @@ export const updateUser = async (
         email,
         birth_date,
         phone_number,
+        bank_details,
+        identification_order,
         profile_complete,
       },
     });
 
-
-
-    res.status(200).json(userProfile);
+    res.status(200).json(vetProfile);
   } catch (e) {
     res.status(500).json(e);
   }
 };
 
-export const getUser = async (
+export const getVet = async (
   req: Request,
   res: Response,
   prisma: PrismaClient
 ) => {
   try {
     const { id } = req.params;
-
-    const {logged_in_id} = req.body;
+    const { logged_in_id } = req.body;
 
     const payload: JWTPayload = handleTokenVerification(req, res) as JWTPayload;
 
-    if (payload.userId != logged_in_id) return res.status(401).json("Unauthorized");
+    if (payload.userId != logged_in_id)
+      return res.status(401).json("Unauthorized");
 
-    const userProfile = await prisma.user.findUnique({
+    const vetProfile = await prisma.vet.findUnique({
       where: {
         id,
       },
       include: {
-        pets: true,
+        specialities: true,
         appointments: true,
-      }
-    })
-    
+      },
+    });
 
-
-
-    res.status(200).json(userProfile);
+    res.status(200).json(vetProfile);
   } catch (e) {
     res.status(500).json(e);
   }

@@ -104,11 +104,12 @@ export const getPet = async (
 ) => {
   try {
     const { id } = req.params;
-    const { owner_id } = req.body;
+    const { logged_in_id } = req.body;
 
     const payload: JWTPayload = handleTokenVerification(req, res) as JWTPayload;
 
-    if (payload.userId != owner_id) return res.status(401).json("Unauthorized");
+    if (payload.userId != logged_in_id)
+      return res.status(401).json("Unauthorized");
 
     const pet = await prisma.pet.findUnique({
       where: {

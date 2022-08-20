@@ -41,9 +41,8 @@ exports.updateUser = updateUser;
 const getUser = (req, res, prisma) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { id } = req.params;
-        const { logged_in_id } = req.body;
         const payload = (0, authentication_1.handleTokenVerification)(req, res);
-        if (payload.userId != logged_in_id)
+        if (payload.userId != id)
             return res.status(401).json("Unauthorized");
         const userProfile = yield prisma.user.findUnique({
             where: {

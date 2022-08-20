@@ -20,6 +20,7 @@ const authentication_1 = require("./controllers/authentication/authentication");
 const user_1 = require("./controllers/user/user");
 const pet_1 = require("./controllers/pet/pet");
 const appointment_1 = require("./controllers/appointment/appointment");
+const vet_1 = require("./controllers/vet/vet");
 const prisma = new client_1.PrismaClient();
 dotenv_1.default.config();
 const app = (0, express_1.default)();
@@ -37,9 +38,25 @@ app.post("/register", (req, res) => __awaiter(void 0, void 0, void 0, function* 
         console.log(e);
     }
 }));
+app.post("/registerVet", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        (0, authentication_1.registerVet)(req, res, prisma);
+    }
+    catch (e) {
+        console.log(e);
+    }
+}));
 app.post("/login", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         (0, authentication_1.login)(req, res, prisma);
+    }
+    catch (e) {
+        console.log(e);
+    }
+}));
+app.post("/loginVet", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        (0, authentication_1.loginVet)(req, res, prisma);
     }
     catch (e) {
         console.log(e);
@@ -57,6 +74,23 @@ app.get("/user/:id", (req, res) => __awaiter(void 0, void 0, void 0, function* (
 app.put("/user/:id", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         (0, user_1.updateUser)(req, res, prisma);
+    }
+    catch (e) {
+        console.log(e);
+    }
+}));
+// ===========Vet ROUTES============
+app.get("/vet/:id", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        (0, vet_1.getVet)(req, res, prisma);
+    }
+    catch (e) {
+        console.log(e);
+    }
+}));
+app.put("/vet/:id", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        (0, vet_1.updateVet)(req, res, prisma);
     }
     catch (e) {
         console.log(e);

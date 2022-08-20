@@ -50,6 +50,47 @@ export const register = async (
     });
 };
 
+export const registerVet = async (
+  req: Request,
+  res: Response,
+  prisma: PrismaClient
+) => {
+  const { email, password } = req.body;
+
+  const hash = bcrypt.hashSync(password, 10);
+
+  prisma.auth
+    .create({
+      data: {
+        email,
+        passwordHash: hash,
+      },
+    })
+    .then(() => {
+      prisma.vet
+        .create({
+          data: {
+            email,
+            birth_date: new Date().toString(),
+            first_name: "",
+            last_name: "",
+            phone_number: "",
+            bank_details: "",
+            identification_order: 0,
+          },
+        })
+        .finally(() => {
+          res.status(200).json("Vet created");
+        })
+        .catch((err) => {
+          res.status(500).json(err);
+        });
+    })
+    .catch((e) => {
+      res.status(500).json("Vet not created");
+    });
+};
+
 export const login = async (
   req: Request,
   res: Response,
@@ -73,11 +114,51 @@ export const login = async (
       where: {
         email,
       },
-    })!;
+      include: {
+        pets: true,
+      },
+    });
 
     const jwtToken = generateToken(userProfile?.id as string);
 
     res.status(200).json({ userProfile, jwtToken });
+  } catch (e) {
+    res.status(500).json(e);
+  }
+};
+
+export const loginVet = async (
+  req: Request,
+  res: Response,
+  prisma: PrismaClient
+) => {
+  try {
+    const { email, password } = req.body;
+    const userAth = await prisma.auth.findUnique({
+      where: {
+        email,
+      },
+    });
+
+    if (!userAth) return res.status(404).json("Vet Not Found");
+
+    const isValid = bcrypt.compareSync(password, userAth.passwordHash);
+
+    if (!isValid) return res.status(401).json("Wrong password");
+
+    const vetProfile = await prisma.vet.findUnique({
+      where: {
+        email,
+      },
+      include: {
+        appointments: true,
+        specialities: true,
+      },
+    })!;
+
+    const jwtToken = generateToken(vetProfile?.id as string);
+
+    res.status(200).json({ vetProfile, jwtToken });
   } catch (e) {
     res.status(500).json(e);
   }
@@ -91,10 +172,7 @@ export const verifyToken = (token: string) => {
   return verify(token, public_key, { algorithms: ["RS256"] });
 };
 
-export const handleTokenVerification = (
-  req: Request,
-  res: Response
-)=> {
+export const handleTokenVerification = (req: Request, res: Response) => {
   const token = req?.headers["authorization"]?.split(" ")[1];
 
   let payload;
@@ -103,7 +181,6 @@ export const handleTokenVerification = (
 
   try {
     payload = verifyToken(token);
-
 
     return payload;
   } catch (e) {
