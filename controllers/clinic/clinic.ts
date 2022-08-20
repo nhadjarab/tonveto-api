@@ -135,7 +135,7 @@ export const getClinic = async (
             vet: true,
           },
           where: {
-            // approved: true,
+            approved: true,
           },
         },
         owner: true,
@@ -243,7 +243,7 @@ export const removeVetFromClinic = async (
   try {
     const { id } = req.params;
 
-    const { logged_in_id, vet_id } = req.body;
+    const { logged_in_id, clinic_id } = req.body;
 
     const payload: JWTPayload = handleTokenVerification(req, res) as JWTPayload;
 
@@ -252,7 +252,67 @@ export const removeVetFromClinic = async (
 
     const clinic = await prisma.clinic.findUnique({
       where: {
-        id,
+        id : clinic_id,
+      },
+      include: {
+        vets: {
+          include: {
+            vet: true,
+          },
+          where: {
+            approved: true,
+          },
+        },
+        owner: true,
+      },
+    });
+
+    if (!clinic) return res.status(404).json("Clinic does not exist");
+
+    if (clinic.owner_id != logged_in_id)
+      return res.status(401).json("Unauthorized");
+
+    const vet = await prisma.vet.findUnique({
+      where: {
+        id: id,
+      },
+    });
+
+    if (!vet) return res.status(404).json("Vet does not exist");
+
+    const vetClinic = await prisma.vetClinic.delete({
+      where: {
+        vet_id_clinic_id: {
+          clinic_id: clinic_id,
+          vet_id: id,
+        },
+      },
+    });
+
+    res.status(200).json(`Vet removed from clinic : ${clinic.name}`);
+  } catch (e) {
+    console.log(e);
+  }
+};
+
+export const approveNewVet = async (
+  req: Request,
+  res: Response,
+  prisma: PrismaClient
+) => {
+  try {
+    const { id } = req.params;
+
+    const { logged_in_id, clinic_id } = req.body;
+
+    const payload: JWTPayload = handleTokenVerification(req, res) as JWTPayload;
+
+    if (payload.userId != logged_in_id)
+      return res.status(401).json("Unauthorized");
+
+    const clinic = await prisma.clinic.findUnique({
+      where: {
+        id: clinic_id,
       },
       include: {
         vets: {
@@ -269,27 +329,42 @@ export const removeVetFromClinic = async (
 
     if (!clinic) return res.status(404).json("Clinic does not exist");
 
-    if (clinic.owner_id != logged_in_id)
-      return res.status(401).json("Unauthorized");
-
     const vet = await prisma.vet.findUnique({
       where: {
-        id: vet_id,
+        id,
       },
     });
 
     if (!vet) return res.status(404).json("Vet does not exist");
 
-    const vetClinic = await prisma.vetClinic.delete({
+    const vetClinicRelation = await prisma.vetClinic.findUnique({
       where: {
         vet_id_clinic_id: {
-          clinic_id: id,
-          vet_id: vet_id,
+          vet_id: id,
+          clinic_id: clinic_id,
         },
       },
     });
 
-    res.status(200).json(`Vet removed from clinic : ${clinic.name}`);
+    if (!vetClinicRelation)
+      return res.status(404).json("Vet is not a member of this clinic");
+
+    if (clinic.owner_id != logged_in_id)
+      return res.status(401).json("Unauthorized");
+
+    const vetClinic = await prisma.vetClinic.update({
+      where: {
+        vet_id_clinic_id: {
+          vet_id: id,
+          clinic_id: clinic_id,
+        },
+      },
+      data: {
+        approved: true,
+      },
+    });
+
+    res.status(200).json(`Vet approved into clinic : ${clinic.name}`);
   } catch (e) {
     console.log(e);
   }

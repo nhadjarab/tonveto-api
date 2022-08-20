@@ -21,6 +21,7 @@ import {
 import { getVet, updateVet } from "./controllers/vet/vet";
 import {
   addVetToClinic,
+  approveNewVet,
   createClinic,
   deleteClinic,
   getClinic,
@@ -152,6 +153,14 @@ app.post("/clinic/vet", async (req: Request, res: Response) => {
   }
 });
 
+app.put("/clinic/vet/:id", async (req: Request, res: Response) => {
+  try {
+    approveNewVet(req, res, prisma);
+  } catch (e) {
+    console.log(e);
+  }
+});
+
 app.delete("/clinic/vet/:id", async (req: Request, res: Response) => {
   try {
     removeVetFromClinic(req, res, prisma);
@@ -227,7 +236,5 @@ app.delete("/appointment/:id", async (req: Request, res: Response) => {
 });
 
 app.listen(port, () => {
-  console.log(
-    `⚡️[server]: Server is running at https://localhost:${port}`
-  );
+  console.log(`⚡️[server]: Server is running at https://localhost:${port}`);
 });

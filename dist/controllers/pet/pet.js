@@ -50,6 +50,13 @@ const updatePet = (req, res, prisma) => __awaiter(void 0, void 0, void 0, functi
         const payload = (0, authentication_1.handleTokenVerification)(req, res);
         if (payload.userId != owner_id)
             return res.status(401).json("Unauthorized");
+        const pet = yield prisma.pet.findUnique({
+            where: {
+                id,
+            },
+        });
+        if (!pet)
+            return res.status(404).json("Pet not found");
         const newPet = yield prisma.pet.update({
             where: {
                 id,
@@ -79,11 +86,19 @@ const getPet = (req, res, prisma) => __awaiter(void 0, void 0, void 0, function*
         const { id } = req.params;
         const { logged_in_id } = req.body;
         const payload = (0, authentication_1.handleTokenVerification)(req, res);
+        console.log(payload);
         if (payload.userId != logged_in_id)
             return res.status(401).json("Unauthorized");
         const pet = yield prisma.pet.findUnique({
             where: {
                 id,
+            },
+            include: {
+                appointments: {
+                    include: {
+                        vet: true,
+                    },
+                },
             },
         });
         if (!pet)
@@ -102,13 +117,18 @@ const deletePet = (req, res, prisma) => __awaiter(void 0, void 0, void 0, functi
         const payload = (0, authentication_1.handleTokenVerification)(req, res);
         if (payload.userId != owner_id)
             return res.status(401).json("Unauthorized");
-        const pet = yield prisma.pet.delete({
+        const pet = yield prisma.pet.findUnique({
             where: {
                 id,
             },
         });
         if (!pet)
             return res.status(404).json("Pet not found");
+        const removedPet = yield prisma.pet.delete({
+            where: {
+                id,
+            },
+        });
         res.status(200).json("Pet deleted successfully");
     }
     catch (e) {

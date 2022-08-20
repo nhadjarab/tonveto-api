@@ -55,40 +55,34 @@ export const registerVet = async (
   res: Response,
   prisma: PrismaClient
 ) => {
-  const { email, password } = req.body;
+  try {
+    const { email, password } = req.body;
 
-  const hash = bcrypt.hashSync(password, 10);
+    const hash = bcrypt.hashSync(password, 10);
 
-  prisma.auth
-    .create({
+    const vetAuth = await prisma.auth.create({
       data: {
         email,
         passwordHash: hash,
       },
-    })
-    .then(() => {
-      prisma.vet
-        .create({
-          data: {
-            email,
-            birth_date: new Date().toString(),
-            first_name: "",
-            last_name: "",
-            phone_number: "",
-            bank_details: "",
-            identification_order: 0,
-          },
-        })
-        .finally(() => {
-          res.status(200).json("Vet created");
-        })
-        .catch((err) => {
-          res.status(500).json(err);
-        });
-    })
-    .catch((e) => {
-      res.status(500).json("Vet not created");
     });
+
+    const vet = await prisma.vet.create({
+      data: {
+        email,
+        birth_date: new Date().toString(),
+        first_name: "",
+        last_name: "",
+        phone_number: "",
+        bank_details: "",
+        identification_order: 1,
+      },
+    });
+
+    res.status(200).json(vet);
+  } catch (e) {
+    res.status(500).json(e);
+  }
 };
 
 export const login = async (

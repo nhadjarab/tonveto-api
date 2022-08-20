@@ -73,6 +73,14 @@ export const updatePet = async (
 
     if (payload.userId != owner_id) return res.status(401).json("Unauthorized");
 
+    const pet = await prisma.pet.findUnique({
+      where: {
+        id,
+      },
+    });
+
+    if (!pet) return res.status(404).json("Pet not found");
+
     const newPet = await prisma.pet.update({
       where: {
         id,
@@ -108,12 +116,21 @@ export const getPet = async (
 
     const payload: JWTPayload = handleTokenVerification(req, res) as JWTPayload;
 
+    console.log(payload);
+
     if (payload.userId != logged_in_id)
       return res.status(401).json("Unauthorized");
 
     const pet = await prisma.pet.findUnique({
       where: {
         id,
+      },
+      include: {
+        appointments: {
+          include: {
+            vet: true,
+          },
+        },
       },
     });
 
@@ -138,13 +155,19 @@ export const deletePet = async (
 
     if (payload.userId != owner_id) return res.status(401).json("Unauthorized");
 
-    const pet = await prisma.pet.delete({
+    const pet = await prisma.pet.findUnique({
       where: {
         id,
       },
     });
 
     if (!pet) return res.status(404).json("Pet not found");
+
+    const removedPet = await prisma.pet.delete({
+      where: {
+        id,
+      },
+    });
 
     res.status(200).json("Pet deleted successfully");
   } catch (e) {

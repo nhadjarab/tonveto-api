@@ -52,18 +52,16 @@ const register = (req, res, prisma) => __awaiter(void 0, void 0, void 0, functio
 });
 exports.register = register;
 const registerVet = (req, res, prisma) => __awaiter(void 0, void 0, void 0, function* () {
-    const { email, password } = req.body;
-    const hash = bcrypt_1.default.hashSync(password, 10);
-    prisma.auth
-        .create({
-        data: {
-            email,
-            passwordHash: hash,
-        },
-    })
-        .then(() => {
-        prisma.vet
-            .create({
+    try {
+        const { email, password } = req.body;
+        const hash = bcrypt_1.default.hashSync(password, 10);
+        const vetAuth = yield prisma.auth.create({
+            data: {
+                email,
+                passwordHash: hash,
+            },
+        });
+        const vet = yield prisma.vet.create({
             data: {
                 email,
                 birth_date: new Date().toString(),
@@ -71,19 +69,14 @@ const registerVet = (req, res, prisma) => __awaiter(void 0, void 0, void 0, func
                 last_name: "",
                 phone_number: "",
                 bank_details: "",
-                identification_order: 0,
+                identification_order: 1,
             },
-        })
-            .finally(() => {
-            res.status(200).json("Vet created");
-        })
-            .catch((err) => {
-            res.status(500).json(err);
         });
-    })
-        .catch((e) => {
-        res.status(500).json("Vet not created");
-    });
+        res.status(200).json(vet);
+    }
+    catch (e) {
+        res.status(500).json(e);
+    }
 });
 exports.registerVet = registerVet;
 const login = (req, res, prisma) => __awaiter(void 0, void 0, void 0, function* () {

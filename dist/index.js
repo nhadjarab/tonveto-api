@@ -138,6 +138,14 @@ app.post("/clinic/vet", (req, res) => __awaiter(void 0, void 0, void 0, function
         console.log(e);
     }
 }));
+app.put("/clinic/vet/:id", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        (0, clinic_1.approveNewVet)(req, res, prisma);
+    }
+    catch (e) {
+        console.log(e);
+    }
+}));
 app.delete("/clinic/vet/:id", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         (0, clinic_1.removeVetFromClinic)(req, res, prisma);
