@@ -53,6 +53,7 @@ model Vet {
   phone_number         String
   identification_order Int             @unique
   profile_complete     Boolean         @default(false)
+  is_approved          Boolean         @default(false)
   type                 String          @default("vet")
   specialities         Specialty[]
   bank_details         String
@@ -83,15 +84,16 @@ model Specialty {
 }
 
 model Clinic {
-  id           String      @id @unique @default(cuid())
+  id           String  @id @unique @default(cuid())
   name         String
   address      String
   city         String
   country      String
   phone_number String
   owner_id     String
-  owner        Vet         @relation(fields: [owner_id], references: [id])
-  vets         VetClinic[]
+  is_approved  Boolean @default(false)
+  owner Vet         @relation(fields: [owner_id], references: [id])
+  vets  VetClinic[]
 }
 
 model Appointment {

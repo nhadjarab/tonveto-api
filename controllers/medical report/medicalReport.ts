@@ -30,6 +30,9 @@ export const addMedicalReport = async (
 
     if (!doesVetExist) return res.status(404).json("Vet does not exist");
 
+    if (!doesVetExist.is_approved)
+      return res.status(400).json("Vet is not approved yet");
+
     const doesPetExist = await prisma.pet.findUnique({
       where: {
         id: pet_id,

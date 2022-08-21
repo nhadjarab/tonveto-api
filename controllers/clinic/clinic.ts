@@ -22,6 +22,8 @@ export const createClinic = async (
 
     if (!isUserVet) return res.status(404).json("Vet does not exist");
     if (isUserVet.type != "vet") return res.status(401).json("Unauthorized");
+    if (!isUserVet.is_approved)
+      return res.status(400).json("Vet is not approved yet");
 
     const newClinic = await prisma.clinic.create({
       data: {
@@ -79,6 +81,8 @@ export const updateClinic = async (
 
     if (!isUserVet) return res.status(404).json("Vet does not exist");
     if (isUserVet.type != "vet") return res.status(401).json("Unauthorized");
+    if (!isUserVet.is_approved)
+      return res.status(400).json("Vet is not approved yet");
 
     const clinic = await prisma.clinic.findUnique({
       where: {
@@ -211,6 +215,8 @@ export const addVetToClinic = async (
     });
 
     if (!clinic) return res.status(404).json("Clinic does not exist");
+    if (!clinic.is_approved)
+      return res.status(400).json("Clinic is not approved yet");
     if (clinic.owner_id != logged_in_id)
       return res.status(401).json("Unauthorized");
 
@@ -221,6 +227,8 @@ export const addVetToClinic = async (
     });
 
     if (!vet) return res.status(404).json("Vet does not exist");
+    if (!vet.is_approved)
+      return res.status(400).json("Vet is not approved yet");
 
     const vetClinic = await prisma.vetClinic.create({
       data: {
@@ -252,7 +260,7 @@ export const removeVetFromClinic = async (
 
     const clinic = await prisma.clinic.findUnique({
       where: {
-        id : clinic_id,
+        id: clinic_id,
       },
       include: {
         vets: {

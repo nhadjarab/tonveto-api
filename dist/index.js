@@ -25,6 +25,7 @@ const clinic_1 = require("./controllers/clinic/clinic");
 const calendar_1 = require("./controllers/calendar/calendar");
 const specialty_1 = require("./controllers/specialtiy/specialty");
 const medicalReport_1 = require("./controllers/medical report/medicalReport");
+const admin_1 = require("./controllers/admin/admin");
 const prisma = new client_1.PrismaClient();
 dotenv_1.default.config();
 const app = (0, express_1.default)();
@@ -325,6 +326,55 @@ app.put("/report/:id", (req, res) => __awaiter(void 0, void 0, void 0, function*
 app.get("/report/:id", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         (0, medicalReport_1.getMedicalReport)(req, res, prisma);
+    }
+    catch (e) {
+        console.log(e);
+    }
+}));
+// ===========Admin ROUTERS============
+app.get("/getAllUsers", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        (0, admin_1.getAllUsers)(req, res, prisma);
+    }
+    catch (e) {
+        console.log(e);
+    }
+}));
+app.get("/getAllVets", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        (0, admin_1.getAllVets)(req, res, prisma);
+    }
+    catch (e) {
+        console.log(e);
+    }
+}));
+app.get("/getAllClinics", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        (0, admin_1.getAllClinics)(req, res, prisma);
+    }
+    catch (e) {
+        console.log(e);
+    }
+}));
+app.get("/getAllAppointments", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        (0, admin_1.getAllAppointments)(req, res, prisma);
+    }
+    catch (e) {
+        console.log(e);
+    }
+}));
+app.put("/approveClinic/:id", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        (0, admin_1.approveClinic)(req, res, prisma);
+    }
+    catch (e) {
+        console.log(e);
+    }
+}));
+app.put("/approveVet/:id", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        (0, admin_1.approveVet)(req, res, prisma);
     }
     catch (e) {
         console.log(e);

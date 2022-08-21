@@ -26,6 +26,8 @@ const createClinic = (req, res, prisma) => __awaiter(void 0, void 0, void 0, fun
             return res.status(404).json("Vet does not exist");
         if (isUserVet.type != "vet")
             return res.status(401).json("Unauthorized");
+        if (!isUserVet.is_approved)
+            return res.status(400).json("Vet is not approved yet");
         const newClinic = yield prisma.clinic.create({
             data: {
                 name,
@@ -66,6 +68,8 @@ const updateClinic = (req, res, prisma) => __awaiter(void 0, void 0, void 0, fun
             return res.status(404).json("Vet does not exist");
         if (isUserVet.type != "vet")
             return res.status(401).json("Unauthorized");
+        if (!isUserVet.is_approved)
+            return res.status(400).json("Vet is not approved yet");
         const clinic = yield prisma.clinic.findUnique({
             where: {
                 id,
@@ -171,6 +175,8 @@ const addVetToClinic = (req, res, prisma) => __awaiter(void 0, void 0, void 0, f
         });
         if (!clinic)
             return res.status(404).json("Clinic does not exist");
+        if (!clinic.is_approved)
+            return res.status(400).json("Clinic is not approved yet");
         if (clinic.owner_id != logged_in_id)
             return res.status(401).json("Unauthorized");
         const vet = yield prisma.vet.findUnique({
@@ -180,6 +186,8 @@ const addVetToClinic = (req, res, prisma) => __awaiter(void 0, void 0, void 0, f
         });
         if (!vet)
             return res.status(404).json("Vet does not exist");
+        if (!vet.is_approved)
+            return res.status(400).json("Vet is not approved yet");
         const vetClinic = yield prisma.vetClinic.create({
             data: {
                 vet_id: vet_id,

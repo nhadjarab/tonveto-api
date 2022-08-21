@@ -41,6 +41,9 @@ export const addAppointment = async (
     if (!doesVetExist)
       return res.status(404).json(`Vet with id:${vet_id} does not exist`);
 
+    if (!doesVetExist.is_approved)
+      return res.status(400).json("Vet is not approved yet");
+
     const newAppointment = await prisma.appointment.create({
       data: {
         date,
@@ -98,6 +101,9 @@ export const updateAppointment = async (
     if (!doesVetExist)
       return res.status(404).json(`Vet with id:${vet_id} does not exist`);
 
+    if (!doesVetExist.is_approved)
+      return res.status(400).json("Vet is not approved yet");
+
     const updatedAppointment = await prisma.appointment.update({
       where: {
         id,
@@ -128,7 +134,8 @@ export const getAppointment = async (
 
     const payload: JWTPayload = handleTokenVerification(req, res) as JWTPayload;
 
-    if (payload.userId != logged_in_id) return res.status(401).json("Unauthorized");
+    if (payload.userId != logged_in_id)
+      return res.status(401).json("Unauthorized");
 
     const appointment = await prisma.appointment.findUnique({
       where: {

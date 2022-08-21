@@ -38,6 +38,8 @@ const addAppointment = (req, res, prisma) => __awaiter(void 0, void 0, void 0, f
         });
         if (!doesVetExist)
             return res.status(404).json(`Vet with id:${vet_id} does not exist`);
+        if (!doesVetExist.is_approved)
+            return res.status(400).json("Vet is not approved yet");
         const newAppointment = yield prisma.appointment.create({
             data: {
                 date,
@@ -82,6 +84,8 @@ const updateAppointment = (req, res, prisma) => __awaiter(void 0, void 0, void 0
         });
         if (!doesVetExist)
             return res.status(404).json(`Vet with id:${vet_id} does not exist`);
+        if (!doesVetExist.is_approved)
+            return res.status(400).json("Vet is not approved yet");
         const updatedAppointment = yield prisma.appointment.update({
             where: {
                 id,

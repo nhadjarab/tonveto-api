@@ -24,6 +24,8 @@ const addMedicalReport = (req, res, prisma) => __awaiter(void 0, void 0, void 0,
         });
         if (!doesVetExist)
             return res.status(404).json("Vet does not exist");
+        if (!doesVetExist.is_approved)
+            return res.status(400).json("Vet is not approved yet");
         const doesPetExist = yield prisma.pet.findUnique({
             where: {
                 id: pet_id,

@@ -47,6 +47,14 @@ import {
   getMedicalReport,
   updateMedicalReport,
 } from "./controllers/medical report/medicalReport";
+import {
+  approveClinic,
+  approveVet,
+  getAllAppointments,
+  getAllClinics,
+  getAllUsers,
+  getAllVets,
+} from "./controllers/admin/admin";
 
 const prisma = new PrismaClient();
 
@@ -356,6 +364,52 @@ app.put("/report/:id", async (req: Request, res: Response) => {
 app.get("/report/:id", async (req: Request, res: Response) => {
   try {
     getMedicalReport(req, res, prisma);
+  } catch (e) {
+    console.log(e);
+  }
+});
+
+// ===========Admin ROUTERS============
+app.get("/getAllUsers", async (req: Request, res: Response) => {
+  try {
+    getAllUsers(req, res, prisma);
+  } catch (e) {
+    console.log(e);
+  }
+});
+app.get("/getAllVets", async (req: Request, res: Response) => {
+  try {
+    getAllVets(req, res, prisma);
+  } catch (e) {
+    console.log(e);
+  }
+});
+app.get("/getAllClinics", async (req: Request, res: Response) => {
+  try {
+    getAllClinics(req, res, prisma);
+  } catch (e) {
+    console.log(e);
+  }
+});
+app.get("/getAllAppointments", async (req: Request, res: Response) => {
+  try {
+    getAllAppointments(req, res, prisma);
+  } catch (e) {
+    console.log(e);
+  }
+});
+
+app.put("/approveClinic/:id", async (req: Request, res: Response) => {
+  try {
+    approveClinic(req, res, prisma);
+  } catch (e) {
+    console.log(e);
+  }
+});
+
+app.put("/approveVet/:id", async (req: Request, res: Response) => {
+  try {
+    approveVet(req, res, prisma);
   } catch (e) {
     console.log(e);
   }
