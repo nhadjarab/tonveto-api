@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.handleTokenVerification = exports.verifyToken = exports.generateToken = exports.loginVet = exports.login = exports.registerVet = exports.register = void 0;
+exports.handleTokenVerification = exports.verifyToken = exports.generateToken = exports.loginAdmin = exports.loginVet = exports.login = exports.registerAdmin = exports.registerVet = exports.register = void 0;
 const fs_1 = __importDefault(require("fs"));
 const jsonwebtoken_1 = require("jsonwebtoken");
 const bcrypt_1 = __importDefault(require("bcrypt"));
@@ -79,6 +79,32 @@ const registerVet = (req, res, prisma) => __awaiter(void 0, void 0, void 0, func
     }
 });
 exports.registerVet = registerVet;
+const registerAdmin = (req, res, prisma) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const { email, password } = req.body;
+        const hash = bcrypt_1.default.hashSync(password, 10);
+        const adminAuth = yield prisma.auth.create({
+            data: {
+                email,
+                passwordHash: hash,
+            },
+        });
+        const admin = yield prisma.admin.create({
+            data: {
+                email,
+                birth_date: new Date().toString(),
+                first_name: "",
+                last_name: "",
+                phone_number: "",
+            },
+        });
+        res.status(200).json(admin);
+    }
+    catch (e) {
+        res.status(500).json(e);
+    }
+});
+exports.registerAdmin = registerAdmin;
 const login = (req, res, prisma) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { email, password } = req.body;
@@ -138,6 +164,32 @@ const loginVet = (req, res, prisma) => __awaiter(void 0, void 0, void 0, functio
     }
 });
 exports.loginVet = loginVet;
+const loginAdmin = (req, res, prisma) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const { email, password } = req.body;
+        const userAth = yield prisma.auth.findUnique({
+            where: {
+                email,
+            },
+        });
+        if (!userAth)
+            return res.status(404).json("Admin Not Found");
+        const isValid = bcrypt_1.default.compareSync(password, userAth.passwordHash);
+        if (!isValid)
+            return res.status(401).json("Wrong password");
+        const adminProfile = yield prisma.admin.findUnique({
+            where: {
+                email,
+            },
+        });
+        const jwtToken = (0, exports.generateToken)(adminProfile === null || adminProfile === void 0 ? void 0 : adminProfile.id);
+        res.status(200).json({ adminProfile, jwtToken });
+    }
+    catch (e) {
+        res.status(500).json(e);
+    }
+});
+exports.loginAdmin = loginAdmin;
 const generateToken = (userId) => {
     return (0, jsonwebtoken_1.sign)({ userId }, private_key, { algorithm: "RS256" });
 };

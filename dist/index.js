@@ -50,6 +50,14 @@ app.post("/registerVet", (req, res) => __awaiter(void 0, void 0, void 0, functio
         console.log(e);
     }
 }));
+app.post("/registerAdmin", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        (0, authentication_1.registerAdmin)(req, res, prisma);
+    }
+    catch (e) {
+        console.log(e);
+    }
+}));
 app.post("/login", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         (0, authentication_1.login)(req, res, prisma);
@@ -61,6 +69,14 @@ app.post("/login", (req, res) => __awaiter(void 0, void 0, void 0, function* () 
 app.post("/loginVet", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         (0, authentication_1.loginVet)(req, res, prisma);
+    }
+    catch (e) {
+        console.log(e);
+    }
+}));
+app.post("/loginAdmin", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        (0, authentication_1.loginAdmin)(req, res, prisma);
     }
     catch (e) {
         console.log(e);

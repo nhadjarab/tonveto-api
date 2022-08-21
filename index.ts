@@ -9,6 +9,8 @@ import {
   login,
   registerVet,
   loginVet,
+  registerAdmin,
+  loginAdmin,
 } from "./controllers/authentication/authentication";
 import { getUser, updateUser } from "./controllers/user/user";
 import { addPet, deletePet, getPet, updatePet } from "./controllers/pet/pet";
@@ -77,6 +79,14 @@ app.post("/registerVet", async (req: Request, res: Response) => {
   }
 });
 
+app.post("/registerAdmin", async (req: Request, res: Response) => {
+  try {
+    registerAdmin(req, res, prisma);
+  } catch (e) {
+    console.log(e);
+  }
+});
+
 app.post("/login", async (req: Request, res: Response) => {
   try {
     login(req, res, prisma);
@@ -88,6 +98,14 @@ app.post("/login", async (req: Request, res: Response) => {
 app.post("/loginVet", async (req: Request, res: Response) => {
   try {
     loginVet(req, res, prisma);
+  } catch (e) {
+    console.log(e);
+  }
+});
+
+app.post("/loginAdmin", async (req: Request, res: Response) => {
+  try {
+    loginAdmin(req, res, prisma);
   } catch (e) {
     console.log(e);
   }

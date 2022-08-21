@@ -85,6 +85,39 @@ export const registerVet = async (
   }
 };
 
+export const registerAdmin = async (
+  req: Request,
+  res: Response,
+  prisma: PrismaClient
+) => {
+  try {
+    const { email, password } = req.body;
+
+    const hash = bcrypt.hashSync(password, 10);
+
+    const adminAuth = await prisma.auth.create({
+      data: {
+        email,
+        passwordHash: hash,
+      },
+    });
+
+    const admin = await prisma.admin.create({
+      data: {
+        email,
+        birth_date: new Date().toString(),
+        first_name: "",
+        last_name: "",
+        phone_number: "",
+      },
+    });
+
+    res.status(200).json(admin);
+  } catch (e) {
+    res.status(500).json(e);
+  }
+};
+
 export const login = async (
   req: Request,
   res: Response,
@@ -153,6 +186,39 @@ export const loginVet = async (
     const jwtToken = generateToken(vetProfile?.id as string);
 
     res.status(200).json({ vetProfile, jwtToken });
+  } catch (e) {
+    res.status(500).json(e);
+  }
+};
+
+export const loginAdmin = async (
+  req: Request,
+  res: Response,
+  prisma: PrismaClient
+) => {
+  try {
+    const { email, password } = req.body;
+    const userAth = await prisma.auth.findUnique({
+      where: {
+        email,
+      },
+    });
+
+    if (!userAth) return res.status(404).json("Admin Not Found");
+
+    const isValid = bcrypt.compareSync(password, userAth.passwordHash);
+
+    if (!isValid) return res.status(401).json("Wrong password");
+
+    const adminProfile = await prisma.admin.findUnique({
+      where: {
+        email,
+      },
+    })!;
+
+    const jwtToken = generateToken(adminProfile?.id as string);
+
+    res.status(200).json({ adminProfile, jwtToken });
   } catch (e) {
     res.status(500).json(e);
   }
