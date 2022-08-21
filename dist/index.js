@@ -22,6 +22,7 @@ const pet_1 = require("./controllers/pet/pet");
 const appointment_1 = require("./controllers/appointment/appointment");
 const vet_1 = require("./controllers/vet/vet");
 const clinic_1 = require("./controllers/clinic/clinic");
+const calendar_1 = require("./controllers/calendar/calendar");
 const prisma = new client_1.PrismaClient();
 dotenv_1.default.config();
 const app = (0, express_1.default)();
@@ -215,6 +216,39 @@ app.get("/appointment/:id", (req, res) => __awaiter(void 0, void 0, void 0, func
 app.delete("/appointment/:id", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         (0, appointment_1.cancelAppointments)(req, res, prisma);
+    }
+    catch (e) {
+        console.log(e);
+    }
+}));
+// ===========Calendar ROUTERS============
+app.post("/calendar", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        (0, calendar_1.addCalendar)(req, res, prisma);
+    }
+    catch (e) {
+        console.log(e);
+    }
+}));
+app.put("/calendar/:id", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        (0, calendar_1.updateCalendar)(req, res, prisma);
+    }
+    catch (e) {
+        console.log(e);
+    }
+}));
+app.get("/calendar/:id", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        (0, calendar_1.getCalendar)(req, res, prisma);
+    }
+    catch (e) {
+        console.log(e);
+    }
+}));
+app.delete("/calendar/:id", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        (0, calendar_1.deleteCalendar)(req, res, prisma);
     }
     catch (e) {
         console.log(e);

@@ -28,6 +28,12 @@ import {
   removeVetFromClinic,
   updateClinic,
 } from "./controllers/clinic/clinic";
+import {
+  addCalendar,
+  deleteCalendar,
+  getCalendar,
+  updateCalendar,
+} from "./controllers/calendar/calendar";
 
 const prisma = new PrismaClient();
 
@@ -230,6 +236,39 @@ app.get("/appointment/:id", async (req: Request, res: Response) => {
 app.delete("/appointment/:id", async (req: Request, res: Response) => {
   try {
     cancelAppointments(req, res, prisma);
+  } catch (e) {
+    console.log(e);
+  }
+});
+
+// ===========Calendar ROUTERS============
+app.post("/calendar", async (req: Request, res: Response) => {
+  try {
+    addCalendar(req, res, prisma);
+  } catch (e) {
+    console.log(e);
+  }
+});
+
+app.put("/calendar/:id", async (req: Request, res: Response) => {
+  try {
+    updateCalendar(req, res, prisma);
+  } catch (e) {
+    console.log(e);
+  }
+});
+
+app.get("/calendar/:id", async (req: Request, res: Response) => {
+  try {
+    getCalendar(req, res, prisma);
+  } catch (e) {
+    console.log(e);
+  }
+});
+
+app.delete("/calendar/:id", async (req: Request, res: Response) => {
+  try {
+    deleteCalendar(req, res, prisma);
   } catch (e) {
     console.log(e);
   }

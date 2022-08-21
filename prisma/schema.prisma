@@ -58,6 +58,7 @@ model Vet {
   appointments         Appointment[]
   clinics              VetClinic[]
   Clinic               Clinic[]
+  calendar             Calendar[]
 }
 
 model VetClinic {
@@ -74,6 +75,7 @@ model VetClinic {
 model Specialty {
   id     String @id @unique @default(cuid())
   name   String
+  price  Int
   vet    Vet    @relation(fields: [vet_id], references: [id])
   vet_id String
 }
@@ -100,4 +102,17 @@ model Appointment {
   vet_id  String
   user    User   @relation(fields: [user_id], references: [id])
   user_id String
+}
+
+model Calendar {
+  id        String @id @unique @default(cuid())
+  monday    String
+  tuesday   String
+  wednesday String
+  thursday  String
+  friday    String
+  saturday  String
+  sunday    String
+  owner_id  String @unique
+  vet       Vet    @relation(fields: [owner_id], references: [id])
 }
