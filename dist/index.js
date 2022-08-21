@@ -23,6 +23,8 @@ const appointment_1 = require("./controllers/appointment/appointment");
 const vet_1 = require("./controllers/vet/vet");
 const clinic_1 = require("./controllers/clinic/clinic");
 const calendar_1 = require("./controllers/calendar/calendar");
+const specialty_1 = require("./controllers/specialtiy/specialty");
+const medicalReport_1 = require("./controllers/medical report/medicalReport");
 const prisma = new client_1.PrismaClient();
 dotenv_1.default.config();
 const app = (0, express_1.default)();
@@ -249,6 +251,64 @@ app.get("/calendar/:id", (req, res) => __awaiter(void 0, void 0, void 0, functio
 app.delete("/calendar/:id", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         (0, calendar_1.deleteCalendar)(req, res, prisma);
+    }
+    catch (e) {
+        console.log(e);
+    }
+}));
+// ===========Specialty ROUTERS============
+app.post("/specialty", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        (0, specialty_1.addSpecialty)(req, res, prisma);
+    }
+    catch (e) {
+        console.log(e);
+    }
+}));
+app.put("/specialty/:id", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        (0, specialty_1.updateSpecialty)(req, res, prisma);
+    }
+    catch (e) {
+        console.log(e);
+    }
+}));
+app.get("/specialty/:id", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        (0, specialty_1.getSpecialty)(req, res, prisma);
+    }
+    catch (e) {
+        console.log(e);
+    }
+}));
+app.delete("/specialty/:id", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        (0, specialty_1.deleteSpecialty)(req, res, prisma);
+    }
+    catch (e) {
+        console.log(e);
+    }
+}));
+// ===========Medical Report ROUTERS============
+app.post("/report", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        (0, medicalReport_1.addMedicalReport)(req, res, prisma);
+    }
+    catch (e) {
+        console.log(e);
+    }
+}));
+app.put("/report/:id", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        (0, medicalReport_1.updateMedicalReport)(req, res, prisma);
+    }
+    catch (e) {
+        console.log(e);
+    }
+}));
+app.get("/report/:id", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        (0, medicalReport_1.getMedicalReport)(req, res, prisma);
     }
     catch (e) {
         console.log(e);

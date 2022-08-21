@@ -9,9 +9,9 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deletePet = exports.getPet = exports.updatePet = exports.addPet = void 0;
+exports.deletePet = exports.getPet = exports.updatePet = exports.addMedicalReport = void 0;
 const authentication_1 = require("../authentication/authentication");
-const addPet = (req, res, prisma) => __awaiter(void 0, void 0, void 0, function* () {
+const addMedicalReport = (req, res, prisma) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { sex, name, birth_date, species, breed, crossbreed, sterilised, owner_id, } = req.body;
         const payload = (0, authentication_1.handleTokenVerification)(req, res);
@@ -42,7 +42,7 @@ const addPet = (req, res, prisma) => __awaiter(void 0, void 0, void 0, function*
         console.log(e);
     }
 });
-exports.addPet = addPet;
+exports.addMedicalReport = addMedicalReport;
 const updatePet = (req, res, prisma) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { id } = req.params;
@@ -86,6 +86,7 @@ const getPet = (req, res, prisma) => __awaiter(void 0, void 0, void 0, function*
         const { id } = req.params;
         const { logged_in_id } = req.body;
         const payload = (0, authentication_1.handleTokenVerification)(req, res);
+        console.log(payload);
         if (payload.userId != logged_in_id)
             return res.status(401).json("Unauthorized");
         const pet = yield prisma.pet.findUnique({
@@ -96,7 +97,6 @@ const getPet = (req, res, prisma) => __awaiter(void 0, void 0, void 0, function*
                 appointments: {
                     include: {
                         vet: true,
-                        MedicalReport: true,
                     },
                 },
             },
@@ -138,4 +138,4 @@ const deletePet = (req, res, prisma) => __awaiter(void 0, void 0, void 0, functi
     }
 });
 exports.deletePet = deletePet;
-//# sourceMappingURL=pet.js.map
+//# sourceMappingURL=mredicalReport.js.map

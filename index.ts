@@ -34,6 +34,17 @@ import {
   getCalendar,
   updateCalendar,
 } from "./controllers/calendar/calendar";
+import {
+  addSpecialty,
+  deleteSpecialty,
+  getSpecialty,
+  updateSpecialty,
+} from "./controllers/specialtiy/specialty";
+import {
+  addMedicalReport,
+  getMedicalReport,
+  updateMedicalReport,
+} from "./controllers/medical report/medicalReport";
 
 const prisma = new PrismaClient();
 
@@ -269,6 +280,64 @@ app.get("/calendar/:id", async (req: Request, res: Response) => {
 app.delete("/calendar/:id", async (req: Request, res: Response) => {
   try {
     deleteCalendar(req, res, prisma);
+  } catch (e) {
+    console.log(e);
+  }
+});
+
+// ===========Specialty ROUTERS============
+app.post("/specialty", async (req: Request, res: Response) => {
+  try {
+    addSpecialty(req, res, prisma);
+  } catch (e) {
+    console.log(e);
+  }
+});
+
+app.put("/specialty/:id", async (req: Request, res: Response) => {
+  try {
+    updateSpecialty(req, res, prisma);
+  } catch (e) {
+    console.log(e);
+  }
+});
+
+app.get("/specialty/:id", async (req: Request, res: Response) => {
+  try {
+    getSpecialty(req, res, prisma);
+  } catch (e) {
+    console.log(e);
+  }
+});
+
+app.delete("/specialty/:id", async (req: Request, res: Response) => {
+  try {
+    deleteSpecialty(req, res, prisma);
+  } catch (e) {
+    console.log(e);
+  }
+});
+
+// ===========Medical Report ROUTERS============
+app.post("/report", async (req: Request, res: Response) => {
+  try {
+    addMedicalReport(req, res, prisma);
+  } catch (e) {
+    console.log(e);
+  }
+});
+
+app.put("/report/:id", async (req: Request, res: Response) => {
+  try {
+    updateMedicalReport(req, res, prisma);
+  } catch (e) {
+    console.log(e);
+  }
+});
+
+app.get("/report/:id", async (req: Request, res: Response) => {
+  try {
+    getMedicalReport(req, res, prisma);
   } catch (e) {
     console.log(e);
   }

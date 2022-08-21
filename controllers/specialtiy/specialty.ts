@@ -1,56 +1,43 @@
 import { PrismaClient } from "@prisma/client";
+import { ifError } from "assert";
 import { Request, Response } from "express";
 import { handleTokenVerification } from "../authentication/authentication";
 
-export const addPet = async (
+export const addSpecialty = async (
   req: Request,
   res: Response,
   prisma: PrismaClient
 ) => {
   try {
-    const {
-      sex,
-      name,
-      birth_date,
-      species,
-      breed,
-      crossbreed,
-      sterilised,
-      owner_id,
-    } = req.body;
+    const { name, price, owner_id } = req.body;
 
     const payload: JWTPayload = handleTokenVerification(req, res) as JWTPayload;
 
     if (payload.userId != owner_id) return res.status(401).json("Unauthorized");
 
-    const doesUserExist = await prisma.user.findUnique({
+    const doesUserExist = await prisma.vet.findUnique({
       where: {
         id: owner_id,
       },
     });
 
-    if (!doesUserExist) return res.status(404).json("Pet owner does not exist");
+    if (!doesUserExist) return res.status(404).json("Vet does not exist");
 
-    const newPet = await prisma.pet.create({
+    const newSpecialty = await prisma.specialty.create({
       data: {
-        sex,
         name,
-        birth_date,
-        species,
-        breed,
-        crossbreed,
-        sterilised,
-        owner_id,
+        price,
+        vet_id: owner_id,
       },
     });
 
-    res.status(200).json(newPet);
+    res.status(200).json(newSpecialty);
   } catch (e) {
     console.log(e);
   }
 };
 
-export const updatePet = async (
+export const updateSpecialty = async (
   req: Request,
   res: Response,
   prisma: PrismaClient
@@ -58,54 +45,37 @@ export const updatePet = async (
   try {
     const { id } = req.params;
 
-    const {
-      sex,
-      name,
-      birth_date,
-      species,
-      breed,
-      crossbreed,
-      sterilised,
-      owner_id,
-    } = req.body;
+    const { name, price, owner_id } = req.body;
 
     const payload: JWTPayload = handleTokenVerification(req, res) as JWTPayload;
 
     if (payload.userId != owner_id) return res.status(401).json("Unauthorized");
 
-    const pet = await prisma.pet.findUnique({
+    const specialty = await prisma.specialty.findUnique({
       where: {
         id,
       },
     });
 
-    if (!pet) return res.status(404).json("Pet not found");
+    if (!specialty) return res.status(404).json("Specialty does not exist");
 
-    const newPet = await prisma.pet.update({
+    const newSpecialty = await prisma.specialty.update({
       where: {
         id,
       },
       data: {
-        sex,
         name,
-        birth_date,
-        species,
-        breed,
-        crossbreed,
-        sterilised,
-        owner_id,
+        price,
       },
     });
 
-    if (!newPet) res.status(404).json("Pet not found");
-
-    res.status(200).json(newPet);
+    res.status(200).json(newSpecialty);
   } catch (e) {
     console.log(e);
   }
 };
 
-export const getPet = async (
+export const getSpecialty = async (
   req: Request,
   res: Response,
   prisma: PrismaClient
@@ -119,29 +89,24 @@ export const getPet = async (
     if (payload.userId != logged_in_id)
       return res.status(401).json("Unauthorized");
 
-    const pet = await prisma.pet.findUnique({
+    const specialty = await prisma.specialty.findUnique({
       where: {
         id,
       },
       include: {
-        appointments: {
-          include: {
-            vet: true,
-            MedicalReport: true,
-          },
-        },
+        vet: true,
       },
     });
 
-    if (!pet) return res.status(404).json("Pet not found");
+    if (!specialty) return res.status(404).json("Specialty not found");
 
-    res.status(200).json(pet);
+    res.status(200).json(specialty);
   } catch (e) {
     console.log(e);
   }
 };
 
-export const deletePet = async (
+export const deleteSpecialty = async (
   req: Request,
   res: Response,
   prisma: PrismaClient
@@ -154,23 +119,24 @@ export const deletePet = async (
 
     if (payload.userId != owner_id) return res.status(401).json("Unauthorized");
 
-    const pet = await prisma.pet.findUnique({
+    const specialty = await prisma.specialty.findUnique({
       where: {
         id,
       },
     });
 
-    if (!pet) return res.status(404).json("Pet not found");
+    if (!specialty) return res.status(404).json("Specialty not found");
 
-    if (pet.owner_id != owner_id) return res.status(401).json("Unauthorized");
+    if (specialty.vet_id != owner_id)
+      return res.status(401).json("Unauthorized");
 
-    const removedPet = await prisma.pet.delete({
+    const removedSpecialty = await prisma.specialty.delete({
       where: {
         id,
       },
     });
 
-    res.status(200).json("Pet deleted successfully");
+    res.status(200).json("Specialty deleted successfully");
   } catch (e) {
     console.log(e);
   }

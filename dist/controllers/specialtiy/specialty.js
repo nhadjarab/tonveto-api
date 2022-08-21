@@ -9,133 +9,115 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deletePet = exports.getPet = exports.updatePet = exports.addPet = void 0;
+exports.deleteSpecialty = exports.getSpecialty = exports.updateSpecialty = exports.addSpecialty = void 0;
 const authentication_1 = require("../authentication/authentication");
-const addPet = (req, res, prisma) => __awaiter(void 0, void 0, void 0, function* () {
+const addSpecialty = (req, res, prisma) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const { sex, name, birth_date, species, breed, crossbreed, sterilised, owner_id, } = req.body;
+        const { name, price, owner_id } = req.body;
         const payload = (0, authentication_1.handleTokenVerification)(req, res);
         if (payload.userId != owner_id)
             return res.status(401).json("Unauthorized");
-        const doesUserExist = yield prisma.user.findUnique({
+        const doesUserExist = yield prisma.vet.findUnique({
             where: {
                 id: owner_id,
             },
         });
         if (!doesUserExist)
-            return res.status(404).json("Pet owner does not exist");
-        const newPet = yield prisma.pet.create({
+            return res.status(404).json("Vet does not exist");
+        const newSpecialty = yield prisma.specialty.create({
             data: {
-                sex,
                 name,
-                birth_date,
-                species,
-                breed,
-                crossbreed,
-                sterilised,
-                owner_id,
+                price,
+                vet_id: owner_id,
             },
         });
-        res.status(200).json(newPet);
+        res.status(200).json(newSpecialty);
     }
     catch (e) {
         console.log(e);
     }
 });
-exports.addPet = addPet;
-const updatePet = (req, res, prisma) => __awaiter(void 0, void 0, void 0, function* () {
+exports.addSpecialty = addSpecialty;
+const updateSpecialty = (req, res, prisma) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { id } = req.params;
-        const { sex, name, birth_date, species, breed, crossbreed, sterilised, owner_id, } = req.body;
+        const { name, price, owner_id } = req.body;
         const payload = (0, authentication_1.handleTokenVerification)(req, res);
         if (payload.userId != owner_id)
             return res.status(401).json("Unauthorized");
-        const pet = yield prisma.pet.findUnique({
+        const specialty = yield prisma.specialty.findUnique({
             where: {
                 id,
             },
         });
-        if (!pet)
-            return res.status(404).json("Pet not found");
-        const newPet = yield prisma.pet.update({
+        if (!specialty)
+            return res.status(404).json("Specialty does not exist");
+        const newSpecialty = yield prisma.specialty.update({
             where: {
                 id,
             },
             data: {
-                sex,
                 name,
-                birth_date,
-                species,
-                breed,
-                crossbreed,
-                sterilised,
-                owner_id,
+                price,
             },
         });
-        if (!newPet)
-            res.status(404).json("Pet not found");
-        res.status(200).json(newPet);
+        res.status(200).json(newSpecialty);
     }
     catch (e) {
         console.log(e);
     }
 });
-exports.updatePet = updatePet;
-const getPet = (req, res, prisma) => __awaiter(void 0, void 0, void 0, function* () {
+exports.updateSpecialty = updateSpecialty;
+const getSpecialty = (req, res, prisma) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { id } = req.params;
         const { logged_in_id } = req.body;
         const payload = (0, authentication_1.handleTokenVerification)(req, res);
         if (payload.userId != logged_in_id)
             return res.status(401).json("Unauthorized");
-        const pet = yield prisma.pet.findUnique({
+        const specialty = yield prisma.specialty.findUnique({
             where: {
                 id,
             },
             include: {
-                appointments: {
-                    include: {
-                        vet: true,
-                        MedicalReport: true,
-                    },
-                },
+                vet: true,
             },
         });
-        if (!pet)
-            return res.status(404).json("Pet not found");
-        res.status(200).json(pet);
+        if (!specialty)
+            return res.status(404).json("Specialty not found");
+        res.status(200).json(specialty);
     }
     catch (e) {
         console.log(e);
     }
 });
-exports.getPet = getPet;
-const deletePet = (req, res, prisma) => __awaiter(void 0, void 0, void 0, function* () {
+exports.getSpecialty = getSpecialty;
+const deleteSpecialty = (req, res, prisma) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { id } = req.params;
         const { owner_id } = req.body;
         const payload = (0, authentication_1.handleTokenVerification)(req, res);
         if (payload.userId != owner_id)
             return res.status(401).json("Unauthorized");
-        const pet = yield prisma.pet.findUnique({
+        const specialty = yield prisma.specialty.findUnique({
             where: {
                 id,
             },
         });
-        if (!pet)
-            return res.status(404).json("Pet not found");
-        if (pet.owner_id != owner_id)
+        if (!specialty)
+            return res.status(404).json("Specialty not found");
+        if (specialty.vet_id != owner_id)
             return res.status(401).json("Unauthorized");
-        const removedPet = yield prisma.pet.delete({
+        const removedSpecialty = yield prisma.specialty.delete({
             where: {
                 id,
             },
         });
-        res.status(200).json("Pet deleted successfully");
+        res.status(200).json("Specialty deleted successfully");
     }
     catch (e) {
         console.log(e);
     }
 });
-exports.deletePet = deletePet;
-//# sourceMappingURL=pet.js.map
+exports.deleteSpecialty = deleteSpecialty;
+//# sourceMappingURL=specialty.js.map
