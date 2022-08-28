@@ -65,6 +65,7 @@ import {
   editCommentClinic,
   editCommentVet,
 } from "./controllers/comment/comment";
+import { addRatingClinic, addRatingVet, deleteRatingClinic, deleteRatingVet, editRatingClinic, editRatingVet } from "./controllers/rating/rating";
 
 const prisma = new PrismaClient();
 
@@ -390,6 +391,55 @@ app.put("/report/:id", async (req: Request, res: Response) => {
 app.get("/report/:id", async (req: Request, res: Response) => {
   try {
     getMedicalReport(req, res, prisma);
+  } catch (e) {
+    console.log(e);
+  }
+});
+
+// ===========Comment ROUTERS============
+app.post("/ratingVet", async (req: Request, res: Response) => {
+  try {
+    addRatingVet(req, res, prisma);
+  } catch (e) {
+    console.log(e);
+  }
+});
+
+app.post("/ratingClinic", async (req: Request, res: Response) => {
+  try {
+    addRatingClinic(req, res, prisma);
+  } catch (e) {
+    console.log(e);
+  }
+});
+
+app.put("/ratingVet/:id", async (req: Request, res: Response) => {
+  try {
+    editRatingVet(req, res, prisma);
+  } catch (e) {
+    console.log(e);
+  }
+});
+
+app.put("/ratingClinic/:id", async (req: Request, res: Response) => {
+  try {
+    editRatingClinic(req, res, prisma);
+  } catch (e) {
+    console.log(e);
+  }
+});
+
+app.delete("/ratingVet/:id", async (req: Request, res: Response) => {
+  try {
+    deleteRatingVet(req, res, prisma);
+  } catch (e) {
+    console.log(e);
+  }
+});
+
+app.delete("/ratingClinic/:id", async (req: Request, res: Response) => {
+  try {
+    deleteRatingClinic(req, res, prisma);
   } catch (e) {
     console.log(e);
   }

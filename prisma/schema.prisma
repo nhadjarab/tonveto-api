@@ -44,6 +44,8 @@ model User {
   appointments  Appointment[]
   CommentVet    CommentVet[]
   CommentClinic CommentClinic[]
+  RatingVet     RatingVet[]
+  RatingClinic  RatingClinic[]
 }
 
 model Vet {
@@ -65,6 +67,7 @@ model Vet {
   calendar             Calendar[]
   MedicalReport        MedicalReport[]
   CommentVet           CommentVet[]
+  RatingVet            RatingVet[]
 }
 
 model VetClinic {
@@ -98,6 +101,7 @@ model Clinic {
   owner         Vet             @relation(fields: [owner_id], references: [id])
   vets          VetClinic[]
   CommentClinic CommentClinic[]
+  RatingClinic  RatingClinic[]
 }
 
 model Appointment {
@@ -162,6 +166,24 @@ model CommentVet {
 model CommentClinic {
   id        String @id @unique @default(cuid())
   text      String
+  clinic_id String
+  clinic    Clinic @relation(fields: [clinic_id], references: [id])
+  owner_id  String
+  owner     User   @relation(fields: [owner_id], references: [id])
+}
+
+model RatingVet {
+  id       String @id @unique @default(cuid())
+  rating   Float
+  vet_id   String
+  vet      Vet    @relation(fields: [vet_id], references: [id])
+  owner_id String
+  owner    User   @relation(fields: [owner_id], references: [id])
+}
+
+model RatingClinic {
+  id        String @id @unique @default(cuid())
+  rating    Float
   clinic_id String
   clinic    Clinic @relation(fields: [clinic_id], references: [id])
   owner_id  String

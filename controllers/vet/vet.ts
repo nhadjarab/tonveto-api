@@ -69,6 +69,7 @@ export const getVet = async (
         id,
       },
       include: {
+        RatingVet: {},
         specialities: true,
         appointments: true,
         calendar: true,
@@ -79,7 +80,18 @@ export const getVet = async (
       },
     });
 
-    res.status(200).json(vetProfile);
+    if (!vetProfile) return res.status(404).json("Vet does not exist");
+
+    const vetRating = await prisma.ratingVet.aggregate({
+      where: {
+        vet_id: id,
+      },
+      _avg: {
+        rating: true,
+      },
+    });
+
+    res.status(200).json({ vetProfile, vetRating });
   } catch (e) {
     res.status(500).json(e);
   }

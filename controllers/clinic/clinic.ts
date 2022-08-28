@@ -149,7 +149,16 @@ export const getClinic = async (
 
     if (!clinic) return res.status(404).json("Clinic does not exist");
 
-    res.status(200).json(clinic);
+    const clinicRating = await prisma.ratingClinic.aggregate({
+      where: {
+        clinic_id: id,
+      },
+      _avg: {
+        rating: true,
+      },
+    });
+
+    res.status(200).json({ clinic, clinicRating });
   } catch (e) {
     console.log(e);
   }
