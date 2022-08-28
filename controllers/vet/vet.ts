@@ -28,6 +28,23 @@ export const updateVet = async (
 
     if (payload.userId != id) return res.status(401).json("Unauthorized");
 
+    const oldVet = await prisma.vet.findUnique({
+      where: {
+        id,
+      },
+    });
+
+    if (!oldVet) return res.status(404).json("Vet does not exist");
+
+    const newAuth = await prisma.auth.update({
+      where: {
+        email: oldVet.email,
+      },
+      data: {
+        email,
+      },
+    });
+
     const vetProfile = await prisma.vet.update({
       where: {
         id,

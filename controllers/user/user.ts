@@ -26,6 +26,23 @@ export const updateUser = async (
 
     if (payload.userId != id) return res.status(401).json("Unauthorized");
 
+    const oldUser = await prisma.user.findUnique({
+      where: {
+        id,
+      },
+    });
+
+    if (!oldUser) return res.status(404).json("User does not exist");
+
+    const newAuth = await prisma.auth.update({
+      where: {
+        email: oldUser.email,
+      },
+      data: {
+        email,
+      },
+    });
+
     const userProfile = await prisma.user.update({
       where: {
         id,
@@ -39,8 +56,6 @@ export const updateUser = async (
         profile_complete,
       },
     });
-
-
 
     res.status(200).json(userProfile);
   } catch (e) {
@@ -56,11 +71,12 @@ export const getUser = async (
   try {
     const { id } = req.params;
 
-    const {logged_in_id} = req.body;
+    const { logged_in_id } = req.body;
 
     const payload: JWTPayload = handleTokenVerification(req, res) as JWTPayload;
 
-    if (payload.userId != logged_in_id) return res.status(401).json("Unauthorized");
+    if (payload.userId != logged_in_id)
+      return res.status(401).json("Unauthorized");
 
     const userProfile = await prisma.user.findUnique({
       where: {
@@ -69,11 +85,8 @@ export const getUser = async (
       include: {
         pets: true,
         appointments: true,
-      }
-    })
-
-
-
+      },
+    });
 
     res.status(200).json(userProfile);
   } catch (e) {
