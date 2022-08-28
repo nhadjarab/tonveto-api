@@ -34,14 +34,16 @@ export const updateUser = async (
 
     if (!oldUser) return res.status(404).json("User does not exist");
 
-    const newAuth = await prisma.auth.update({
-      where: {
-        email: oldUser.email,
-      },
-      data: {
-        email,
-      },
-    });
+    if (oldUser.email != email) {
+      const newAuth = await prisma.auth.update({
+        where: {
+          email: oldUser.email,
+        },
+        data: {
+          email,
+        },
+      });
+    }
 
     const userProfile = await prisma.user.update({
       where: {

@@ -36,14 +36,16 @@ export const updateVet = async (
 
     if (!oldVet) return res.status(404).json("Vet does not exist");
 
-    const newAuth = await prisma.auth.update({
-      where: {
-        email: oldVet.email,
-      },
-      data: {
-        email,
-      },
-    });
+    if (oldVet.email != email) {
+      const newAuth = await prisma.auth.update({
+        where: {
+          email: oldVet.email,
+        },
+        data: {
+          email,
+        },
+      });
+    }
 
     const vetProfile = await prisma.vet.update({
       where: {
