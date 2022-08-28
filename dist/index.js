@@ -26,6 +26,7 @@ const calendar_1 = require("./controllers/calendar/calendar");
 const specialty_1 = require("./controllers/specialtiy/specialty");
 const medicalReport_1 = require("./controllers/medical report/medicalReport");
 const admin_1 = require("./controllers/admin/admin");
+const comment_1 = require("./controllers/comment/comment");
 const prisma = new client_1.PrismaClient();
 dotenv_1.default.config();
 const app = (0, express_1.default)();
@@ -342,6 +343,55 @@ app.put("/report/:id", (req, res) => __awaiter(void 0, void 0, void 0, function*
 app.get("/report/:id", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         (0, medicalReport_1.getMedicalReport)(req, res, prisma);
+    }
+    catch (e) {
+        console.log(e);
+    }
+}));
+// ===========Comment ROUTERS============
+app.post("/commentVet", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        (0, comment_1.addCommentVet)(req, res, prisma);
+    }
+    catch (e) {
+        console.log(e);
+    }
+}));
+app.post("/commentClinic", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        (0, comment_1.addCommentClinic)(req, res, prisma);
+    }
+    catch (e) {
+        console.log(e);
+    }
+}));
+app.put("/commentVet/:id", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        (0, comment_1.editCommentVet)(req, res, prisma);
+    }
+    catch (e) {
+        console.log(e);
+    }
+}));
+app.put("/commentClinic/:id", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        (0, comment_1.editCommentClinic)(req, res, prisma);
+    }
+    catch (e) {
+        console.log(e);
+    }
+}));
+app.delete("/commentVet/:id", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        (0, comment_1.deleteCommentVet)(req, res, prisma);
+    }
+    catch (e) {
+        console.log(e);
+    }
+}));
+app.delete("/commentClinic/:id", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        (0, comment_1.deleteCommentClinic)(req, res, prisma);
     }
     catch (e) {
         console.log(e);

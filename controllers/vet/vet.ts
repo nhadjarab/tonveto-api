@@ -72,6 +72,7 @@ export const getVet = async (
         specialities: true,
         appointments: true,
         calendar: true,
+        CommentVet: true,
         clinics: {
           include: { clinic: true },
         },

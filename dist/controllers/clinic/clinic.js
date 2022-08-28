@@ -111,6 +111,7 @@ const getClinic = (req, res, prisma) => __awaiter(void 0, void 0, void 0, functi
                 id,
             },
             include: {
+                CommentClinic: true,
                 vets: {
                     include: {
                         vet: true,

@@ -55,6 +55,7 @@ const getVet = (req, res, prisma) => __awaiter(void 0, void 0, void 0, function*
                 specialities: true,
                 appointments: true,
                 calendar: true,
+                CommentVet: true,
                 clinics: {
                     include: { clinic: true },
                 },

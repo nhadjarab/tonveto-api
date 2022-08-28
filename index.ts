@@ -57,6 +57,14 @@ import {
   getAllUsers,
   getAllVets,
 } from "./controllers/admin/admin";
+import {
+  addCommentClinic,
+  addCommentVet,
+  deleteCommentClinic,
+  deleteCommentVet,
+  editCommentClinic,
+  editCommentVet,
+} from "./controllers/comment/comment";
 
 const prisma = new PrismaClient();
 
@@ -382,6 +390,55 @@ app.put("/report/:id", async (req: Request, res: Response) => {
 app.get("/report/:id", async (req: Request, res: Response) => {
   try {
     getMedicalReport(req, res, prisma);
+  } catch (e) {
+    console.log(e);
+  }
+});
+
+// ===========Comment ROUTERS============
+app.post("/commentVet", async (req: Request, res: Response) => {
+  try {
+    addCommentVet(req, res, prisma);
+  } catch (e) {
+    console.log(e);
+  }
+});
+
+app.post("/commentClinic", async (req: Request, res: Response) => {
+  try {
+    addCommentClinic(req, res, prisma);
+  } catch (e) {
+    console.log(e);
+  }
+});
+
+app.put("/commentVet/:id", async (req: Request, res: Response) => {
+  try {
+    editCommentVet(req, res, prisma);
+  } catch (e) {
+    console.log(e);
+  }
+});
+
+app.put("/commentClinic/:id", async (req: Request, res: Response) => {
+  try {
+    editCommentClinic(req, res, prisma);
+  } catch (e) {
+    console.log(e);
+  }
+});
+
+app.delete("/commentVet/:id", async (req: Request, res: Response) => {
+  try {
+    deleteCommentVet(req, res, prisma);
+  } catch (e) {
+    console.log(e);
+  }
+});
+
+app.delete("/commentClinic/:id", async (req: Request, res: Response) => {
+  try {
+    deleteCommentClinic(req, res, prisma);
   } catch (e) {
     console.log(e);
   }

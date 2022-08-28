@@ -134,6 +134,7 @@ export const getClinic = async (
         id,
       },
       include: {
+        CommentClinic: true,
         vets: {
           include: {
             vet: true,
