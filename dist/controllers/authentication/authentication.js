@@ -200,7 +200,7 @@ const verifyToken = (token) => {
 exports.verifyToken = verifyToken;
 const handleTokenVerification = (req, res) => {
     var _a;
-    const token = (_a = req === null || req === void 0 ? void 0 : req.headers["authorization"]) === null || _a === void 0 ? void 0 : _a.split(" ")[1];
+    const token = (_a = req === null || req === void 0 ? void 0 : req.headers.authorization) === null || _a === void 0 ? void 0 : _a.split(" ")[1];
     let payload;
     if (!token)
         return res.status(401).end();

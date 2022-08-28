@@ -62,6 +62,7 @@ model Vet {
   Clinic               Clinic[]
   calendar             Calendar[]
   MedicalReport        MedicalReport[]
+  CommentVet           CommentVet[]
 }
 
 model VetClinic {
@@ -84,28 +85,29 @@ model Specialty {
 }
 
 model Clinic {
-  id           String  @id @unique @default(cuid())
-  name         String
-  address      String
-  city         String
-  country      String
-  phone_number String
-  owner_id     String
-  is_approved  Boolean @default(false)
-  owner Vet         @relation(fields: [owner_id], references: [id])
-  vets  VetClinic[]
+  id            String          @id @unique @default(cuid())
+  name          String
+  address       String
+  city          String
+  country       String
+  phone_number  String
+  owner_id      String
+  is_approved   Boolean         @default(false)
+  owner         Vet             @relation(fields: [owner_id], references: [id])
+  vets          VetClinic[]
+  CommentClinic CommentClinic[]
 }
 
 model Appointment {
   id            String          @id @unique @default(cuid())
   date          String
   time          String
-  pet           Pet             @relation(fields: [pet_id], references: [id])
-  pet_id        String
+  pet           Pet?            @relation(fields: [pet_id], references: [id])
+  pet_id        String?
   vet           Vet             @relation(fields: [vet_id], references: [id])
   vet_id        String
-  user          User            @relation(fields: [user_id], references: [id])
-  user_id       String
+  user          User?           @relation(fields: [user_id], references: [id])
+  user_id       String?
   MedicalReport MedicalReport[]
 }
 
@@ -144,4 +146,18 @@ model Admin {
   birth_date   String
   phone_number String
   type         String @default("admin")
+}
+
+model CommentVet {
+  id     String @id @unique @default(cuid())
+  text   String
+  vet_id String
+  vet    Vet    @relation(fields: [vet_id], references: [id])
+}
+
+model CommentClinic {
+  id        String @id @unique @default(cuid())
+  text      String
+  clinic_id String
+  clinic    Clinic @relation(fields: [clinic_id], references: [id])
 }

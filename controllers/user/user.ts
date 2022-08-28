@@ -71,7 +71,7 @@ export const getUser = async (
         appointments: true,
       }
     })
-    
+
 
 
 

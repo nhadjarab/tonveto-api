@@ -232,8 +232,8 @@ export const addVetToClinic = async (
 
     const vetClinic = await prisma.vetClinic.create({
       data: {
-        vet_id: vet_id,
-        clinic_id: clinic_id,
+        vet_id,
+        clinic_id,
       },
     });
 
@@ -282,7 +282,7 @@ export const removeVetFromClinic = async (
 
     const vet = await prisma.vet.findUnique({
       where: {
-        id: id,
+        id,
       },
     });
 
@@ -291,7 +291,7 @@ export const removeVetFromClinic = async (
     const vetClinic = await prisma.vetClinic.delete({
       where: {
         vet_id_clinic_id: {
-          clinic_id: clinic_id,
+          clinic_id,
           vet_id: id,
         },
       },
@@ -349,7 +349,7 @@ export const approveNewVet = async (
       where: {
         vet_id_clinic_id: {
           vet_id: id,
-          clinic_id: clinic_id,
+          clinic_id,
         },
       },
     });
@@ -364,7 +364,7 @@ export const approveNewVet = async (
       where: {
         vet_id_clinic_id: {
           vet_id: id,
-          clinic_id: clinic_id,
+          clinic_id,
         },
       },
       data: {

@@ -17,7 +17,9 @@ import { addPet, deletePet, getPet, updatePet } from "./controllers/pet/pet";
 import {
   addAppointment,
   cancelAppointments,
+  closeTimeSlot,
   getAppointment,
+  openTimeSlot,
   updateAppointment,
 } from "./controllers/appointment/appointment";
 import { getVet, updateVet } from "./controllers/vet/vet";
@@ -273,6 +275,22 @@ app.get("/appointment/:id", async (req: Request, res: Response) => {
 app.delete("/appointment/:id", async (req: Request, res: Response) => {
   try {
     cancelAppointments(req, res, prisma);
+  } catch (e) {
+    console.log(e);
+  }
+});
+
+app.post("/closeTimeSlot", async (req: Request, res: Response) => {
+  try {
+    closeTimeSlot(req, res, prisma);
+  } catch (e) {
+    console.log(e);
+  }
+});
+
+app.post("/openTimeSlot", async (req: Request, res: Response) => {
+  try {
+    openTimeSlot(req, res, prisma);
   } catch (e) {
     console.log(e);
   }

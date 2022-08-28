@@ -43,7 +43,7 @@ export const addCalendar = async (
         friday: JSON.stringify(friday),
         saturday: JSON.stringify(saturday),
         sunday: JSON.stringify(sunday),
-        owner_id: owner_id,
+        owner_id,
       },
     });
 
@@ -112,7 +112,7 @@ export const updateCalendar = async (
         friday: JSON.stringify(friday),
         saturday: JSON.stringify(saturday),
         sunday: JSON.stringify(sunday),
-        owner_id: owner_id,
+        owner_id,
       },
     });
 

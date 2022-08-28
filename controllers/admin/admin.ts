@@ -12,7 +12,7 @@ export const getAllUsers = async (
 
     const payload: JWTPayload = handleTokenVerification(req, res) as JWTPayload;
 
-    if (payload.userId != logged_in_id)
+    if (payload.userId !== logged_in_id)
       return res.status(401).json("Unauthorized");
 
     const admin = await prisma.admin.findUnique({
@@ -51,7 +51,7 @@ export const getAllVets = async (
 
     const payload: JWTPayload = handleTokenVerification(req, res) as JWTPayload;
 
-    if (payload.userId != logged_in_id)
+    if (payload.userId !== logged_in_id)
       return res.status(401).json("Unauthorized");
 
     const admin = await prisma.admin.findUnique({
@@ -92,7 +92,7 @@ export const getAllClinics = async (
 
     const payload: JWTPayload = handleTokenVerification(req, res) as JWTPayload;
 
-    if (payload.userId != logged_in_id)
+    if (payload.userId !== logged_in_id)
       return res.status(401).json("Unauthorized");
 
     const admin = await prisma.admin.findUnique({
@@ -129,7 +129,7 @@ export const getAllAppointments = async (
 
     const payload: JWTPayload = handleTokenVerification(req, res) as JWTPayload;
 
-    if (payload.userId != logged_in_id)
+    if (payload.userId !== logged_in_id)
       return res.status(401).json("Unauthorized");
 
     const admin = await prisma.admin.findUnique({
@@ -167,7 +167,7 @@ export const approveClinic = async (
 
     const payload: JWTPayload = handleTokenVerification(req, res) as JWTPayload;
 
-    if (payload.userId != logged_in_id)
+    if (payload.userId !== logged_in_id)
       return res.status(401).json("Unauthorized");
 
     const admin = await prisma.admin.findUnique({
@@ -213,7 +213,7 @@ export const approveVet = async (
 
     const payload: JWTPayload = handleTokenVerification(req, res) as JWTPayload;
 
-    if (payload.userId != logged_in_id)
+    if (payload.userId !== logged_in_id)
       return res.status(401).json("Unauthorized");
 
     const admin = await prisma.admin.findUnique({

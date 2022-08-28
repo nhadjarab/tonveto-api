@@ -240,6 +240,22 @@ app.delete("/appointment/:id", (req, res) => __awaiter(void 0, void 0, void 0, f
         console.log(e);
     }
 }));
+app.post("/closeTimeSlot", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        (0, appointment_1.closeTimeSlot)(req, res, prisma);
+    }
+    catch (e) {
+        console.log(e);
+    }
+}));
+app.post("/openTimeSlot", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        (0, appointment_1.openTimeSlot)(req, res, prisma);
+    }
+    catch (e) {
+        console.log(e);
+    }
+}));
 // ===========Calendar ROUTERS============
 app.post("/calendar", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {

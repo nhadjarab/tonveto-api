@@ -35,7 +35,7 @@ const addCalendar = (req, res, prisma) => __awaiter(void 0, void 0, void 0, func
                 friday: JSON.stringify(friday),
                 saturday: JSON.stringify(saturday),
                 sunday: JSON.stringify(sunday),
-                owner_id: owner_id,
+                owner_id,
             },
         });
         res.status(200).json(newCalendar);
@@ -84,7 +84,7 @@ const updateCalendar = (req, res, prisma) => __awaiter(void 0, void 0, void 0, f
                 friday: JSON.stringify(friday),
                 saturday: JSON.stringify(saturday),
                 sunday: JSON.stringify(sunday),
-                owner_id: owner_id,
+                owner_id,
             },
         });
         res.status(200).json(newCalendar);

@@ -190,8 +190,8 @@ const addVetToClinic = (req, res, prisma) => __awaiter(void 0, void 0, void 0, f
             return res.status(400).json("Vet is not approved yet");
         const vetClinic = yield prisma.vetClinic.create({
             data: {
-                vet_id: vet_id,
-                clinic_id: clinic_id,
+                vet_id,
+                clinic_id,
             },
         });
         res.status(200).json(`Vet added to clinic : ${clinic.name}`);
@@ -230,7 +230,7 @@ const removeVetFromClinic = (req, res, prisma) => __awaiter(void 0, void 0, void
             return res.status(401).json("Unauthorized");
         const vet = yield prisma.vet.findUnique({
             where: {
-                id: id,
+                id,
             },
         });
         if (!vet)
@@ -238,7 +238,7 @@ const removeVetFromClinic = (req, res, prisma) => __awaiter(void 0, void 0, void
         const vetClinic = yield prisma.vetClinic.delete({
             where: {
                 vet_id_clinic_id: {
-                    clinic_id: clinic_id,
+                    clinic_id,
                     vet_id: id,
                 },
             },
@@ -286,7 +286,7 @@ const approveNewVet = (req, res, prisma) => __awaiter(void 0, void 0, void 0, fu
             where: {
                 vet_id_clinic_id: {
                     vet_id: id,
-                    clinic_id: clinic_id,
+                    clinic_id,
                 },
             },
         });
@@ -298,7 +298,7 @@ const approveNewVet = (req, res, prisma) => __awaiter(void 0, void 0, void 0, fu
             where: {
                 vet_id_clinic_id: {
                     vet_id: id,
-                    clinic_id: clinic_id,
+                    clinic_id,
                 },
             },
             data: {

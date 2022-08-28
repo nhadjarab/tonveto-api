@@ -15,7 +15,7 @@ const getAllUsers = (req, res, prisma) => __awaiter(void 0, void 0, void 0, func
     try {
         const { logged_in_id } = req.body;
         const payload = (0, authentication_1.handleTokenVerification)(req, res);
-        if (payload.userId != logged_in_id)
+        if (payload.userId !== logged_in_id)
             return res.status(401).json("Unauthorized");
         const admin = yield prisma.admin.findUnique({
             where: {
@@ -46,7 +46,7 @@ const getAllVets = (req, res, prisma) => __awaiter(void 0, void 0, void 0, funct
     try {
         const { logged_in_id } = req.body;
         const payload = (0, authentication_1.handleTokenVerification)(req, res);
-        if (payload.userId != logged_in_id)
+        if (payload.userId !== logged_in_id)
             return res.status(401).json("Unauthorized");
         const admin = yield prisma.admin.findUnique({
             where: {
@@ -79,7 +79,7 @@ const getAllClinics = (req, res, prisma) => __awaiter(void 0, void 0, void 0, fu
     try {
         const { logged_in_id } = req.body;
         const payload = (0, authentication_1.handleTokenVerification)(req, res);
-        if (payload.userId != logged_in_id)
+        if (payload.userId !== logged_in_id)
             return res.status(401).json("Unauthorized");
         const admin = yield prisma.admin.findUnique({
             where: {
@@ -108,7 +108,7 @@ const getAllAppointments = (req, res, prisma) => __awaiter(void 0, void 0, void 
     try {
         const { logged_in_id } = req.body;
         const payload = (0, authentication_1.handleTokenVerification)(req, res);
-        if (payload.userId != logged_in_id)
+        if (payload.userId !== logged_in_id)
             return res.status(401).json("Unauthorized");
         const admin = yield prisma.admin.findUnique({
             where: {
@@ -137,7 +137,7 @@ const approveClinic = (req, res, prisma) => __awaiter(void 0, void 0, void 0, fu
         const { id } = req.params;
         const { logged_in_id } = req.body;
         const payload = (0, authentication_1.handleTokenVerification)(req, res);
-        if (payload.userId != logged_in_id)
+        if (payload.userId !== logged_in_id)
             return res.status(401).json("Unauthorized");
         const admin = yield prisma.admin.findUnique({
             where: {
@@ -173,7 +173,7 @@ const approveVet = (req, res, prisma) => __awaiter(void 0, void 0, void 0, funct
         const { id } = req.params;
         const { logged_in_id } = req.body;
         const payload = (0, authentication_1.handleTokenVerification)(req, res);
-        if (payload.userId != logged_in_id)
+        if (payload.userId !== logged_in_id)
             return res.status(401).json("Unauthorized");
         const admin = yield prisma.admin.findUnique({
             where: {
