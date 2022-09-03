@@ -415,6 +415,22 @@ app.post("/commentClinic", (req, res) => __awaiter(void 0, void 0, void 0, funct
         console.log(e);
     }
 }));
+app.post("/reportCommentVet", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        (0, comment_1.reportVetComment)(req, res, prisma);
+    }
+    catch (e) {
+        console.log(e);
+    }
+}));
+app.post("/reportCommentClinic", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        (0, comment_1.reportClinicComment)(req, res, prisma);
+    }
+    catch (e) {
+        console.log(e);
+    }
+}));
 app.put("/commentVet/:id", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         (0, comment_1.editCommentVet)(req, res, prisma);

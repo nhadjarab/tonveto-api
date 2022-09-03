@@ -18,6 +18,23 @@ const updateUser = (req, res, prisma) => __awaiter(void 0, void 0, void 0, funct
         const payload = (0, authentication_1.handleTokenVerification)(req, res);
         if (payload.userId != id)
             return res.status(401).json("Unauthorized");
+        const oldUser = yield prisma.user.findUnique({
+            where: {
+                id,
+            },
+        });
+        if (!oldUser)
+            return res.status(404).json("User does not exist");
+        if (oldUser.email != email) {
+            const newAuth = yield prisma.auth.update({
+                where: {
+                    email: oldUser.email,
+                },
+                data: {
+                    email,
+                },
+            });
+        }
         const userProfile = yield prisma.user.update({
             where: {
                 id,
@@ -52,7 +69,7 @@ const getUser = (req, res, prisma) => __awaiter(void 0, void 0, void 0, function
             include: {
                 pets: true,
                 appointments: true,
-            }
+            },
         });
         res.status(200).json(userProfile);
     }

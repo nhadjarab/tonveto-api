@@ -18,6 +18,23 @@ const updateVet = (req, res, prisma) => __awaiter(void 0, void 0, void 0, functi
         const payload = (0, authentication_1.handleTokenVerification)(req, res);
         if (payload.userId != id)
             return res.status(401).json("Unauthorized");
+        const oldVet = yield prisma.vet.findUnique({
+            where: {
+                id,
+            },
+        });
+        if (!oldVet)
+            return res.status(404).json("Vet does not exist");
+        if (oldVet.email != email) {
+            const newAuth = yield prisma.auth.update({
+                where: {
+                    email: oldVet.email,
+                },
+                data: {
+                    email,
+                },
+            });
+        }
         const vetProfile = yield prisma.vet.update({
             where: {
                 id,

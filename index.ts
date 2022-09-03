@@ -64,8 +64,17 @@ import {
   deleteCommentVet,
   editCommentClinic,
   editCommentVet,
+  reportClinicComment,
+  reportVetComment,
 } from "./controllers/comment/comment";
-import { addRatingClinic, addRatingVet, deleteRatingClinic, deleteRatingVet, editRatingClinic, editRatingVet } from "./controllers/rating/rating";
+import {
+  addRatingClinic,
+  addRatingVet,
+  deleteRatingClinic,
+  deleteRatingVet,
+  editRatingClinic,
+  editRatingVet,
+} from "./controllers/rating/rating";
 
 const prisma = new PrismaClient();
 
@@ -457,6 +466,22 @@ app.post("/commentVet", async (req: Request, res: Response) => {
 app.post("/commentClinic", async (req: Request, res: Response) => {
   try {
     addCommentClinic(req, res, prisma);
+  } catch (e) {
+    console.log(e);
+  }
+});
+
+app.post("/reportCommentVet", async (req: Request, res: Response) => {
+  try {
+    reportVetComment(req, res, prisma);
+  } catch (e) {
+    console.log(e);
+  }
+});
+
+app.post("/reportCommentClinic", async (req: Request, res: Response) => {
+  try {
+    reportClinicComment(req, res, prisma);
   } catch (e) {
     console.log(e);
   }
