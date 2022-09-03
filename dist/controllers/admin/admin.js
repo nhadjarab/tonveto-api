@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.approveVet = exports.approveClinic = exports.getAllAppointments = exports.getAllClinics = exports.getAllVets = exports.getAllUsers = void 0;
+exports.rejectCommentReport = exports.approveCommentReport = exports.getCommentReports = exports.approveVet = exports.approveClinic = exports.getAllAppointments = exports.getAllClinics = exports.getAllVets = exports.getAllUsers = void 0;
 const authentication_1 = require("../authentication/authentication");
 const getAllUsers = (req, res, prisma) => __awaiter(void 0, void 0, void 0, function* () {
     try {
@@ -204,4 +204,147 @@ const approveVet = (req, res, prisma) => __awaiter(void 0, void 0, void 0, funct
     }
 });
 exports.approveVet = approveVet;
+const getCommentReports = (req, res, prisma) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const { logged_in_id } = req.body;
+        const payload = (0, authentication_1.handleTokenVerification)(req, res);
+        if (payload.userId !== logged_in_id)
+            return res.status(401).json("Unauthorized");
+        const admin = yield prisma.admin.findUnique({
+            where: {
+                id: logged_in_id,
+            },
+        });
+        if (!admin)
+            return res.status(404).json("Admin not found");
+        const vetCommentReports = yield prisma.commentVetReport.findMany({
+            include: {
+                comment: true,
+            },
+        });
+        const clinicCommentReports = yield prisma.commentClinicReport.findMany({
+            include: {
+                comment: true,
+            },
+        });
+        const totalReports = [...vetCommentReports, ...clinicCommentReports];
+        res.status(200).json(totalReports);
+    }
+    catch (e) {
+        console.log(e);
+    }
+});
+exports.getCommentReports = getCommentReports;
+const approveCommentReport = (req, res, prisma) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const { id } = req.params;
+        const { logged_in_id, commentType, commentId } = req.body;
+        const payload = (0, authentication_1.handleTokenVerification)(req, res);
+        if (payload.userId !== logged_in_id)
+            return res.status(401).json("Unauthorized");
+        const admin = yield prisma.admin.findUnique({
+            where: {
+                id: logged_in_id,
+            },
+        });
+        let commentReport;
+        if (commentType === "vet") {
+            const comment = yield prisma.commentVet.findUnique({
+                where: {
+                    id: commentId,
+                },
+            });
+            if (!comment)
+                return res.status(404).json("Comment not found");
+            commentReport = yield prisma.commentVetReport.delete({
+                where: {
+                    id,
+                },
+            });
+            yield prisma.commentVet.delete({
+                where: {
+                    id: commentId,
+                },
+            });
+        }
+        else if (commentType === "clinic") {
+            const comment = yield prisma.commentClinic.findUnique({
+                where: {
+                    id: commentId,
+                },
+            });
+            if (!comment)
+                return res.status(404).json("Comment not found");
+            commentReport = yield prisma.commentClinicReport.delete({
+                where: {
+                    id,
+                },
+            });
+            yield prisma.commentClinic.delete({
+                where: {
+                    id: commentId,
+                },
+            });
+        }
+        else {
+            return res.status(400).json("Invalid comment type");
+        }
+        res.status(200).json(commentReport);
+    }
+    catch (e) {
+        console.log(e);
+    }
+});
+exports.approveCommentReport = approveCommentReport;
+const rejectCommentReport = (req, res, prisma) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const { id } = req.params;
+        const { logged_in_id, commentType, commentId } = req.body;
+        const payload = (0, authentication_1.handleTokenVerification)(req, res);
+        if (payload.userId !== logged_in_id)
+            return res.status(401).json("Unauthorized");
+        const admin = yield prisma.admin.findUnique({
+            where: {
+                id: logged_in_id,
+            },
+        });
+        let commentReport;
+        if (commentType === "vet") {
+            const comment = yield prisma.commentVet.findUnique({
+                where: {
+                    id: commentId,
+                },
+            });
+            if (!comment)
+                return res.status(404).json("Comment not found");
+            commentReport = yield prisma.commentVetReport.delete({
+                where: {
+                    id,
+                },
+            });
+        }
+        else if (commentType === "clinic") {
+            const comment = yield prisma.commentClinic.findUnique({
+                where: {
+                    id: commentId,
+                },
+            });
+            if (!comment)
+                return res.status(404).json("Comment not found");
+            commentReport = yield prisma.commentClinicReport.delete({
+                where: {
+                    id,
+                },
+            });
+        }
+        else {
+            return res.status(400).json("Invalid comment type");
+        }
+        res.status(200).json(commentReport);
+    }
+    catch (e) {
+        console.log(e);
+    }
+});
+exports.rejectCommentReport = rejectCommentReport;
 //# sourceMappingURL=admin.js.map

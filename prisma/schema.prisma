@@ -155,12 +155,12 @@ model Admin {
 }
 
 model CommentVet {
-  id               String             @id @unique @default(cuid())
-  text             String
-  vet_id           String
-  vet              Vet                @relation(fields: [vet_id], references: [id])
-  owner_id         String
-  owner            User               @relation(fields: [owner_id], references: [id])
+  id       String @id @unique @default(cuid())
+  text     String
+  vet_id   String
+  vet      Vet    @relation(fields: [vet_id], references: [id])
+  owner_id String
+  owner    User   @relation(fields: [owner_id], references: [id])
   CommentVetReport CommentVetReport[]
 }
 
@@ -199,6 +199,7 @@ model CommentClinicReport {
   comment       CommentClinic @relation(fields: [comment_id], references: [id])
   reported_by   String
   reporter_type String
+  report_type   String        @default("clinic")
 }
 
 model CommentVetReport {
@@ -207,4 +208,5 @@ model CommentVetReport {
   comment_id    String
   reported_by   String
   reporter_type String
+  report_type   String     @default("vet")
 }

@@ -246,3 +246,175 @@ export const approveVet = async (
     console.log(e);
   }
 };
+
+export const getCommentReports = async (
+  req: Request,
+  res: Response,
+  prisma: PrismaClient
+) => {
+  try {
+    const { logged_in_id } = req.body;
+
+    const payload: JWTPayload = handleTokenVerification(req, res) as JWTPayload;
+
+    if (payload.userId !== logged_in_id)
+      return res.status(401).json("Unauthorized");
+
+    const admin = await prisma.admin.findUnique({
+      where: {
+        id: logged_in_id,
+      },
+    });
+
+    if (!admin) return res.status(404).json("Admin not found");
+
+    const vetCommentReports = await prisma.commentVetReport.findMany({
+      include: {
+        comment: true,
+      },
+    });
+
+    const clinicCommentReports = await prisma.commentClinicReport.findMany({
+      include: {
+        comment: true,
+      },
+    });
+
+    const totalReports = [...vetCommentReports, ...clinicCommentReports];
+
+    res.status(200).json(totalReports);
+  } catch (e) {
+    console.log(e);
+  }
+};
+
+export const approveCommentReport = async (
+  req: Request,
+  res: Response,
+  prisma: PrismaClient
+) => {
+  try {
+    const { id } = req.params;
+
+    const { logged_in_id, commentType, commentId } = req.body;
+
+    const payload: JWTPayload = handleTokenVerification(req, res) as JWTPayload;
+
+    if (payload.userId !== logged_in_id)
+      return res.status(401).json("Unauthorized");
+
+    const admin = await prisma.admin.findUnique({
+      where: {
+        id: logged_in_id,
+      },
+    });
+
+    let commentReport;
+
+    if (commentType === "vet") {
+      const comment = await prisma.commentVet.findUnique({
+        where: {
+          id: commentId,
+        },
+      });
+
+      if (!comment) return res.status(404).json("Comment not found");
+      commentReport = await prisma.commentVetReport.delete({
+        where: {
+          id,
+        },
+      });
+
+      await prisma.commentVet.delete({
+        where: {
+          id: commentId,
+        },
+      });
+    } else if (commentType === "clinic") {
+      const comment = await prisma.commentClinic.findUnique({
+        where: {
+          id: commentId,
+        },
+      });
+
+      if (!comment) return res.status(404).json("Comment not found");
+      commentReport = await prisma.commentClinicReport.delete({
+        where: {
+          id,
+        },
+      });
+
+      await prisma.commentClinic.delete({
+        where: {
+          id: commentId,
+        },
+      });
+    } else {
+      return res.status(400).json("Invalid comment type");
+    }
+
+    res.status(200).json(commentReport);
+  } catch (e) {
+    console.log(e);
+  }
+};
+export const rejectCommentReport = async (
+  req: Request,
+  res: Response,
+  prisma: PrismaClient
+) => {
+  try {
+    const { id } = req.params;
+
+    const { logged_in_id, commentType, commentId } = req.body;
+
+    const payload: JWTPayload = handleTokenVerification(req, res) as JWTPayload;
+
+    if (payload.userId !== logged_in_id)
+      return res.status(401).json("Unauthorized");
+
+    const admin = await prisma.admin.findUnique({
+      where: {
+        id: logged_in_id,
+      },
+    });
+
+    let commentReport;
+
+    if (commentType === "vet") {
+      const comment = await prisma.commentVet.findUnique({
+        where: {
+          id: commentId,
+        },
+      });
+
+      if (!comment) return res.status(404).json("Comment not found");
+
+      commentReport = await prisma.commentVetReport.delete({
+        where: {
+          id,
+        },
+      });
+    } else if (commentType === "clinic") {
+      const comment = await prisma.commentClinic.findUnique({
+        where: {
+          id: commentId,
+        },
+      });
+
+      if (!comment) return res.status(404).json("Comment not found");
+
+      commentReport = await prisma.commentClinicReport.delete({
+        where: {
+          id,
+        },
+      });
+    } else {
+      return res.status(400).json("Invalid comment type");
+    }
+
+    res.status(200).json(commentReport);
+  } catch (e) {
+    console.log(e);
+  }
+};

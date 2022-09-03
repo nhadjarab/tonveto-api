@@ -51,11 +51,14 @@ import {
 } from "./controllers/medical report/medicalReport";
 import {
   approveClinic,
+  approveCommentReport,
   approveVet,
   getAllAppointments,
   getAllClinics,
   getAllUsers,
   getAllVets,
+  getCommentReports,
+  rejectCommentReport,
 } from "./controllers/admin/admin";
 import {
   addCommentClinic,
@@ -471,7 +474,7 @@ app.post("/commentClinic", async (req: Request, res: Response) => {
   }
 });
 
-app.post("/reportCommentVet", async (req: Request, res: Response) => {
+app.post("/reportCommentVet/:id", async (req: Request, res: Response) => {
   try {
     reportVetComment(req, res, prisma);
   } catch (e) {
@@ -479,7 +482,7 @@ app.post("/reportCommentVet", async (req: Request, res: Response) => {
   }
 });
 
-app.post("/reportCommentClinic", async (req: Request, res: Response) => {
+app.post("/reportCommentClinic/:id", async (req: Request, res: Response) => {
   try {
     reportClinicComment(req, res, prisma);
   } catch (e) {
@@ -549,6 +552,14 @@ app.get("/getAllAppointments", async (req: Request, res: Response) => {
   }
 });
 
+app.get("/getAllCommentReports", async (req: Request, res: Response) => {
+  try {
+    getCommentReports(req, res, prisma);
+  } catch (e) {
+    console.log(e);
+  }
+});
+
 app.put("/approveClinic/:id", async (req: Request, res: Response) => {
   try {
     approveClinic(req, res, prisma);
@@ -560,6 +571,22 @@ app.put("/approveClinic/:id", async (req: Request, res: Response) => {
 app.put("/approveVet/:id", async (req: Request, res: Response) => {
   try {
     approveVet(req, res, prisma);
+  } catch (e) {
+    console.log(e);
+  }
+});
+
+app.delete("/approveCommentReport/:id", async (req: Request, res: Response) => {
+  try {
+    approveCommentReport(req, res, prisma);
+  } catch (e) {
+    console.log(e);
+  }
+});
+
+app.delete("/rejectCommentReport/:id", async (req: Request, res: Response) => {
+  try {
+    rejectCommentReport(req, res, prisma);
   } catch (e) {
     console.log(e);
   }

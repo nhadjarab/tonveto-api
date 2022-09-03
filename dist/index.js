@@ -415,7 +415,7 @@ app.post("/commentClinic", (req, res) => __awaiter(void 0, void 0, void 0, funct
         console.log(e);
     }
 }));
-app.post("/reportCommentVet", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+app.post("/reportCommentVet/:id", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         (0, comment_1.reportVetComment)(req, res, prisma);
     }
@@ -423,7 +423,7 @@ app.post("/reportCommentVet", (req, res) => __awaiter(void 0, void 0, void 0, fu
         console.log(e);
     }
 }));
-app.post("/reportCommentClinic", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+app.post("/reportCommentClinic/:id", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         (0, comment_1.reportClinicComment)(req, res, prisma);
     }
@@ -496,6 +496,14 @@ app.get("/getAllAppointments", (req, res) => __awaiter(void 0, void 0, void 0, f
         console.log(e);
     }
 }));
+app.get("/getAllCommentReports", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        (0, admin_1.getCommentReports)(req, res, prisma);
+    }
+    catch (e) {
+        console.log(e);
+    }
+}));
 app.put("/approveClinic/:id", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         (0, admin_1.approveClinic)(req, res, prisma);
@@ -507,6 +515,22 @@ app.put("/approveClinic/:id", (req, res) => __awaiter(void 0, void 0, void 0, fu
 app.put("/approveVet/:id", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         (0, admin_1.approveVet)(req, res, prisma);
+    }
+    catch (e) {
+        console.log(e);
+    }
+}));
+app.delete("/approveCommentReport/:id", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        (0, admin_1.approveCommentReport)(req, res, prisma);
+    }
+    catch (e) {
+        console.log(e);
+    }
+}));
+app.delete("/rejectCommentReport/:id", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        (0, admin_1.rejectCommentReport)(req, res, prisma);
     }
     catch (e) {
         console.log(e);
