@@ -78,6 +78,7 @@ import {
   editRatingClinic,
   editRatingVet,
 } from "./controllers/rating/rating";
+import { search } from "./controllers/search/search";
 
 const prisma = new PrismaClient();
 
@@ -592,6 +593,16 @@ app.delete("/rejectCommentReport/:id", async (req: Request, res: Response) => {
   }
 });
 
+// ===========Search ROUTERS============
+app.get("/search/:query", async (req: Request, res: Response) => {
+  try {
+    search(req, res, prisma);
+  } catch (e) {
+    console.log(e);
+  }
+});
+
+// API ENDPOINTS
 app.listen(port, () => {
   console.log(`⚡️[server]: Server is running at https://localhost:${port}`);
 });

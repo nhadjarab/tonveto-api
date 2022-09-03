@@ -59,8 +59,8 @@ model Vet {
   profile_complete     Boolean         @default(false)
   is_approved          Boolean         @default(false)
   type                 String          @default("vet")
-  specialities         Specialty[]
   bank_details         String
+  specialities         Specialty[]
   appointments         Appointment[]
   clinics              VetClinic[]
   Clinic               Clinic[]

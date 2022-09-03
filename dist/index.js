@@ -28,6 +28,7 @@ const medicalReport_1 = require("./controllers/medical report/medicalReport");
 const admin_1 = require("./controllers/admin/admin");
 const comment_1 = require("./controllers/comment/comment");
 const rating_1 = require("./controllers/rating/rating");
+const search_1 = require("./controllers/search/search");
 const prisma = new client_1.PrismaClient();
 dotenv_1.default.config();
 const app = (0, express_1.default)();
@@ -536,6 +537,16 @@ app.delete("/rejectCommentReport/:id", (req, res) => __awaiter(void 0, void 0, v
         console.log(e);
     }
 }));
+// ===========Search ROUTERS============
+app.get("/search/:query", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        (0, search_1.search)(req, res, prisma);
+    }
+    catch (e) {
+        console.log(e);
+    }
+}));
+// API ENDPOINTS
 app.listen(port, () => {
     console.log(`⚡️[server]: Server is running at https://localhost:${port}`);
 });
