@@ -60,10 +60,16 @@ exports.updateVet = updateVet;
 const getVet = (req, res, prisma) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { id } = req.params;
-        const { logged_in_id } = req.body;
+        // const {logged_in_id} = req.headers;
+        const { logged_in_id } = req.headers;
+        console.log("body", req.body);
+        console.log("logged in id", logged_in_id);
+        console.log("id", id);
         const payload = (0, authentication_1.handleTokenVerification)(req, res);
-        if (payload.userId != logged_in_id)
+        console.log("payload", payload);
+        if (payload.userId != logged_in_id) {
             return res.status(401).json("Unauthorized");
+        }
         const vetProfile = yield prisma.vet.findUnique({
             where: {
                 id,

@@ -13,7 +13,7 @@ exports.rejectCommentReport = exports.approveCommentReport = exports.getCommentR
 const authentication_1 = require("../authentication/authentication");
 const getAllUsers = (req, res, prisma) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const { logged_in_id } = req.body;
+        const { logged_in_id } = req.headers;
         const payload = (0, authentication_1.handleTokenVerification)(req, res);
         if (payload.userId !== logged_in_id)
             return res.status(401).json("Unauthorized");
@@ -44,7 +44,7 @@ const getAllUsers = (req, res, prisma) => __awaiter(void 0, void 0, void 0, func
 exports.getAllUsers = getAllUsers;
 const getAllVets = (req, res, prisma) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const { logged_in_id } = req.body;
+        const { logged_in_id } = req.headers;
         const payload = (0, authentication_1.handleTokenVerification)(req, res);
         if (payload.userId !== logged_in_id)
             return res.status(401).json("Unauthorized");
@@ -77,7 +77,7 @@ const getAllVets = (req, res, prisma) => __awaiter(void 0, void 0, void 0, funct
 exports.getAllVets = getAllVets;
 const getAllClinics = (req, res, prisma) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const { logged_in_id } = req.body;
+        const { logged_in_id } = req.headers;
         const payload = (0, authentication_1.handleTokenVerification)(req, res);
         if (payload.userId !== logged_in_id)
             return res.status(401).json("Unauthorized");
@@ -106,7 +106,7 @@ const getAllClinics = (req, res, prisma) => __awaiter(void 0, void 0, void 0, fu
 exports.getAllClinics = getAllClinics;
 const getAllAppointments = (req, res, prisma) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const { logged_in_id } = req.body;
+        const { logged_in_id } = req.headers;
         const payload = (0, authentication_1.handleTokenVerification)(req, res);
         if (payload.userId !== logged_in_id)
             return res.status(401).json("Unauthorized");
@@ -135,7 +135,7 @@ exports.getAllAppointments = getAllAppointments;
 const approveClinic = (req, res, prisma) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { id } = req.params;
-        const { logged_in_id } = req.body;
+        const { logged_in_id } = req.headers;
         const payload = (0, authentication_1.handleTokenVerification)(req, res);
         if (payload.userId !== logged_in_id)
             return res.status(401).json("Unauthorized");
@@ -171,7 +171,7 @@ exports.approveClinic = approveClinic;
 const approveVet = (req, res, prisma) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { id } = req.params;
-        const { logged_in_id } = req.body;
+        const { logged_in_id } = req.headers;
         const payload = (0, authentication_1.handleTokenVerification)(req, res);
         if (payload.userId !== logged_in_id)
             return res.status(401).json("Unauthorized");
@@ -206,7 +206,7 @@ const approveVet = (req, res, prisma) => __awaiter(void 0, void 0, void 0, funct
 exports.approveVet = approveVet;
 const getCommentReports = (req, res, prisma) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const { logged_in_id } = req.body;
+        const { logged_in_id } = req.headers;
         const payload = (0, authentication_1.handleTokenVerification)(req, res);
         if (payload.userId !== logged_in_id)
             return res.status(401).json("Unauthorized");

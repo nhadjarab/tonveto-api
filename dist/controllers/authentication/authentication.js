@@ -20,6 +20,13 @@ const private_key = fs_1.default.readFileSync(__dirname + "/vetolib.rsa");
 const public_key = fs_1.default.readFileSync(__dirname + "/vetolib.rsa.pub");
 const register = (req, res, prisma) => __awaiter(void 0, void 0, void 0, function* () {
     const { email, password } = req.body;
+    const existingAccount = yield prisma.auth.findUnique({
+        where: {
+            email,
+        },
+    });
+    if (existingAccount)
+        res.status(400).json("Account already exists");
     const hash = bcrypt_1.default.hashSync(password, 10);
     prisma.auth
         .create({
@@ -54,6 +61,13 @@ exports.register = register;
 const registerVet = (req, res, prisma) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { email, password } = req.body;
+        const existingAccount = yield prisma.auth.findUnique({
+            where: {
+                email,
+            },
+        });
+        if (existingAccount)
+            res.status(400).json("Account already exists");
         const hash = bcrypt_1.default.hashSync(password, 10);
         const vetAuth = yield prisma.auth.create({
             data: {
@@ -69,7 +83,6 @@ const registerVet = (req, res, prisma) => __awaiter(void 0, void 0, void 0, func
                 last_name: "",
                 phone_number: "",
                 bank_details: "",
-                identification_order: 1,
             },
         });
         res.status(200).json(vet);
@@ -82,6 +95,13 @@ exports.registerVet = registerVet;
 const registerAdmin = (req, res, prisma) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { email, password } = req.body;
+        const existingAccount = yield prisma.auth.findUnique({
+            where: {
+                email,
+            },
+        });
+        if (existingAccount)
+            res.status(400).json("Account already exists");
         const hash = bcrypt_1.default.hashSync(password, 10);
         const adminAuth = yield prisma.auth.create({
             data: {

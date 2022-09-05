@@ -76,12 +76,14 @@ export const getVet = async (
 ) => {
   try {
     const { id } = req.params;
-    const { logged_in_id } = req.body;
+
+    const { logged_in_id } = req.headers;
 
     const payload: JWTPayload = handleTokenVerification(req, res) as JWTPayload;
 
-    if (payload.userId != logged_in_id)
+    if (payload.userId != logged_in_id) {
       return res.status(401).json("Unauthorized");
+    }
 
     const vetProfile = await prisma.vet.findUnique({
       where: {

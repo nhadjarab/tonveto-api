@@ -86,7 +86,7 @@ exports.editCommentVet = editCommentVet;
 const deleteCommentVet = (req, res, prisma) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { id } = req.params;
-        const { logged_in_id } = req.body;
+        const { logged_in_id } = req.headers;
         const payload = (0, authentication_1.handleTokenVerification)(req, res);
         if (payload.userId != logged_in_id)
             return res.status(401).json("Unauthorized");
@@ -186,7 +186,7 @@ exports.editCommentClinic = editCommentClinic;
 const deleteCommentClinic = (req, res, prisma) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { id } = req.params;
-        const { logged_in_id } = req.body;
+        const { logged_in_id } = req.headers;
         const payload = (0, authentication_1.handleTokenVerification)(req, res);
         if (payload.userId != logged_in_id)
             return res.status(401).json("Unauthorized");

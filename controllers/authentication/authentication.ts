@@ -18,6 +18,14 @@ export const register = async (
 ) => {
   const { email, password } = req.body;
 
+  const existingAccount = await prisma.auth.findUnique({
+    where: {
+      email,
+    },
+  });
+
+  if (existingAccount) res.status(400).json("Account already exists");
+
   const hash = bcrypt.hashSync(password, 10);
 
   prisma.auth
@@ -58,6 +66,14 @@ export const registerVet = async (
   try {
     const { email, password } = req.body;
 
+    const existingAccount = await prisma.auth.findUnique({
+      where: {
+        email,
+      },
+    });
+
+    if (existingAccount) res.status(400).json("Account already exists");
+
     const hash = bcrypt.hashSync(password, 10);
 
     const vetAuth = await prisma.auth.create({
@@ -91,6 +107,14 @@ export const registerAdmin = async (
 ) => {
   try {
     const { email, password } = req.body;
+
+    const existingAccount = await prisma.auth.findUnique({
+      where: {
+        email,
+      },
+    });
+
+    if (existingAccount) res.status(400).json("Account already exists");
 
     const hash = bcrypt.hashSync(password, 10);
 

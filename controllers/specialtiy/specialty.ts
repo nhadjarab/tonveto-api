@@ -84,7 +84,7 @@ export const getSpecialty = async (
 ) => {
   try {
     const { id } = req.params;
-    const { logged_in_id } = req.body;
+    const {logged_in_id} = req.headers;
 
     const payload: JWTPayload = handleTokenVerification(req, res) as JWTPayload;
 

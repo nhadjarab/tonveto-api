@@ -8,7 +8,7 @@ export const getAllUsers = async (
   prisma: PrismaClient
 ) => {
   try {
-    const { logged_in_id } = req.body;
+    const {logged_in_id} = req.headers;
 
     const payload: JWTPayload = handleTokenVerification(req, res) as JWTPayload;
 
@@ -47,7 +47,7 @@ export const getAllVets = async (
   prisma: PrismaClient
 ) => {
   try {
-    const { logged_in_id } = req.body;
+    const {logged_in_id} = req.headers;
 
     const payload: JWTPayload = handleTokenVerification(req, res) as JWTPayload;
 
@@ -88,7 +88,7 @@ export const getAllClinics = async (
   prisma: PrismaClient
 ) => {
   try {
-    const { logged_in_id } = req.body;
+    const {logged_in_id} = req.headers;
 
     const payload: JWTPayload = handleTokenVerification(req, res) as JWTPayload;
 
@@ -125,7 +125,7 @@ export const getAllAppointments = async (
   prisma: PrismaClient
 ) => {
   try {
-    const { logged_in_id } = req.body;
+    const {logged_in_id} = req.headers;
 
     const payload: JWTPayload = handleTokenVerification(req, res) as JWTPayload;
 
@@ -163,7 +163,7 @@ export const approveClinic = async (
   try {
     const { id } = req.params;
 
-    const { logged_in_id } = req.body;
+    const {logged_in_id} = req.headers;
 
     const payload: JWTPayload = handleTokenVerification(req, res) as JWTPayload;
 
@@ -209,7 +209,7 @@ export const approveVet = async (
   try {
     const { id } = req.params;
 
-    const { logged_in_id } = req.body;
+    const {logged_in_id} = req.headers;
 
     const payload: JWTPayload = handleTokenVerification(req, res) as JWTPayload;
 
@@ -253,7 +253,7 @@ export const getCommentReports = async (
   prisma: PrismaClient
 ) => {
   try {
-    const { logged_in_id } = req.body;
+    const {logged_in_id} = req.headers;
 
     const payload: JWTPayload = handleTokenVerification(req, res) as JWTPayload;
 
