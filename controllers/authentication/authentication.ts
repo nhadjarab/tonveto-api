@@ -75,7 +75,6 @@ export const registerVet = async (
         last_name: "",
         phone_number: "",
         bank_details: "",
-        identification_order: 1,
       },
     });
 
