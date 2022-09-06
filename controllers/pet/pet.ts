@@ -21,13 +21,13 @@ export const addPet = async (
 
     if (
       !sex ||
-      name ||
-      birth_date ||
-      species ||
-      breed ||
-      crossbreed ||
-      sterilised ||
-      owner_id
+      !name ||
+      !birth_date ||
+      !species ||
+      !breed ||
+      !crossbreed ||
+      !sterilised ||
+      !owner_id
     )
       return res.status(400).json("Missing fields");
 
@@ -85,13 +85,13 @@ export const updatePet = async (
 
     if (
       !sex ||
-      name ||
-      birth_date ||
-      species ||
-      breed ||
-      crossbreed ||
-      sterilised ||
-      owner_id
+      !name ||
+      !birth_date ||
+      !species ||
+      !breed ||
+      !crossbreed ||
+      !sterilised ||
+      !owner_id
     )
       return res.status(400).json("Missing fields");
 
