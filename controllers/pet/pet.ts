@@ -20,14 +20,14 @@ export const addPet = async (
     } = req.body;
 
     if (
-      !sex ||
-      !name ||
-      !birth_date ||
-      !species ||
-      !breed ||
-      !crossbreed ||
-      !sterilised ||
-      !owner_id
+      sex == undefined ||
+      name == undefined ||
+      birth_date == undefined ||
+      species == undefined ||
+      breed == undefined ||
+      crossbreed == undefined ||
+      sterilised == undefined ||
+      owner_id == undefined
     )
       return res.status(400).json("Missing fields");
 
@@ -84,14 +84,14 @@ export const updatePet = async (
     } = req.body;
 
     if (
-      !sex ||
-      !name ||
-      !birth_date ||
-      !species ||
-      !breed ||
-      !crossbreed ||
-      !sterilised ||
-      !owner_id
+      sex == undefined ||
+      name == undefined ||
+      birth_date == undefined ||
+      species == undefined ||
+      breed == undefined ||
+      crossbreed == undefined ||
+      sterilised == undefined ||
+      owner_id == undefined
     )
       return res.status(400).json("Missing fields");
 
@@ -182,7 +182,7 @@ export const deletePet = async (
 
     const { owner_id } = req.body;
 
-    if (!owner_id) return res.status(400).json("Missing fields");
+    if (owner_id == undefined) return res.status(400).json("Missing fields");
 
     const payload: JWTPayload = handleTokenVerification(req, res) as JWTPayload;
 

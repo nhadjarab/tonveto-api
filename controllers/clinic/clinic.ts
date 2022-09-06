@@ -10,7 +10,14 @@ export const createClinic = async (
   try {
     const { name, address, city, country, phone_number, owner_id } = req.body;
 
-    if (!name || !address || !city || !country || !phone_number || !owner_id) {
+    if (
+      name == undefined ||
+      address == undefined ||
+      city == undefined ||
+      country == undefined ||
+      phone_number == undefined ||
+      owner_id == undefined
+    ) {
       return res.status(400).json("Missing fields");
     }
 
@@ -68,7 +75,14 @@ export const updateClinic = async (
 
     const { name, address, city, country, phone_number, owner_id } = req.body;
 
-    if (!name || !address || !city || !country || !phone_number || !owner_id) {
+    if (
+      name == undefined ||
+      address == undefined ||
+      city == undefined ||
+      country == undefined ||
+      phone_number == undefined ||
+      owner_id == undefined
+    ) {
       return res.status(400).json("Missing fields");
     }
 
@@ -205,6 +219,24 @@ export const deleteClinic = async (
       },
     });
 
+    const deleteComments = await prisma.commentClinic.deleteMany({
+      where: {
+        clinic_id: id,
+      },
+    });
+
+    const deleteReport = await prisma.commentClinicReport.deleteMany({
+      where: {
+        clinic_id: id,
+      },
+    });
+
+    const deleteRatings = await prisma.ratingClinic.deleteMany({
+      where: {
+        clinic_id: id,
+      },
+    });
+
     const deletedClinic = await prisma.clinic.delete({
       where: { id },
     });
@@ -225,7 +257,8 @@ export const addVetToClinic = async (
 
     const { logged_in_id } = req.headers;
 
-    if (!vet_id || !clinic_id) return res.status(400).json("Missing fields");
+    if (vet_id == undefined || clinic_id == undefined)
+      return res.status(400).json("Missing fields");
 
     const payload: JWTPayload = handleTokenVerification(req, res) as JWTPayload;
 
@@ -281,7 +314,7 @@ export const removeVetFromClinic = async (
 
     const { clinic_id } = req.body;
 
-    if (!clinic_id) return res.status(400).json("Missing fields");
+    if (clinic_id == undefined) return res.status(400).json("Missing fields");
 
     const payload: JWTPayload = handleTokenVerification(req, res) as JWTPayload;
 
@@ -347,7 +380,7 @@ export const approveNewVet = async (
 
     const { clinic_id } = req.body;
 
-    if (!clinic_id) return res.status(400).json("Missing fields");
+    if (clinic_id == undefined) return res.status(400).json("Missing fields");
 
     const payload: JWTPayload = handleTokenVerification(req, res) as JWTPayload;
 

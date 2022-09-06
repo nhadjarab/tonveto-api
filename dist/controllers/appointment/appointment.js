@@ -21,7 +21,11 @@ mail_1.default.setApiKey(process.env.SENDGRID);
 const addAppointment = (req, res, prisma) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { date, time, pet_id, vet_id, user_id } = req.body;
-        if (!date || !time || !pet_id || !vet_id || !user_id)
+        if (date == undefined ||
+            time == undefined ||
+            pet_id == undefined ||
+            vet_id == undefined ||
+            user_id == undefined)
             return res.status(400).json("Missing fields");
         const payload = (0, authentication_1.handleTokenVerification)(req, res);
         if (payload.userId != user_id)
@@ -115,7 +119,11 @@ const updateAppointment = (req, res, prisma) => __awaiter(void 0, void 0, void 0
         if (!id || id === "")
             return res.status(400).json("Missing id");
         const { date, time, pet_id, vet_id, user_id } = req.body;
-        if (!date || !time || !pet_id || !vet_id || !user_id)
+        if (date == undefined ||
+            time == undefined ||
+            pet_id == undefined ||
+            vet_id == undefined ||
+            user_id == undefined)
             return res.status(400).json("Missing fields");
         const payload = (0, authentication_1.handleTokenVerification)(req, res);
         if (payload.userId != user_id)
@@ -240,7 +248,7 @@ const cancelAppointments = (req, res, prisma) => __awaiter(void 0, void 0, void 
         if (!id || id === "")
             return res.status(400).json("Missing id");
         const { user_id } = req.body;
-        if (!user_id)
+        if (user_id == undefined)
             return res.status(400).json("Missing user_id");
         const payload = (0, authentication_1.handleTokenVerification)(req, res);
         if (payload.userId != user_id)
@@ -252,6 +260,13 @@ const cancelAppointments = (req, res, prisma) => __awaiter(void 0, void 0, void 
         });
         if (!doesUserExist)
             return res.status(404).json("User not found");
+        const doesAppointmentExist = yield prisma.appointment.findUnique({
+            where: {
+                id,
+            },
+        });
+        if (!doesAppointmentExist)
+            return res.status(404).json("Appointment not found");
         const appointment = yield prisma.appointment.delete({
             where: {
                 id,
@@ -276,7 +291,11 @@ exports.cancelAppointments = cancelAppointments;
 const closeTimeSlot = (req, res, prisma) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { date, time, vet_id, pet_id, user_id } = req.body;
-        if (!date || !time || !vet_id || !pet_id || !user_id)
+        if (date == undefined ||
+            time == undefined ||
+            vet_id == undefined ||
+            pet_id == undefined ||
+            user_id == undefined)
             return res.status(400).json("Missing fields");
         const payload = (0, authentication_1.handleTokenVerification)(req, res);
         if (payload.userId != vet_id)
@@ -368,7 +387,7 @@ exports.closeTimeSlot = closeTimeSlot;
 const openTimeSlot = (req, res, prisma) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { date, time, vet_id } = req.body;
-        if (!date || !time || !vet_id)
+        if (date == undefined || time == undefined || vet_id == undefined)
             return res.status(400).json("Missing fields");
         const payload = (0, authentication_1.handleTokenVerification)(req, res);
         if (payload.userId != vet_id)

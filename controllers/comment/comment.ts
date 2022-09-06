@@ -12,7 +12,8 @@ export const addCommentVet = async (
 
     const { text, vet_id } = req.body;
 
-    if (!text || !vet_id) return res.status(400).json("Missing fields");
+    if (text == undefined || vet_id == undefined)
+      return res.status(400).json("Missing fields");
 
     const payload: JWTPayload = handleTokenVerification(req, res) as JWTPayload;
 
@@ -63,7 +64,7 @@ export const editCommentVet = async (
 
     const { text } = req.body;
 
-    if (!text) return res.status(400).json("Missing fields");
+    if (text == undefined) return res.status(400).json("Missing fields");
 
     const payload: JWTPayload = handleTokenVerification(req, res) as JWTPayload;
 
@@ -153,7 +154,8 @@ export const addCommentClinic = async (
 
     const { text, clinic_id } = req.body;
 
-    if (!text || !clinic_id) return res.status(400).json("Missing fields");
+    if (text == undefined || clinic_id == undefined)
+      return res.status(400).json("Missing fields");
 
     const payload: JWTPayload = handleTokenVerification(req, res) as JWTPayload;
 
@@ -204,7 +206,7 @@ export const editCommentClinic = async (
 
     const { text } = req.body;
 
-    if (!text) return res.status(400).json("Missing fields");
+    if (text == undefined) return res.status(400).json("Missing fields");
 
     const payload: JWTPayload = handleTokenVerification(req, res) as JWTPayload;
 
@@ -295,9 +297,10 @@ export const reportVetComment = async (
 
     const { logged_in_id } = req.headers;
 
-    const { user_type } = req.body;
+    const { user_type, vet_id } = req.body;
 
-    if (!user_type) return res.status(400).json("Missing fields");
+    if (user_type == undefined || vet_id == undefined)
+      return res.status(400).json("Missing fields");
 
     const payload: JWTPayload = handleTokenVerification(req, res) as JWTPayload;
 
@@ -332,11 +335,20 @@ export const reportVetComment = async (
 
     if (!user) return res.status(404).json("User not found");
 
+    const vet = await prisma.vet.findUnique({
+      where: {
+        id: vet_id,
+      },
+    });
+
+    if (!vet) return res.status(404).json("Vet not found");
+
     const report = await prisma.commentVetReport.create({
       data: {
         reported_by: logged_in_id,
         comment_id: id,
         reporter_type: user_type,
+        vet_id,
       },
     });
 
@@ -358,9 +370,10 @@ export const reportClinicComment = async (
 
     const { logged_in_id } = req.headers;
 
-    const { user_type } = req.body;
+    const { user_type, clinic_id } = req.body;
 
-    if (!user_type) return res.status(400).json("Missing fields");
+    if (user_type == undefined || clinic_id == undefined)
+      return res.status(400).json("Missing fields");
 
     const payload: JWTPayload = handleTokenVerification(req, res) as JWTPayload;
 
@@ -395,11 +408,20 @@ export const reportClinicComment = async (
 
     if (!user) return res.status(404).json("User not found");
 
+    const clinic = await prisma.clinic.findUnique({
+      where: {
+        id: clinic_id,
+      },
+    });
+
+    if (!clinic) return res.status(404).json("Clinic not found");
+
     const report = await prisma.commentClinicReport.create({
       data: {
         reported_by: logged_in_id,
         comment_id: id,
         reporter_type: user_type,
+        clinic_id,
       },
     });
 

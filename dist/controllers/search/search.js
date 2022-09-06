@@ -13,10 +13,19 @@ exports.search = void 0;
 const search = (req, res, prisma) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { query } = req.params;
-        const clinics = yield prisma.clinic.findMany({});
+        if (!query)
+            return res.status(400).json("Missing fields");
+        const clinics = yield prisma.clinic.findMany({
+            where: {
+                is_approved: true,
+            },
+        });
         const vets = yield prisma.vet.findMany({
             include: {
                 specialities: true,
+            },
+            where: {
+                is_approved: true,
             },
         });
         // Filter clinics and vets by query

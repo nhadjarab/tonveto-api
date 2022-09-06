@@ -25,12 +25,12 @@ export const updateUser = async (
     } = req.body;
 
     if (
-      !first_name ||
-      !last_name ||
-      !email ||
-      !birth_date ||
-      !phone_number ||
-      !profile_complete
+      first_name == undefined ||
+      last_name == undefined ||
+      email == undefined ||
+      birth_date == undefined ||
+      phone_number == undefined ||
+      profile_complete == undefined
     )
       return res.status(400).json("Missing fields");
 

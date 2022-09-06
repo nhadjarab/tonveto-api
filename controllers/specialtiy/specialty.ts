@@ -11,7 +11,7 @@ export const addSpecialty = async (
   try {
     const { name, price, owner_id } = req.body;
 
-    if (!name || !price || !owner_id)
+    if (name == undefined || price == undefined || owner_id == undefined)
       return res.status(400).json("Missing fields");
 
     const payload: JWTPayload = handleTokenVerification(req, res) as JWTPayload;
@@ -54,7 +54,7 @@ export const updateSpecialty = async (
 
     const { name, price, owner_id } = req.body;
 
-    if (!name || !price || !owner_id)
+    if (name == undefined || price == undefined || owner_id == undefined)
       return res.status(400).json("Missing fields");
 
     const payload: JWTPayload = handleTokenVerification(req, res) as JWTPayload;
@@ -131,7 +131,7 @@ export const deleteSpecialty = async (
 
     const { owner_id } = req.body;
 
-    if (!owner_id) return res.status(400).json("Missing fields");
+    if (owner_id == undefined) return res.status(400).json("Missing fields");
 
     const payload: JWTPayload = handleTokenVerification(req, res) as JWTPayload;
 

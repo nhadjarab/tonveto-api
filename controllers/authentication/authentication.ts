@@ -19,7 +19,7 @@ export const register = async (
   const { email, password } = req.body;
 
   // return 400 if email or password is missing
-  if (!email || !password) {
+  if (email == undefined || password == undefined) {
     return res.status(400).json("Email and password are required");
   }
 
@@ -71,7 +71,7 @@ export const registerVet = async (
   try {
     const { email, password } = req.body;
     // return 400 if email or password is missing
-    if (!email || !password) {
+    if (email == undefined || password == undefined) {
       return res.status(400).json("Email and password are required");
     }
     const existingAccount = await prisma.auth.findUnique({
@@ -118,7 +118,7 @@ export const registerAdmin = async (
   try {
     const { email, password } = req.body;
     // return 400 if email or password is missing
-    if (!email || !password) {
+    if (email == undefined || password == undefined) {
       return res.status(400).json("Email and password are required");
     }
 
@@ -164,7 +164,7 @@ export const login = async (
     const { email, password } = req.body;
 
     // return 400 if email or password is missing
-    if (!email || !password) {
+    if (email == undefined || password == undefined) {
       return res.status(400).json("Email and password are required");
     }
     const userAth = await prisma.auth.findUnique({
@@ -205,7 +205,7 @@ export const loginVet = async (
     const { email, password } = req.body;
 
     // return 400 if email or password is missing
-    if (!email || !password) {
+    if (email == undefined || password == undefined) {
       return res.status(400).json("Email and password are required");
     }
     const userAth = await prisma.auth.findUnique({
@@ -247,7 +247,7 @@ export const loginAdmin = async (
     const { email, password } = req.body;
 
     // return 400 if email or password is missing
-    if (!email || !password) {
+    if (email == undefined || password == undefined) {
       return res.status(400).json("Email and password are required");
     }
     const userAth = await prisma.auth.findUnique({

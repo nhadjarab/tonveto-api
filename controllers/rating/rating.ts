@@ -12,7 +12,8 @@ export const addRatingVet = async (
 
     const { rating, vet_id } = req.body;
 
-    if (!rating || !vet_id) return res.status(400).json("Missing fields");
+    if (rating == undefined || vet_id == undefined)
+      return res.status(400).json("Missing fields");
 
     const payload: JWTPayload = handleTokenVerification(req, res) as JWTPayload;
 
@@ -66,7 +67,7 @@ export const editRatingVet = async (
 
     const { rating } = req.body;
 
-    if (!rating) return res.status(400).json("Missing fields");
+    if (rating == undefined) return res.status(400).json("Missing fields");
 
     const payload: JWTPayload = handleTokenVerification(req, res) as JWTPayload;
 
@@ -158,7 +159,8 @@ export const addRatingClinic = async (
 
     const { rating, clinic_id } = req.body;
 
-    if (!rating || !clinic_id) return res.status(400).json("Missing fields");
+    if (rating == undefined || clinic_id == undefined)
+      return res.status(400).json("Missing fields");
 
     const payload: JWTPayload = handleTokenVerification(req, res) as JWTPayload;
 
@@ -212,7 +214,7 @@ export const editRatingClinic = async (
 
     const { rating } = req.body;
 
-    if (!rating) return res.status(400).json("Missing fields");
+    if (rating == undefined) return res.status(400).json("Missing fields");
 
     const payload: JWTPayload = handleTokenVerification(req, res) as JWTPayload;
 

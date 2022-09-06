@@ -27,14 +27,14 @@ export const updateVet = async (
     } = req.body;
 
     if (
-      !email ||
-      !birth_date ||
-      !first_name ||
-      !last_name ||
-      !phone_number ||
-      !bank_details ||
-      !identification_order ||
-      !profile_complete
+      email == undefined ||
+      birth_date == undefined ||
+      first_name == undefined ||
+      last_name == undefined ||
+      phone_number == undefined ||
+      bank_details == undefined ||
+      identification_order == undefined ||
+      profile_complete == undefined
     )
       return res.status(400).json("Missing fields");
 

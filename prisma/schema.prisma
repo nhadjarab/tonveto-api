@@ -201,6 +201,7 @@ model CommentClinicReport {
   comment       CommentClinic @relation(fields: [comment_id], references: [id])
   reported_by   String
   reporter_type String
+  clinic_id     String
   report_type   String        @default("clinic")
 }
 
@@ -210,5 +211,6 @@ model CommentVetReport {
   comment_id    String
   reported_by   String
   reporter_type String
+  vet_id        String
   report_type   String     @default("vet")
 }

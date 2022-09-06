@@ -14,14 +14,14 @@ const authentication_1 = require("../authentication/authentication");
 const addCalendar = (req, res, prisma) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { monday, tuesday, wednesday, thursday, friday, saturday, sunday, owner_id, } = req.body;
-        if (!monday ||
-            !tuesday ||
-            !wednesday ||
-            !thursday ||
-            !friday ||
-            !saturday ||
-            !sunday ||
-            !owner_id) {
+        if (monday == undefined ||
+            tuesday == undefined ||
+            wednesday == undefined ||
+            thursday == undefined ||
+            friday == undefined ||
+            saturday == undefined ||
+            sunday == undefined ||
+            owner_id == undefined) {
             return res.status(400).json("Missing fields");
         }
         const payload = (0, authentication_1.handleTokenVerification)(req, res);
@@ -62,14 +62,14 @@ const updateCalendar = (req, res, prisma) => __awaiter(void 0, void 0, void 0, f
             return res.status(400).json("Missing id");
         }
         const { monday, tuesday, wednesday, thursday, friday, saturday, sunday, owner_id, } = req.body;
-        if (!monday ||
-            !tuesday ||
-            !wednesday ||
-            !thursday ||
-            !friday ||
-            !saturday ||
-            !sunday ||
-            !owner_id) {
+        if (monday == undefined ||
+            tuesday == undefined ||
+            wednesday == undefined ||
+            thursday == undefined ||
+            friday == undefined ||
+            saturday == undefined ||
+            sunday == undefined ||
+            owner_id == undefined) {
             return res.status(400).json("Missing fields");
         }
         const payload = (0, authentication_1.handleTokenVerification)(req, res);

@@ -14,6 +14,15 @@ const authentication_1 = require("../authentication/authentication");
 const addPet = (req, res, prisma) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { sex, name, birth_date, species, breed, crossbreed, sterilised, owner_id, } = req.body;
+        if (sex == undefined ||
+            name == undefined ||
+            birth_date == undefined ||
+            species == undefined ||
+            breed == undefined ||
+            crossbreed == undefined ||
+            sterilised == undefined ||
+            owner_id == undefined)
+            return res.status(400).json("Missing fields");
         const payload = (0, authentication_1.handleTokenVerification)(req, res);
         if (payload.userId != owner_id)
             return res.status(401).json("Unauthorized");
@@ -46,7 +55,18 @@ exports.addPet = addPet;
 const updatePet = (req, res, prisma) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { id } = req.params;
+        if (!id || id === "")
+            return res.status(400).json("Missing fields");
         const { sex, name, birth_date, species, breed, crossbreed, sterilised, owner_id, } = req.body;
+        if (sex == undefined ||
+            name == undefined ||
+            birth_date == undefined ||
+            species == undefined ||
+            breed == undefined ||
+            crossbreed == undefined ||
+            sterilised == undefined ||
+            owner_id == undefined)
+            return res.status(400).json("Missing fields");
         const payload = (0, authentication_1.handleTokenVerification)(req, res);
         if (payload.userId != owner_id)
             return res.status(401).json("Unauthorized");
@@ -84,6 +104,8 @@ exports.updatePet = updatePet;
 const getPet = (req, res, prisma) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { id } = req.params;
+        if (!id || id === "")
+            return res.status(400).json("Missing fields");
         const { logged_in_id } = req.headers;
         const payload = (0, authentication_1.handleTokenVerification)(req, res);
         if (payload.userId != logged_in_id)
@@ -113,7 +135,11 @@ exports.getPet = getPet;
 const deletePet = (req, res, prisma) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { id } = req.params;
+        if (!id || id === "")
+            return res.status(400).json("Missing fields");
         const { owner_id } = req.body;
+        if (owner_id == undefined)
+            return res.status(400).json("Missing fields");
         const payload = (0, authentication_1.handleTokenVerification)(req, res);
         if (payload.userId != owner_id)
             return res.status(401).json("Unauthorized");

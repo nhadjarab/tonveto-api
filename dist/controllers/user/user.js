@@ -14,7 +14,16 @@ const authentication_1 = require("../authentication/authentication");
 const updateUser = (req, res, prisma) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { id } = req.params;
+        if (!id)
+            return res.status(400).json("Missing fields");
         const { first_name, last_name, email, birth_date, phone_number, profile_complete, } = req.body;
+        if (first_name == undefined ||
+            last_name == undefined ||
+            email == undefined ||
+            birth_date == undefined ||
+            phone_number == undefined ||
+            profile_complete == undefined)
+            return res.status(400).json("Missing fields");
         const payload = (0, authentication_1.handleTokenVerification)(req, res);
         if (payload.userId != id)
             return res.status(401).json("Unauthorized");
@@ -58,6 +67,8 @@ exports.updateUser = updateUser;
 const getUser = (req, res, prisma) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { id } = req.params;
+        if (!id)
+            return res.status(400).json("Missing fields");
         const { logged_in_id } = req.headers;
         const payload = (0, authentication_1.handleTokenVerification)(req, res);
         if (payload.userId != logged_in_id)

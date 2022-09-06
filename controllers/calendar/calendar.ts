@@ -20,14 +20,14 @@ export const addCalendar = async (
     } = req.body;
 
     if (
-      !monday ||
-      !tuesday ||
-      !wednesday ||
-      !thursday ||
-      !friday ||
-      !saturday ||
-      !sunday ||
-      !owner_id
+      monday == undefined ||
+      tuesday == undefined ||
+      wednesday == undefined ||
+      thursday == undefined ||
+      friday == undefined ||
+      saturday == undefined ||
+      sunday == undefined ||
+      owner_id == undefined
     ) {
       return res.status(400).json("Missing fields");
     }
@@ -90,14 +90,14 @@ export const updateCalendar = async (
     } = req.body;
 
     if (
-      !monday ||
-      !tuesday ||
-      !wednesday ||
-      !thursday ||
-      !friday ||
-      !saturday ||
-      !sunday ||
-      !owner_id
+      monday == undefined ||
+      tuesday == undefined ||
+      wednesday == undefined ||
+      thursday == undefined ||
+      friday == undefined ||
+      saturday == undefined ||
+      sunday == undefined ||
+      owner_id == undefined
     ) {
       return res.status(400).json("Missing fields");
     }

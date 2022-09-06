@@ -14,7 +14,12 @@ const authentication_1 = require("../authentication/authentication");
 const createClinic = (req, res, prisma) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { name, address, city, country, phone_number, owner_id } = req.body;
-        if (!name || !address || !city || !country || !phone_number || !owner_id) {
+        if (name == undefined ||
+            address == undefined ||
+            city == undefined ||
+            country == undefined ||
+            phone_number == undefined ||
+            owner_id == undefined) {
             return res.status(400).json("Missing fields");
         }
         const payload = (0, authentication_1.handleTokenVerification)(req, res);
@@ -60,14 +65,14 @@ const updateClinic = (req, res, prisma) => __awaiter(void 0, void 0, void 0, fun
         const { id } = req.params;
         if (!id || id === "")
             return res.status(400).json("Missing fields");
-        const { name, address, city, country, phone_number, owner_id, logged_in_id, } = req.body;
-        if (!name ||
-            !address ||
-            !city ||
-            !country ||
-            !phone_number ||
-            !owner_id ||
-            !logged_in_id) {
+        const { logged_in_id } = req.headers;
+        const { name, address, city, country, phone_number, owner_id } = req.body;
+        if (name == undefined ||
+            address == undefined ||
+            city == undefined ||
+            country == undefined ||
+            phone_number == undefined ||
+            owner_id == undefined) {
             return res.status(400).json("Missing fields");
         }
         const payload = (0, authentication_1.handleTokenVerification)(req, res);
@@ -191,8 +196,9 @@ const deleteClinic = (req, res, prisma) => __awaiter(void 0, void 0, void 0, fun
 exports.deleteClinic = deleteClinic;
 const addVetToClinic = (req, res, prisma) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const { logged_in_id, vet_id, clinic_id } = req.body;
-        if (!logged_in_id || !vet_id || !clinic_id)
+        const { vet_id, clinic_id } = req.body;
+        const { logged_in_id } = req.headers;
+        if (vet_id == undefined || clinic_id == undefined)
             return res.status(400).json("Missing fields");
         const payload = (0, authentication_1.handleTokenVerification)(req, res);
         if (payload.userId != logged_in_id)
@@ -235,8 +241,9 @@ const removeVetFromClinic = (req, res, prisma) => __awaiter(void 0, void 0, void
         const { id } = req.params;
         if (!id || id === "")
             return res.status(400).json("Missing fields");
-        const { logged_in_id, clinic_id } = req.body;
-        if (!logged_in_id || !clinic_id)
+        const { logged_in_id } = req.headers;
+        const { clinic_id } = req.body;
+        if (clinic_id == undefined)
             return res.status(400).json("Missing fields");
         const payload = (0, authentication_1.handleTokenVerification)(req, res);
         if (payload.userId != logged_in_id)
@@ -288,8 +295,9 @@ const approveNewVet = (req, res, prisma) => __awaiter(void 0, void 0, void 0, fu
         const { id } = req.params;
         if (!id || id === "")
             return res.status(400).json("Missing fields");
-        const { logged_in_id, clinic_id } = req.body;
-        if (!logged_in_id || !clinic_id)
+        const { logged_in_id } = req.headers;
+        const { clinic_id } = req.body;
+        if (clinic_id == undefined)
             return res.status(400).json("Missing fields");
         const payload = (0, authentication_1.handleTokenVerification)(req, res);
         if (payload.userId != logged_in_id)

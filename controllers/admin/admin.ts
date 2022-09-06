@@ -312,7 +312,7 @@ export const approveCommentReport = async (
 
     const { commentType, commentId } = req.body;
 
-    if (!commentType || !commentId)
+    if (commentType == undefined || commentId == undefined)
       return res.status(400).json("Missing comment fields");
 
     const payload: JWTPayload = handleTokenVerification(req, res) as JWTPayload;
@@ -391,7 +391,7 @@ export const rejectCommentReport = async (
 
     const { commentType, commentId } = req.body;
 
-    if (!commentType || !commentId)
+    if (commentType == undefined || commentId == undefined)
       return res.status(400).json("Missing comment fields");
 
     const payload: JWTPayload = handleTokenVerification(req, res) as JWTPayload;

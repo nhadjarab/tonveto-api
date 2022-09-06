@@ -13,11 +13,18 @@ export const search = async (
 
     if (!query) return res.status(400).json("Missing fields");
 
-    const clinics = await prisma.clinic.findMany({});
+    const clinics = await prisma.clinic.findMany({
+      where: {
+        is_approved: true,
+      },
+    });
 
     const vets = await prisma.vet.findMany({
       include: {
         specialities: true,
+      },
+      where: {
+        is_approved: true,
       },
     });
 

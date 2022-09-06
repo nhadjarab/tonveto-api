@@ -19,13 +19,13 @@ export const addMedicalReport = async (
     } = req.body;
 
     if (
-      !appointment_id ||
-      !reason ||
-      !diagnosis ||
-      !treatment ||
-      !notes ||
-      !pet_id ||
-      !vet_id
+      appointment_id == undefined ||
+      reason == undefined ||
+      diagnosis == undefined ||
+      treatment == undefined ||
+      notes == undefined ||
+      pet_id == undefined ||
+      vet_id == undefined
     )
       return res.status(400).json("Missing fields");
 
@@ -95,12 +95,12 @@ export const updateMedicalReport = async (
       req.body;
 
     if (
-      !appointment_id ||
-      !reason ||
-      !diagnosis ||
-      !treatment ||
-      !notes ||
-      !pet_id
+      appointment_id == undefined ||
+      reason == undefined ||
+      diagnosis == undefined ||
+      treatment == undefined ||
+      notes == undefined ||
+      pet_id == undefined
     )
       return res.status(400).json("Missing fields");
 

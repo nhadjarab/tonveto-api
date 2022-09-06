@@ -21,7 +21,7 @@ const public_key = fs_1.default.readFileSync(__dirname + "/vetolib.rsa.pub");
 const register = (req, res, prisma) => __awaiter(void 0, void 0, void 0, function* () {
     const { email, password } = req.body;
     // return 400 if email or password is missing
-    if (!email || !password) {
+    if (email == undefined || password == undefined) {
         return res.status(400).json("Email and password are required");
     }
     const existingAccount = yield prisma.auth.findUnique({
@@ -66,7 +66,7 @@ const registerVet = (req, res, prisma) => __awaiter(void 0, void 0, void 0, func
     try {
         const { email, password } = req.body;
         // return 400 if email or password is missing
-        if (!email || !password) {
+        if (email == undefined || password == undefined) {
             return res.status(400).json("Email and password are required");
         }
         const existingAccount = yield prisma.auth.findUnique({
@@ -105,7 +105,7 @@ const registerAdmin = (req, res, prisma) => __awaiter(void 0, void 0, void 0, fu
     try {
         const { email, password } = req.body;
         // return 400 if email or password is missing
-        if (!email || !password) {
+        if (email == undefined || password == undefined) {
             return res.status(400).json("Email and password are required");
         }
         const existingAccount = yield prisma.auth.findUnique({
@@ -142,7 +142,7 @@ const login = (req, res, prisma) => __awaiter(void 0, void 0, void 0, function* 
     try {
         const { email, password } = req.body;
         // return 400 if email or password is missing
-        if (!email || !password) {
+        if (email == undefined || password == undefined) {
             return res.status(400).json("Email and password are required");
         }
         const userAth = yield prisma.auth.findUnique({
@@ -175,7 +175,7 @@ const loginVet = (req, res, prisma) => __awaiter(void 0, void 0, void 0, functio
     try {
         const { email, password } = req.body;
         // return 400 if email or password is missing
-        if (!email || !password) {
+        if (email == undefined || password == undefined) {
             return res.status(400).json("Email and password are required");
         }
         const userAth = yield prisma.auth.findUnique({
@@ -209,7 +209,7 @@ const loginAdmin = (req, res, prisma) => __awaiter(void 0, void 0, void 0, funct
     try {
         const { email, password } = req.body;
         // return 400 if email or password is missing
-        if (!email || !password) {
+        if (email == undefined || password == undefined) {
             return res.status(400).json("Email and password are required");
         }
         const userAth = yield prisma.auth.findUnique({

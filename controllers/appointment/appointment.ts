@@ -16,7 +16,13 @@ export const addAppointment = async (
   try {
     const { date, time, pet_id, vet_id, user_id } = req.body;
 
-    if (!date || !time || !pet_id || !vet_id || !user_id)
+    if (
+      date == undefined ||
+      time == undefined ||
+      pet_id == undefined ||
+      vet_id == undefined ||
+      user_id == undefined
+    )
       return res.status(400).json("Missing fields");
 
     const payload: JWTPayload = handleTokenVerification(req, res) as JWTPayload;
@@ -143,7 +149,13 @@ export const updateAppointment = async (
 
     const { date, time, pet_id, vet_id, user_id } = req.body;
 
-    if (!date || !time || !pet_id || !vet_id || !user_id)
+    if (
+      date == undefined ||
+      time == undefined ||
+      pet_id == undefined ||
+      vet_id == undefined ||
+      user_id == undefined
+    )
       return res.status(400).json("Missing fields");
 
     const payload: JWTPayload = handleTokenVerification(req, res) as JWTPayload;
@@ -309,7 +321,7 @@ export const cancelAppointments = async (
 
     const { user_id } = req.body;
 
-    if (!user_id) return res.status(400).json("Missing user_id");
+    if (user_id == undefined) return res.status(400).json("Missing user_id");
 
     const payload: JWTPayload = handleTokenVerification(req, res) as JWTPayload;
 
@@ -322,6 +334,15 @@ export const cancelAppointments = async (
     });
 
     if (!doesUserExist) return res.status(404).json("User not found");
+
+    const doesAppointmentExist = await prisma.appointment.findUnique({
+      where: {
+        id,
+      },
+    });
+
+    if (!doesAppointmentExist)
+      return res.status(404).json("Appointment not found");
 
     const appointment = await prisma.appointment.delete({
       where: {
@@ -353,7 +374,13 @@ export const closeTimeSlot = async (
   try {
     const { date, time, vet_id, pet_id, user_id } = req.body;
 
-    if (!date || !time || !vet_id || !pet_id || !user_id)
+    if (
+      date == undefined ||
+      time == undefined ||
+      vet_id == undefined ||
+      pet_id == undefined ||
+      user_id == undefined
+    )
       return res.status(400).json("Missing fields");
 
     const payload: JWTPayload = handleTokenVerification(req, res) as JWTPayload;
@@ -474,7 +501,7 @@ export const openTimeSlot = async (
   try {
     const { date, time, vet_id } = req.body;
 
-    if (!date || !time || !vet_id)
+    if (date == undefined || time == undefined || vet_id == undefined)
       return res.status(400).json("Missing fields");
 
     const payload: JWTPayload = handleTokenVerification(req, res) as JWTPayload;

@@ -13,8 +13,9 @@ exports.reportClinicComment = exports.reportVetComment = exports.deleteCommentCl
 const authentication_1 = require("../authentication/authentication");
 const addCommentVet = (req, res, prisma) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const { text, logged_in_id, vet_id } = req.body;
-        if (!text || !logged_in_id || !vet_id)
+        const { logged_in_id } = req.headers;
+        const { text, vet_id } = req.body;
+        if (text == undefined || vet_id == undefined)
             return res.status(400).json("Missing fields");
         const payload = (0, authentication_1.handleTokenVerification)(req, res);
         if (payload.userId != logged_in_id)
@@ -50,10 +51,11 @@ exports.addCommentVet = addCommentVet;
 const editCommentVet = (req, res, prisma) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { id } = req.params;
+        const { logged_in_id } = req.headers;
         if (!id || id === "")
             return res.status(400).json("Missing fields");
-        const { text, logged_in_id } = req.body;
-        if (!text || !logged_in_id)
+        const { text } = req.body;
+        if (text == undefined)
             return res.status(400).json("Missing fields");
         const payload = (0, authentication_1.handleTokenVerification)(req, res);
         if (payload.userId != logged_in_id)
@@ -121,8 +123,9 @@ const deleteCommentVet = (req, res, prisma) => __awaiter(void 0, void 0, void 0,
 exports.deleteCommentVet = deleteCommentVet;
 const addCommentClinic = (req, res, prisma) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const { text, logged_in_id, clinic_id } = req.body;
-        if (!text || !logged_in_id || !clinic_id)
+        const { logged_in_id } = req.headers;
+        const { text, clinic_id } = req.body;
+        if (text == undefined || clinic_id == undefined)
             return res.status(400).json("Missing fields");
         const payload = (0, authentication_1.handleTokenVerification)(req, res);
         if (payload.userId != logged_in_id)
@@ -158,10 +161,11 @@ exports.addCommentClinic = addCommentClinic;
 const editCommentClinic = (req, res, prisma) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { id } = req.params;
+        const { logged_in_id } = req.headers;
         if (!id || id === "")
             return res.status(400).json("Missing fields");
-        const { text, logged_in_id } = req.body;
-        if (!text || !logged_in_id)
+        const { text } = req.body;
+        if (text == undefined)
             return res.status(400).json("Missing fields");
         const payload = (0, authentication_1.handleTokenVerification)(req, res);
         if (payload.userId != logged_in_id)
@@ -200,6 +204,8 @@ exports.editCommentClinic = editCommentClinic;
 const deleteCommentClinic = (req, res, prisma) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { id } = req.params;
+        if (!id || id === "")
+            return res.status(400).json("Missing fields");
         const { logged_in_id } = req.headers;
         const payload = (0, authentication_1.handleTokenVerification)(req, res);
         if (payload.userId != logged_in_id)
@@ -228,7 +234,12 @@ exports.deleteCommentClinic = deleteCommentClinic;
 const reportVetComment = (req, res, prisma) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { id } = req.params;
-        const { logged_in_id, user_type } = req.body;
+        if (!id || id === "")
+            return res.status(400).json("Missing fields");
+        const { logged_in_id } = req.headers;
+        const { user_type } = req.body;
+        if (user_type == undefined)
+            return res.status(400).json("Missing fields");
         const payload = (0, authentication_1.handleTokenVerification)(req, res);
         if (payload.userId != logged_in_id)
             return res.status(401).json("Unauthorized");
@@ -276,7 +287,12 @@ exports.reportVetComment = reportVetComment;
 const reportClinicComment = (req, res, prisma) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { id } = req.params;
-        const { logged_in_id, user_type } = req.body;
+        if (!id || id === "")
+            return res.status(400).json("Missing fields");
+        const { logged_in_id } = req.headers;
+        const { user_type } = req.body;
+        if (user_type == undefined)
+            return res.status(400).json("Missing fields");
         const payload = (0, authentication_1.handleTokenVerification)(req, res);
         if (payload.userId != logged_in_id)
             return res.status(401).json("Unauthorized");
