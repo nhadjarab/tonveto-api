@@ -11,6 +11,8 @@ export const search = async (
   try {
     const { query } = req.params;
 
+    if (!query) return res.status(400).json("Missing fields");
+
     const clinics = await prisma.clinic.findMany({});
 
     const vets = await prisma.vet.findMany({

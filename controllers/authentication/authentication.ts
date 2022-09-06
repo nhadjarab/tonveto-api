@@ -18,13 +18,18 @@ export const register = async (
 ) => {
   const { email, password } = req.body;
 
+  // return 400 if email or password is missing
+  if (!email || !password) {
+    return res.status(400).json("Email and password are required");
+  }
+
   const existingAccount = await prisma.auth.findUnique({
     where: {
       email,
     },
   });
 
-  if (existingAccount) res.status(400).json("Account already exists");
+  if (existingAccount) return res.status(400).json("Account already exists");
 
   const hash = bcrypt.hashSync(password, 10);
 
@@ -65,14 +70,19 @@ export const registerVet = async (
 ) => {
   try {
     const { email, password } = req.body;
-
+    // return 400 if email or password is missing
+    if (!email || !password) {
+      return res.status(400).json("Email and password are required");
+    }
     const existingAccount = await prisma.auth.findUnique({
       where: {
         email,
       },
     });
 
-    if (existingAccount) res.status(400).json("Account already exists");
+    if (existingAccount) {
+      return res.status(400).json("Account already exists");
+    }
 
     const hash = bcrypt.hashSync(password, 10);
 
@@ -94,7 +104,7 @@ export const registerVet = async (
       },
     });
 
-    res.status(200).json(vet);
+    res.status(201).json(vet);
   } catch (e) {
     res.status(500).json(e);
   }
@@ -107,6 +117,10 @@ export const registerAdmin = async (
 ) => {
   try {
     const { email, password } = req.body;
+    // return 400 if email or password is missing
+    if (!email || !password) {
+      return res.status(400).json("Email and password are required");
+    }
 
     const existingAccount = await prisma.auth.findUnique({
       where: {
@@ -114,7 +128,7 @@ export const registerAdmin = async (
       },
     });
 
-    if (existingAccount) res.status(400).json("Account already exists");
+    if (existingAccount) return res.status(400).json("Account already exists");
 
     const hash = bcrypt.hashSync(password, 10);
 
@@ -135,9 +149,9 @@ export const registerAdmin = async (
       },
     });
 
-    res.status(200).json(admin);
+    res.status(201).json(admin);
   } catch (e) {
-    res.status(500).json(e);
+    return res.status(500).json(e);
   }
 };
 
@@ -148,6 +162,11 @@ export const login = async (
 ) => {
   try {
     const { email, password } = req.body;
+
+    // return 400 if email or password is missing
+    if (!email || !password) {
+      return res.status(400).json("Email and password are required");
+    }
     const userAth = await prisma.auth.findUnique({
       where: {
         email,
@@ -184,6 +203,11 @@ export const loginVet = async (
 ) => {
   try {
     const { email, password } = req.body;
+
+    // return 400 if email or password is missing
+    if (!email || !password) {
+      return res.status(400).json("Email and password are required");
+    }
     const userAth = await prisma.auth.findUnique({
       where: {
         email,
@@ -221,6 +245,11 @@ export const loginAdmin = async (
 ) => {
   try {
     const { email, password } = req.body;
+
+    // return 400 if email or password is missing
+    if (!email || !password) {
+      return res.status(400).json("Email and password are required");
+    }
     const userAth = await prisma.auth.findUnique({
       where: {
         email,

@@ -21,6 +21,8 @@ mail_1.default.setApiKey(process.env.SENDGRID);
 const addAppointment = (req, res, prisma) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { date, time, pet_id, vet_id, user_id } = req.body;
+        if (!date || !time || !pet_id || !vet_id || !user_id)
+            return res.status(400).json("Missing fields");
         const payload = (0, authentication_1.handleTokenVerification)(req, res);
         if (payload.userId != user_id)
             return res.status(401).json("Unauthorized");
@@ -100,7 +102,7 @@ const addAppointment = (req, res, prisma) => __awaiter(void 0, void 0, void 0, f
             .catch((error) => {
             console.error(error);
         });
-        res.status(200).json(newAppointment);
+        res.status(201).json(newAppointment);
     }
     catch (e) {
         console.log(e);
@@ -110,7 +112,11 @@ exports.addAppointment = addAppointment;
 const updateAppointment = (req, res, prisma) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { id } = req.params;
+        if (!id || id === "")
+            return res.status(400).json("Missing id");
         const { date, time, pet_id, vet_id, user_id } = req.body;
+        if (!date || !time || !pet_id || !vet_id || !user_id)
+            return res.status(400).json("Missing fields");
         const payload = (0, authentication_1.handleTokenVerification)(req, res);
         if (payload.userId != user_id)
             return res.status(401).json("Unauthorized");
@@ -203,6 +209,8 @@ exports.updateAppointment = updateAppointment;
 const getAppointment = (req, res, prisma) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { id } = req.params;
+        if (!id || id === "")
+            return res.status(400).json("Missing id");
         const { logged_in_id } = req.headers;
         const payload = (0, authentication_1.handleTokenVerification)(req, res);
         if (payload.userId != logged_in_id)
@@ -229,7 +237,11 @@ exports.getAppointment = getAppointment;
 const cancelAppointments = (req, res, prisma) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { id } = req.params;
+        if (!id || id === "")
+            return res.status(400).json("Missing id");
         const { user_id } = req.body;
+        if (!user_id)
+            return res.status(400).json("Missing user_id");
         const payload = (0, authentication_1.handleTokenVerification)(req, res);
         if (payload.userId != user_id)
             return res.status(401).json("Unauthorized");
@@ -264,6 +276,8 @@ exports.cancelAppointments = cancelAppointments;
 const closeTimeSlot = (req, res, prisma) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { date, time, vet_id, pet_id, user_id } = req.body;
+        if (!date || !time || !vet_id || !pet_id || !user_id)
+            return res.status(400).json("Missing fields");
         const payload = (0, authentication_1.handleTokenVerification)(req, res);
         if (payload.userId != vet_id)
             return res.status(401).json("Unauthorized");
@@ -341,7 +355,7 @@ const closeTimeSlot = (req, res, prisma) => __awaiter(void 0, void 0, void 0, fu
                 time,
                 pet_id,
                 vet_id,
-                user_id
+                user_id,
             },
         });
         res.status(200).json(newAppointment);
@@ -354,6 +368,8 @@ exports.closeTimeSlot = closeTimeSlot;
 const openTimeSlot = (req, res, prisma) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { date, time, vet_id } = req.body;
+        if (!date || !time || !vet_id)
+            return res.status(400).json("Missing fields");
         const payload = (0, authentication_1.handleTokenVerification)(req, res);
         if (payload.userId != vet_id)
             return res.status(401).json("Unauthorized");

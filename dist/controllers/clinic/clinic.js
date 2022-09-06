@@ -14,6 +14,9 @@ const authentication_1 = require("../authentication/authentication");
 const createClinic = (req, res, prisma) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { name, address, city, country, phone_number, owner_id } = req.body;
+        if (!name || !address || !city || !country || !phone_number || !owner_id) {
+            return res.status(400).json("Missing fields");
+        }
         const payload = (0, authentication_1.handleTokenVerification)(req, res);
         if (payload.userId != owner_id)
             return res.status(401).json("Unauthorized");
@@ -55,7 +58,18 @@ exports.createClinic = createClinic;
 const updateClinic = (req, res, prisma) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { id } = req.params;
+        if (!id || id === "")
+            return res.status(400).json("Missing fields");
         const { name, address, city, country, phone_number, owner_id, logged_in_id, } = req.body;
+        if (!name ||
+            !address ||
+            !city ||
+            !country ||
+            !phone_number ||
+            !owner_id ||
+            !logged_in_id) {
+            return res.status(400).json("Missing fields");
+        }
         const payload = (0, authentication_1.handleTokenVerification)(req, res);
         if (payload.userId != logged_in_id)
             return res.status(401).json("Unauthorized");
@@ -102,6 +116,8 @@ exports.updateClinic = updateClinic;
 const getClinic = (req, res, prisma) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { id } = req.params;
+        if (!id || id === "")
+            return res.status(400).json("Missing fields");
         const { logged_in_id } = req.headers;
         const payload = (0, authentication_1.handleTokenVerification)(req, res);
         if (payload.userId != logged_in_id)
@@ -143,6 +159,8 @@ exports.getClinic = getClinic;
 const deleteClinic = (req, res, prisma) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { id } = req.params;
+        if (!id || id === "")
+            return res.status(400).json("Missing fields");
         const { logged_in_id } = req.headers;
         const payload = (0, authentication_1.handleTokenVerification)(req, res);
         if (payload.userId != logged_in_id)
@@ -174,6 +192,8 @@ exports.deleteClinic = deleteClinic;
 const addVetToClinic = (req, res, prisma) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { logged_in_id, vet_id, clinic_id } = req.body;
+        if (!logged_in_id || !vet_id || !clinic_id)
+            return res.status(400).json("Missing fields");
         const payload = (0, authentication_1.handleTokenVerification)(req, res);
         if (payload.userId != logged_in_id)
             return res.status(401).json("Unauthorized");
@@ -213,7 +233,11 @@ exports.addVetToClinic = addVetToClinic;
 const removeVetFromClinic = (req, res, prisma) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { id } = req.params;
+        if (!id || id === "")
+            return res.status(400).json("Missing fields");
         const { logged_in_id, clinic_id } = req.body;
+        if (!logged_in_id || !clinic_id)
+            return res.status(400).json("Missing fields");
         const payload = (0, authentication_1.handleTokenVerification)(req, res);
         if (payload.userId != logged_in_id)
             return res.status(401).json("Unauthorized");
@@ -262,7 +286,11 @@ exports.removeVetFromClinic = removeVetFromClinic;
 const approveNewVet = (req, res, prisma) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { id } = req.params;
+        if (!id || id === "")
+            return res.status(400).json("Missing fields");
         const { logged_in_id, clinic_id } = req.body;
+        if (!logged_in_id || !clinic_id)
+            return res.status(400).json("Missing fields");
         const payload = (0, authentication_1.handleTokenVerification)(req, res);
         if (payload.userId != logged_in_id)
             return res.status(401).json("Unauthorized");

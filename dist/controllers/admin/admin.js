@@ -135,6 +135,9 @@ exports.getAllAppointments = getAllAppointments;
 const approveClinic = (req, res, prisma) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { id } = req.params;
+        if (!id || id === "") {
+            return res.status(400).json("Missing id");
+        }
         const { logged_in_id } = req.headers;
         const payload = (0, authentication_1.handleTokenVerification)(req, res);
         if (payload.userId !== logged_in_id)
@@ -171,6 +174,9 @@ exports.approveClinic = approveClinic;
 const approveVet = (req, res, prisma) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { id } = req.params;
+        if (!id || id === "") {
+            return res.status(400).json("Missing id");
+        }
         const { logged_in_id } = req.headers;
         const payload = (0, authentication_1.handleTokenVerification)(req, res);
         if (payload.userId !== logged_in_id)
@@ -238,7 +244,13 @@ exports.getCommentReports = getCommentReports;
 const approveCommentReport = (req, res, prisma) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { id } = req.params;
-        const { logged_in_id, commentType, commentId } = req.body;
+        if (!id || id === "") {
+            return res.status(400).json("Missing id");
+        }
+        const { logged_in_id } = req.headers;
+        const { commentType, commentId } = req.body;
+        if (!commentType || !commentId)
+            return res.status(400).json("Missing comment fields");
         const payload = (0, authentication_1.handleTokenVerification)(req, res);
         if (payload.userId !== logged_in_id)
             return res.status(401).json("Unauthorized");
@@ -299,6 +311,9 @@ exports.approveCommentReport = approveCommentReport;
 const rejectCommentReport = (req, res, prisma) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { id } = req.params;
+        if (!id || id === "") {
+            return res.status(400).json("Missing id");
+        }
         const { logged_in_id, commentType, commentId } = req.body;
         const payload = (0, authentication_1.handleTokenVerification)(req, res);
         if (payload.userId !== logged_in_id)

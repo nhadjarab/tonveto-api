@@ -19,6 +19,18 @@ export const addPet = async (
       owner_id,
     } = req.body;
 
+    if (
+      !sex ||
+      name ||
+      birth_date ||
+      species ||
+      breed ||
+      crossbreed ||
+      sterilised ||
+      owner_id
+    )
+      return res.status(400).json("Missing fields");
+
     const payload: JWTPayload = handleTokenVerification(req, res) as JWTPayload;
 
     if (payload.userId != owner_id) return res.status(401).json("Unauthorized");
@@ -58,6 +70,8 @@ export const updatePet = async (
   try {
     const { id } = req.params;
 
+    if (!id || id === "") return res.status(400).json("Missing fields");
+
     const {
       sex,
       name,
@@ -68,6 +82,18 @@ export const updatePet = async (
       sterilised,
       owner_id,
     } = req.body;
+
+    if (
+      !sex ||
+      name ||
+      birth_date ||
+      species ||
+      breed ||
+      crossbreed ||
+      sterilised ||
+      owner_id
+    )
+      return res.status(400).json("Missing fields");
 
     const payload: JWTPayload = handleTokenVerification(req, res) as JWTPayload;
 
@@ -112,7 +138,10 @@ export const getPet = async (
 ) => {
   try {
     const { id } = req.params;
-    const {logged_in_id} = req.headers;
+
+    if (!id || id === "") return res.status(400).json("Missing fields");
+
+    const { logged_in_id } = req.headers;
 
     const payload: JWTPayload = handleTokenVerification(req, res) as JWTPayload;
 
@@ -148,7 +177,12 @@ export const deletePet = async (
 ) => {
   try {
     const { id } = req.params;
+
+    if (!id || id === "") return res.status(400).json("Missing fields");
+
     const { owner_id } = req.body;
+
+    if (!owner_id) return res.status(400).json("Missing fields");
 
     const payload: JWTPayload = handleTokenVerification(req, res) as JWTPayload;
 

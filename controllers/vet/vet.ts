@@ -13,6 +13,8 @@ export const updateVet = async (
   try {
     const { id } = req.params;
 
+    if (!id) return res.status(400).json("Missing fields");
+
     const {
       email,
       birth_date,
@@ -23,6 +25,18 @@ export const updateVet = async (
       identification_order,
       profile_complete,
     } = req.body;
+
+    if (
+      !email ||
+      !birth_date ||
+      !first_name ||
+      !last_name ||
+      !phone_number ||
+      !bank_details ||
+      !identification_order ||
+      !profile_complete
+    )
+      return res.status(400).json("Missing fields");
 
     const payload: JWTPayload = handleTokenVerification(req, res) as JWTPayload;
 
@@ -76,6 +90,8 @@ export const getVet = async (
 ) => {
   try {
     const { id } = req.params;
+
+    if (!id) return res.status(400).json("Missing fields");
 
     const { logged_in_id } = req.headers;
 

@@ -11,6 +11,9 @@ export const addSpecialty = async (
   try {
     const { name, price, owner_id } = req.body;
 
+    if (!name || !price || !owner_id)
+      return res.status(400).json("Missing fields");
+
     const payload: JWTPayload = handleTokenVerification(req, res) as JWTPayload;
 
     if (payload.userId != owner_id) return res.status(401).json("Unauthorized");
@@ -47,7 +50,12 @@ export const updateSpecialty = async (
   try {
     const { id } = req.params;
 
+    if (!id) return res.status(400).json("Missing fields");
+
     const { name, price, owner_id } = req.body;
+
+    if (!name || !price || !owner_id)
+      return res.status(400).json("Missing fields");
 
     const payload: JWTPayload = handleTokenVerification(req, res) as JWTPayload;
 
@@ -84,7 +92,10 @@ export const getSpecialty = async (
 ) => {
   try {
     const { id } = req.params;
-    const {logged_in_id} = req.headers;
+
+    if (!id) return res.status(400).json("Missing fields");
+
+    const { logged_in_id } = req.headers;
 
     const payload: JWTPayload = handleTokenVerification(req, res) as JWTPayload;
 
@@ -115,7 +126,12 @@ export const deleteSpecialty = async (
 ) => {
   try {
     const { id } = req.params;
+
+    if (!id) return res.status(400).json("Missing fields");
+
     const { owner_id } = req.body;
+
+    if (!owner_id) return res.status(400).json("Missing fields");
 
     const payload: JWTPayload = handleTokenVerification(req, res) as JWTPayload;
 

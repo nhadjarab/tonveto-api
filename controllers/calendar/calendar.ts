@@ -19,6 +19,19 @@ export const addCalendar = async (
       owner_id,
     } = req.body;
 
+    if (
+      !monday ||
+      !tuesday ||
+      !wednesday ||
+      !thursday ||
+      !friday ||
+      !saturday ||
+      !sunday ||
+      !owner_id
+    ) {
+      return res.status(400).json("Missing fields");
+    }
+
     const payload: JWTPayload = handleTokenVerification(req, res) as JWTPayload;
 
     if (payload.userId != owner_id) return res.status(401).json("Unauthorized");
@@ -61,6 +74,10 @@ export const updateCalendar = async (
   try {
     const { id } = req.params;
 
+    if (!id || id === "") {
+      return res.status(400).json("Missing id");
+    }
+
     const {
       monday,
       tuesday,
@@ -71,6 +88,19 @@ export const updateCalendar = async (
       sunday,
       owner_id,
     } = req.body;
+
+    if (
+      !monday ||
+      !tuesday ||
+      !wednesday ||
+      !thursday ||
+      !friday ||
+      !saturday ||
+      !sunday ||
+      !owner_id
+    ) {
+      return res.status(400).json("Missing fields");
+    }
 
     const payload: JWTPayload = handleTokenVerification(req, res) as JWTPayload;
 
@@ -129,7 +159,12 @@ export const getCalendar = async (
 ) => {
   try {
     const { id } = req.params;
-    const {logged_in_id} = req.headers;
+
+    if (!id || id === "") {
+      return res.status(400).json("Missing id");
+    }
+
+    const { logged_in_id } = req.headers;
 
     const payload: JWTPayload = handleTokenVerification(req, res) as JWTPayload;
 
@@ -158,6 +193,11 @@ export const deleteCalendar = async (
 ) => {
   try {
     const { id } = req.params;
+
+    if (!id || id === "") {
+      return res.status(400).json("Missing id");
+    }
+
     const { owner_id } = req.body;
 
     const payload: JWTPayload = handleTokenVerification(req, res) as JWTPayload;

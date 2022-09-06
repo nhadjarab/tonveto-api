@@ -13,6 +13,8 @@ export const updateUser = async (
   try {
     const { id } = req.params;
 
+    if (!id) return res.status(400).json("Missing fields");
+
     const {
       first_name,
       last_name,
@@ -21,6 +23,16 @@ export const updateUser = async (
       phone_number,
       profile_complete,
     } = req.body;
+
+    if (
+      !first_name ||
+      !last_name ||
+      !email ||
+      !birth_date ||
+      !phone_number ||
+      !profile_complete
+    )
+      return res.status(400).json("Missing fields");
 
     const payload: JWTPayload = handleTokenVerification(req, res) as JWTPayload;
 
@@ -73,7 +85,9 @@ export const getUser = async (
   try {
     const { id } = req.params;
 
-    const {logged_in_id} = req.headers;
+    if (!id) return res.status(400).json("Missing fields");
+
+    const { logged_in_id } = req.headers;
 
     const payload: JWTPayload = handleTokenVerification(req, res) as JWTPayload;
 

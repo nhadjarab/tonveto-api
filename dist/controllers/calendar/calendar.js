@@ -14,6 +14,16 @@ const authentication_1 = require("../authentication/authentication");
 const addCalendar = (req, res, prisma) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { monday, tuesday, wednesday, thursday, friday, saturday, sunday, owner_id, } = req.body;
+        if (!monday ||
+            !tuesday ||
+            !wednesday ||
+            !thursday ||
+            !friday ||
+            !saturday ||
+            !sunday ||
+            !owner_id) {
+            return res.status(400).json("Missing fields");
+        }
         const payload = (0, authentication_1.handleTokenVerification)(req, res);
         if (payload.userId != owner_id)
             return res.status(401).json("Unauthorized");
@@ -48,7 +58,20 @@ exports.addCalendar = addCalendar;
 const updateCalendar = (req, res, prisma) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { id } = req.params;
+        if (!id || id === "") {
+            return res.status(400).json("Missing id");
+        }
         const { monday, tuesday, wednesday, thursday, friday, saturday, sunday, owner_id, } = req.body;
+        if (!monday ||
+            !tuesday ||
+            !wednesday ||
+            !thursday ||
+            !friday ||
+            !saturday ||
+            !sunday ||
+            !owner_id) {
+            return res.status(400).json("Missing fields");
+        }
         const payload = (0, authentication_1.handleTokenVerification)(req, res);
         if (payload.userId != owner_id)
             return res.status(401).json("Unauthorized");
@@ -97,6 +120,9 @@ exports.updateCalendar = updateCalendar;
 const getCalendar = (req, res, prisma) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { id } = req.params;
+        if (!id || id === "") {
+            return res.status(400).json("Missing id");
+        }
         const { logged_in_id } = req.headers;
         const payload = (0, authentication_1.handleTokenVerification)(req, res);
         if (payload.userId != logged_in_id)
@@ -119,6 +145,9 @@ exports.getCalendar = getCalendar;
 const deleteCalendar = (req, res, prisma) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { id } = req.params;
+        if (!id || id === "") {
+            return res.status(400).json("Missing id");
+        }
         const { owner_id } = req.body;
         const payload = (0, authentication_1.handleTokenVerification)(req, res);
         if (payload.userId != owner_id)

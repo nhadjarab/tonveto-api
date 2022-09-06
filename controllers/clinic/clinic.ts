@@ -10,6 +10,10 @@ export const createClinic = async (
   try {
     const { name, address, city, country, phone_number, owner_id } = req.body;
 
+    if (!name || !address || !city || !country || !phone_number || !owner_id) {
+      return res.status(400).json("Missing fields");
+    }
+
     const payload: JWTPayload = handleTokenVerification(req, res) as JWTPayload;
 
     if (payload.userId != owner_id) return res.status(401).json("Unauthorized");
@@ -58,15 +62,15 @@ export const updateClinic = async (
   try {
     const { id } = req.params;
 
-    const {
-      name,
-      address,
-      city,
-      country,
-      phone_number,
-      owner_id,
-      logged_in_id,
-    } = req.body;
+    if (!id || id === "") return res.status(400).json("Missing fields");
+
+    const { logged_in_id } = req.headers;
+
+    const { name, address, city, country, phone_number, owner_id } = req.body;
+
+    if (!name || !address || !city || !country || !phone_number || !owner_id) {
+      return res.status(400).json("Missing fields");
+    }
 
     const payload: JWTPayload = handleTokenVerification(req, res) as JWTPayload;
 
@@ -122,7 +126,10 @@ export const getClinic = async (
 ) => {
   try {
     const { id } = req.params;
-    const {logged_in_id} = req.headers;
+
+    if (!id || id === "") return res.status(400).json("Missing fields");
+
+    const { logged_in_id } = req.headers;
 
     const payload: JWTPayload = handleTokenVerification(req, res) as JWTPayload;
 
@@ -171,7 +178,10 @@ export const deleteClinic = async (
 ) => {
   try {
     const { id } = req.params;
-    const {logged_in_id} = req.headers;
+
+    if (!id || id === "") return res.status(400).json("Missing fields");
+
+    const { logged_in_id } = req.headers;
 
     const payload: JWTPayload = handleTokenVerification(req, res) as JWTPayload;
 
@@ -211,7 +221,11 @@ export const addVetToClinic = async (
   prisma: PrismaClient
 ) => {
   try {
-    const { logged_in_id, vet_id, clinic_id } = req.body;
+    const { vet_id, clinic_id } = req.body;
+
+    const { logged_in_id } = req.headers;
+
+    if (!vet_id || !clinic_id) return res.status(400).json("Missing fields");
 
     const payload: JWTPayload = handleTokenVerification(req, res) as JWTPayload;
 
@@ -261,7 +275,13 @@ export const removeVetFromClinic = async (
   try {
     const { id } = req.params;
 
-    const { logged_in_id, clinic_id } = req.body;
+    if (!id || id === "") return res.status(400).json("Missing fields");
+
+    const { logged_in_id } = req.headers;
+
+    const { clinic_id } = req.body;
+
+    if (!clinic_id) return res.status(400).json("Missing fields");
 
     const payload: JWTPayload = handleTokenVerification(req, res) as JWTPayload;
 
@@ -321,7 +341,13 @@ export const approveNewVet = async (
   try {
     const { id } = req.params;
 
-    const { logged_in_id, clinic_id } = req.body;
+    if (!id || id === "") return res.status(400).json("Missing fields");
+
+    const { logged_in_id } = req.headers;
+
+    const { clinic_id } = req.body;
+
+    if (!clinic_id) return res.status(400).json("Missing fields");
 
     const payload: JWTPayload = handleTokenVerification(req, res) as JWTPayload;
 

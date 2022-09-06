@@ -18,6 +18,17 @@ export const addMedicalReport = async (
       vet_id,
     } = req.body;
 
+    if (
+      !appointment_id ||
+      !reason ||
+      !diagnosis ||
+      !treatment ||
+      !notes ||
+      !pet_id ||
+      !vet_id
+    )
+      return res.status(400).json("Missing fields");
+
     const payload: JWTPayload = handleTokenVerification(req, res) as JWTPayload;
 
     if (payload.userId != vet_id) return res.status(401).json("Unauthorized");
@@ -76,15 +87,22 @@ export const updateMedicalReport = async (
   try {
     const { id } = req.params;
 
-    const {
-      appointment_id,
-      reason,
-      diagnosis,
-      treatment,
-      notes,
-      pet_id,
-      logged_in_id,
-    } = req.body;
+    if (!id || id === "") return res.status(400).json("Missing fields");
+
+    const { logged_in_id } = req.headers;
+
+    const { appointment_id, reason, diagnosis, treatment, notes, pet_id } =
+      req.body;
+
+    if (
+      !appointment_id ||
+      !reason ||
+      !diagnosis ||
+      !treatment ||
+      !notes ||
+      !pet_id
+    )
+      return res.status(400).json("Missing fields");
 
     const payload: JWTPayload = handleTokenVerification(req, res) as JWTPayload;
 
@@ -130,7 +148,10 @@ export const getMedicalReport = async (
 ) => {
   try {
     const { id } = req.params;
-    const {logged_in_id} = req.headers;
+
+    if (!id || id === "") return res.status(400).json("Missing fields");
+
+    const { logged_in_id } = req.headers;
 
     const payload: JWTPayload = handleTokenVerification(req, res) as JWTPayload;
 
