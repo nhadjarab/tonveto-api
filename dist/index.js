@@ -147,6 +147,14 @@ app.get("/clinic/:id", (req, res) => __awaiter(void 0, void 0, void 0, function*
         console.log(e);
     }
 }));
+app.get("/clinicApplications/:id", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        (0, clinic_1.getClinicApplicants)(req, res, prisma);
+    }
+    catch (e) {
+        console.log(e);
+    }
+}));
 app.delete("/clinic/:id", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         (0, clinic_1.deleteClinic)(req, res, prisma);

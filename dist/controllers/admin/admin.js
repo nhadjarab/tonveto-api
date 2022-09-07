@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.rejectCommentReport = exports.approveCommentReport = exports.getCommentReports = exports.approveVet = exports.approveClinic = exports.getAllAppointments = exports.getAllClinics = exports.getAllVets = exports.getAllUsers = void 0;
+exports.getAllClinicApplications = exports.getAllVetApplications = exports.rejectCommentReport = exports.approveCommentReport = exports.getCommentReports = exports.approveVet = exports.approveClinic = exports.getAllAppointments = exports.getAllClinics = exports.getAllVets = exports.getAllUsers = void 0;
 const authentication_1 = require("../authentication/authentication");
 const getAllUsers = (req, res, prisma) => __awaiter(void 0, void 0, void 0, function* () {
     try {
@@ -365,4 +365,57 @@ const rejectCommentReport = (req, res, prisma) => __awaiter(void 0, void 0, void
     }
 });
 exports.rejectCommentReport = rejectCommentReport;
+const getAllVetApplications = (req, res, prisma) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const { logged_in_id } = req.headers;
+        const payload = (0, authentication_1.handleTokenVerification)(req, res);
+        if (payload.userId !== logged_in_id)
+            return res.status(401).json("Unauthorized");
+        const admin = yield prisma.admin.findUnique({
+            where: {
+                id: logged_in_id,
+            },
+        });
+        if (!admin)
+            return res.status(404).json("Admin not found");
+        const vets = yield prisma.vet.findMany({
+            where: {
+                is_approved: false,
+            },
+        });
+        res.status(200).json(vets);
+    }
+    catch (e) {
+        console.log(e);
+    }
+});
+exports.getAllVetApplications = getAllVetApplications;
+const getAllClinicApplications = (req, res, prisma) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const { logged_in_id } = req.headers;
+        const payload = (0, authentication_1.handleTokenVerification)(req, res);
+        if (payload.userId !== logged_in_id)
+            return res.status(401).json("Unauthorized");
+        const admin = yield prisma.admin.findUnique({
+            where: {
+                id: logged_in_id,
+            },
+        });
+        if (!admin)
+            return res.status(404).json("Admin not found");
+        const clinics = yield prisma.clinic.findMany({
+            include: {
+                owner: true,
+            },
+            where: {
+                is_approved: false,
+            },
+        });
+        res.status(200).json(clinics);
+    }
+    catch (e) {
+        console.log(e);
+    }
+});
+exports.getAllClinicApplications = getAllClinicApplications;
 //# sourceMappingURL=admin.js.map

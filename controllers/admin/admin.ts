@@ -444,3 +444,72 @@ export const rejectCommentReport = async (
     console.log(e);
   }
 };
+
+export const getAllVetApplications = async (
+  req: Request,
+  res: Response,
+  prisma: PrismaClient
+) => {
+  try {
+    const { logged_in_id } = req.headers;
+
+    const payload: JWTPayload = handleTokenVerification(req, res) as JWTPayload;
+
+    if (payload.userId !== logged_in_id)
+      return res.status(401).json("Unauthorized");
+
+    const admin = await prisma.admin.findUnique({
+      where: {
+        id: logged_in_id,
+      },
+    });
+
+    if (!admin) return res.status(404).json("Admin not found");
+
+    const vets = await prisma.vet.findMany({
+      where: {
+        is_approved: false,
+      },
+    });
+
+    res.status(200).json(vets);
+  } catch (e) {
+    console.log(e);
+  }
+};
+
+export const getAllClinicApplications = async (
+  req: Request,
+  res: Response,
+  prisma: PrismaClient
+) => {
+  try {
+    const { logged_in_id } = req.headers;
+
+    const payload: JWTPayload = handleTokenVerification(req, res) as JWTPayload;
+
+    if (payload.userId !== logged_in_id)
+      return res.status(401).json("Unauthorized");
+
+    const admin = await prisma.admin.findUnique({
+      where: {
+        id: logged_in_id,
+      },
+    });
+
+    if (!admin) return res.status(404).json("Admin not found");
+
+    const clinics = await prisma.clinic.findMany({
+      include: {
+        owner: true,
+      },
+      where: {
+        is_approved: false,
+      },
+    });
+
+    res.status(200).json(clinics);
+  } catch (e) {
+    console.log(e);
+  }
+};

@@ -16,13 +16,12 @@ const updateUser = (req, res, prisma) => __awaiter(void 0, void 0, void 0, funct
         const { id } = req.params;
         if (!id)
             return res.status(400).json("Missing fields");
-        const { first_name, last_name, email, birth_date, phone_number, profile_complete, } = req.body;
+        const { first_name, last_name, email, birth_date, phone_number } = req.body;
         if (first_name == undefined ||
             last_name == undefined ||
             email == undefined ||
             birth_date == undefined ||
-            phone_number == undefined ||
-            profile_complete == undefined)
+            phone_number == undefined)
             return res.status(400).json("Missing fields");
         const payload = (0, authentication_1.handleTokenVerification)(req, res);
         if (payload.userId != id)
@@ -35,6 +34,13 @@ const updateUser = (req, res, prisma) => __awaiter(void 0, void 0, void 0, funct
         if (!oldUser)
             return res.status(404).json("User does not exist");
         if (oldUser.email != email) {
+            const doesAuthExist = yield prisma.auth.findUnique({
+                where: {
+                    email,
+                },
+            });
+            if (doesAuthExist)
+                return res.status(400).json("Email already being used");
             const newAuth = yield prisma.auth.update({
                 where: {
                     email: oldUser.email,
@@ -54,7 +60,7 @@ const updateUser = (req, res, prisma) => __awaiter(void 0, void 0, void 0, funct
                 email,
                 birth_date,
                 phone_number,
-                profile_complete,
+                profile_complete: isProfileComplete(first_name, last_name, email, birth_date, phone_number),
             },
         });
         res.status(200).json(userProfile);
@@ -89,4 +95,16 @@ const getUser = (req, res, prisma) => __awaiter(void 0, void 0, void 0, function
     }
 });
 exports.getUser = getUser;
+const isProfileComplete = (first_name, last_name, email, birth_date, phone_number) => {
+    return (first_name != undefined &&
+        last_name != undefined &&
+        email != undefined &&
+        birth_date != undefined &&
+        phone_number != undefined &&
+        first_name != "" &&
+        last_name != "" &&
+        email != "" &&
+        birth_date != "" &&
+        phone_number != "");
+};
 //# sourceMappingURL=user.js.map

@@ -372,15 +372,9 @@ export const closeTimeSlot = async (
   prisma: PrismaClient
 ) => {
   try {
-    const { date, time, vet_id, pet_id, user_id } = req.body;
+    const { date, time, vet_id } = req.body;
 
-    if (
-      date == undefined ||
-      time == undefined ||
-      vet_id == undefined ||
-      pet_id == undefined ||
-      user_id == undefined
-    )
+    if (date == undefined || time == undefined || vet_id == undefined)
       return res.status(400).json("Missing fields");
 
     const payload: JWTPayload = handleTokenVerification(req, res) as JWTPayload;
@@ -481,9 +475,9 @@ export const closeTimeSlot = async (
       data: {
         date,
         time,
-        pet_id,
+        pet_id: process.env.DEFAULT_PET_ID,
         vet_id,
-        user_id,
+        user_id: process.env.DEFAULT_USER_ID,
       },
     });
 

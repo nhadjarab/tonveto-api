@@ -15,22 +15,14 @@ export const updateUser = async (
 
     if (!id) return res.status(400).json("Missing fields");
 
-    const {
-      first_name,
-      last_name,
-      email,
-      birth_date,
-      phone_number,
-      profile_complete,
-    } = req.body;
+    const { first_name, last_name, email, birth_date, phone_number } = req.body;
 
     if (
       first_name == undefined ||
       last_name == undefined ||
       email == undefined ||
       birth_date == undefined ||
-      phone_number == undefined ||
-      profile_complete == undefined
+      phone_number == undefined
     )
       return res.status(400).json("Missing fields");
 
@@ -47,6 +39,15 @@ export const updateUser = async (
     if (!oldUser) return res.status(404).json("User does not exist");
 
     if (oldUser.email != email) {
+      const doesAuthExist = await prisma.auth.findUnique({
+        where: {
+          email,
+        },
+      });
+
+      if (doesAuthExist)
+        return res.status(400).json("Email already being used");
+
       const newAuth = await prisma.auth.update({
         where: {
           email: oldUser.email,
@@ -67,7 +68,13 @@ export const updateUser = async (
         email,
         birth_date,
         phone_number,
-        profile_complete,
+        profile_complete: isProfileComplete(
+          first_name,
+          last_name,
+          email,
+          birth_date,
+          phone_number
+        ),
       },
     });
 
@@ -108,4 +115,25 @@ export const getUser = async (
   } catch (e) {
     res.status(500).json(e);
   }
+};
+
+const isProfileComplete = (
+  first_name: string,
+  last_name: string,
+  email: string,
+  birth_date: string,
+  phone_number: string
+) => {
+  return (
+    first_name != undefined &&
+    last_name != undefined &&
+    email != undefined &&
+    birth_date != undefined &&
+    phone_number != undefined &&
+    first_name != "" &&
+    last_name != "" &&
+    email != "" &&
+    birth_date != "" &&
+    phone_number != ""
+  );
 };

@@ -237,8 +237,8 @@ const reportVetComment = (req, res, prisma) => __awaiter(void 0, void 0, void 0,
         if (!id || id === "")
             return res.status(400).json("Missing fields");
         const { logged_in_id } = req.headers;
-        const { user_type } = req.body;
-        if (user_type == undefined)
+        const { user_type, vet_id } = req.body;
+        if (user_type == undefined || vet_id == undefined)
             return res.status(400).json("Missing fields");
         const payload = (0, authentication_1.handleTokenVerification)(req, res);
         if (payload.userId != logged_in_id)
@@ -270,11 +270,19 @@ const reportVetComment = (req, res, prisma) => __awaiter(void 0, void 0, void 0,
         }
         if (!user)
             return res.status(404).json("User not found");
+        const vet = yield prisma.vet.findUnique({
+            where: {
+                id: vet_id,
+            },
+        });
+        if (!vet)
+            return res.status(404).json("Vet not found");
         const report = yield prisma.commentVetReport.create({
             data: {
                 reported_by: logged_in_id,
                 comment_id: id,
                 reporter_type: user_type,
+                vet_id,
             },
         });
         res.status(200).json(report);
@@ -290,8 +298,8 @@ const reportClinicComment = (req, res, prisma) => __awaiter(void 0, void 0, void
         if (!id || id === "")
             return res.status(400).json("Missing fields");
         const { logged_in_id } = req.headers;
-        const { user_type } = req.body;
-        if (user_type == undefined)
+        const { user_type, clinic_id } = req.body;
+        if (user_type == undefined || clinic_id == undefined)
             return res.status(400).json("Missing fields");
         const payload = (0, authentication_1.handleTokenVerification)(req, res);
         if (payload.userId != logged_in_id)
@@ -323,11 +331,19 @@ const reportClinicComment = (req, res, prisma) => __awaiter(void 0, void 0, void
         }
         if (!user)
             return res.status(404).json("User not found");
+        const clinic = yield prisma.clinic.findUnique({
+            where: {
+                id: clinic_id,
+            },
+        });
+        if (!clinic)
+            return res.status(404).json("Clinic not found");
         const report = yield prisma.commentClinicReport.create({
             data: {
                 reported_by: logged_in_id,
                 comment_id: id,
                 reporter_type: user_type,
+                clinic_id,
             },
         });
         res.status(200).json(report);

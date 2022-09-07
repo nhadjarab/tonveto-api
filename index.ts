@@ -22,13 +22,15 @@ import {
   openTimeSlot,
   updateAppointment,
 } from "./controllers/appointment/appointment";
-import { getVet, updateVet } from "./controllers/vet/vet";
+import { getVet, joinClinic, updateVet } from "./controllers/vet/vet";
 import {
   addVetToClinic,
   approveNewVet,
   createClinic,
   deleteClinic,
   getClinic,
+  getClinicApplicants,
+  rejectNewVet,
   removeVetFromClinic,
   updateClinic,
 } from "./controllers/clinic/clinic";
@@ -54,8 +56,10 @@ import {
   approveCommentReport,
   approveVet,
   getAllAppointments,
+  getAllClinicApplications,
   getAllClinics,
   getAllUsers,
+  getAllVetApplications,
   getAllVets,
   getCommentReports,
   rejectCommentReport,
@@ -180,6 +184,14 @@ app.put("/vet/:id", async (req: Request, res: Response) => {
   }
 });
 
+app.post("/joinClinic/:id", async (req: Request, res: Response) => {
+  try {
+    joinClinic(req, res, prisma);
+  } catch (e) {
+    console.log(e);
+  }
+});
+
 // ===========Clinic ROUTES============
 app.post("/clinic", async (req: Request, res: Response) => {
   try {
@@ -200,6 +212,14 @@ app.put("/clinic/:id", async (req: Request, res: Response) => {
 app.get("/clinic/:id", async (req: Request, res: Response) => {
   try {
     getClinic(req, res, prisma);
+  } catch (e) {
+    console.log(e);
+  }
+});
+
+app.get("/clinicApplications/:id", async (req: Request, res: Response) => {
+  try {
+    getClinicApplicants(req, res, prisma);
   } catch (e) {
     console.log(e);
   }
@@ -236,6 +256,16 @@ app.delete("/clinic/vet/:id", async (req: Request, res: Response) => {
     console.log(e);
   }
 });
+
+app.delete("/clinic/vetApplication/:id", async (req: Request, res: Response) => {
+  try {
+    rejectNewVet(req, res, prisma);
+  } catch (e) {
+    console.log(e);
+  }
+});
+
+
 
 // ===========Pet ROUTES============
 app.post("/pet", async (req: Request, res: Response) => {
@@ -557,6 +587,22 @@ app.get("/getAllAppointments", async (req: Request, res: Response) => {
 app.get("/getAllCommentReports", async (req: Request, res: Response) => {
   try {
     getCommentReports(req, res, prisma);
+  } catch (e) {
+    console.log(e);
+  }
+});
+
+app.get("/getAllVetApplications", async (req: Request, res: Response) => {
+  try {
+    getAllVetApplications(req, res, prisma);
+  } catch (e) {
+    console.log(e);
+  }
+});
+
+app.get("/getAllClinicApplications", async (req: Request, res: Response) => {
+  try {
+    getAllClinicApplications(req, res, prisma);
   } catch (e) {
     console.log(e);
   }

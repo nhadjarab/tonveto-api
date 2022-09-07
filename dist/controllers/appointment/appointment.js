@@ -290,12 +290,8 @@ const cancelAppointments = (req, res, prisma) => __awaiter(void 0, void 0, void 
 exports.cancelAppointments = cancelAppointments;
 const closeTimeSlot = (req, res, prisma) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const { date, time, vet_id, pet_id, user_id } = req.body;
-        if (date == undefined ||
-            time == undefined ||
-            vet_id == undefined ||
-            pet_id == undefined ||
-            user_id == undefined)
+        const { date, time, vet_id } = req.body;
+        if (date == undefined || time == undefined || vet_id == undefined)
             return res.status(400).json("Missing fields");
         const payload = (0, authentication_1.handleTokenVerification)(req, res);
         if (payload.userId != vet_id)
@@ -372,9 +368,9 @@ const closeTimeSlot = (req, res, prisma) => __awaiter(void 0, void 0, void 0, fu
             data: {
                 date,
                 time,
-                pet_id,
+                pet_id: process.env.DEFAULT_PET_ID,
                 vet_id,
-                user_id,
+                user_id: process.env.DEFAULT_USER_ID,
             },
         });
         res.status(200).json(newAppointment);
