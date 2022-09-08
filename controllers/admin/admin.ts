@@ -8,7 +8,9 @@ export const getAllUsers = async (
   prisma: PrismaClient
 ) => {
   try {
-    const { logged_in_id } = req.headers;
+     const { logged_in_id } = req.headers;
+
+    if(!logged_in_id) return res.status(400).json("Missing logged in id")
 
     const payload: JWTPayload = handleTokenVerification(req, res) as JWTPayload;
 
@@ -47,7 +49,9 @@ export const getAllVets = async (
   prisma: PrismaClient
 ) => {
   try {
-    const { logged_in_id } = req.headers;
+     const { logged_in_id } = req.headers;
+
+    if(!logged_in_id) return res.status(400).json("Missing logged in id")
 
     const payload: JWTPayload = handleTokenVerification(req, res) as JWTPayload;
 
@@ -88,7 +92,9 @@ export const getAllClinics = async (
   prisma: PrismaClient
 ) => {
   try {
-    const { logged_in_id } = req.headers;
+     const { logged_in_id } = req.headers;
+
+    if(!logged_in_id) return res.status(400).json("Missing logged in id")
 
     const payload: JWTPayload = handleTokenVerification(req, res) as JWTPayload;
 
@@ -125,7 +131,9 @@ export const getAllAppointments = async (
   prisma: PrismaClient
 ) => {
   try {
-    const { logged_in_id } = req.headers;
+     const { logged_in_id } = req.headers;
+
+    if(!logged_in_id) return res.status(400).json("Missing logged in id")
 
     const payload: JWTPayload = handleTokenVerification(req, res) as JWTPayload;
 
@@ -167,7 +175,9 @@ export const approveClinic = async (
       return res.status(400).json("Missing id");
     }
 
-    const { logged_in_id } = req.headers;
+     const { logged_in_id } = req.headers;
+
+    if(!logged_in_id) return res.status(400).json("Missing logged in id")
 
     const payload: JWTPayload = handleTokenVerification(req, res) as JWTPayload;
 
@@ -217,7 +227,9 @@ export const approveVet = async (
       return res.status(400).json("Missing id");
     }
 
-    const { logged_in_id } = req.headers;
+     const { logged_in_id } = req.headers;
+
+    if(!logged_in_id) return res.status(400).json("Missing logged in id")
 
     const payload: JWTPayload = handleTokenVerification(req, res) as JWTPayload;
 
@@ -261,7 +273,9 @@ export const getCommentReports = async (
   prisma: PrismaClient
 ) => {
   try {
-    const { logged_in_id } = req.headers;
+     const { logged_in_id } = req.headers;
+
+    if(!logged_in_id) return res.status(400).json("Missing logged in id")
 
     const payload: JWTPayload = handleTokenVerification(req, res) as JWTPayload;
 
@@ -308,7 +322,9 @@ export const approveCommentReport = async (
       return res.status(400).json("Missing id");
     }
 
-    const { logged_in_id } = req.headers;
+     const { logged_in_id } = req.headers;
+
+    if(!logged_in_id) return res.status(400).json("Missing logged in id")
 
     const { commentType, commentId } = req.body;
 
@@ -387,7 +403,9 @@ export const rejectCommentReport = async (
       return res.status(400).json("Missing id");
     }
 
-    const { logged_in_id } = req.headers;
+     const { logged_in_id } = req.headers;
+
+    if(!logged_in_id) return res.status(400).json("Missing logged in id")
 
     const { commentType, commentId } = req.body;
 
@@ -451,7 +469,9 @@ export const getAllVetApplications = async (
   prisma: PrismaClient
 ) => {
   try {
-    const { logged_in_id } = req.headers;
+     const { logged_in_id } = req.headers;
+
+    if(!logged_in_id) return res.status(400).json("Missing logged in id")
 
     const payload: JWTPayload = handleTokenVerification(req, res) as JWTPayload;
 
@@ -484,7 +504,9 @@ export const getAllClinicApplications = async (
   prisma: PrismaClient
 ) => {
   try {
-    const { logged_in_id } = req.headers;
+     const { logged_in_id } = req.headers;
+
+    if(!logged_in_id) return res.status(400).json("Missing logged in id")
 
     const payload: JWTPayload = handleTokenVerification(req, res) as JWTPayload;
 

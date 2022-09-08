@@ -76,6 +76,8 @@ const getUser = (req, res, prisma) => __awaiter(void 0, void 0, void 0, function
         if (!id)
             return res.status(400).json("Missing fields");
         const { logged_in_id } = req.headers;
+        if (!logged_in_id)
+            return res.status(400).json("Missing logged in id");
         const payload = (0, authentication_1.handleTokenVerification)(req, res);
         if (payload.userId != logged_in_id)
             return res.status(401).json("Unauthorized");

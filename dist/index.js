@@ -114,9 +114,25 @@ app.get("/vet/:id", (req, res) => __awaiter(void 0, void 0, void 0, function* ()
         console.log(e);
     }
 }));
+app.get("/vetClinics/:id", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        (0, vet_1.isVetInClinic)(req, res, prisma);
+    }
+    catch (e) {
+        console.log(e);
+    }
+}));
 app.put("/vet/:id", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         (0, vet_1.updateVet)(req, res, prisma);
+    }
+    catch (e) {
+        console.log(e);
+    }
+}));
+app.post("/joinClinic/:id", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        (0, vet_1.joinClinic)(req, res, prisma);
     }
     catch (e) {
         console.log(e);
@@ -182,6 +198,14 @@ app.put("/clinic/vet/:id", (req, res) => __awaiter(void 0, void 0, void 0, funct
 app.delete("/clinic/vet/:id", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         (0, clinic_1.removeVetFromClinic)(req, res, prisma);
+    }
+    catch (e) {
+        console.log(e);
+    }
+}));
+app.delete("/clinic/vetApplication/:id", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        (0, clinic_1.rejectNewVet)(req, res, prisma);
     }
     catch (e) {
         console.log(e);
@@ -510,6 +534,22 @@ app.get("/getAllAppointments", (req, res) => __awaiter(void 0, void 0, void 0, f
 app.get("/getAllCommentReports", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         (0, admin_1.getCommentReports)(req, res, prisma);
+    }
+    catch (e) {
+        console.log(e);
+    }
+}));
+app.get("/getAllVetApplications", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        (0, admin_1.getAllVetApplications)(req, res, prisma);
+    }
+    catch (e) {
+        console.log(e);
+    }
+}));
+app.get("/getAllClinicApplications", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        (0, admin_1.getAllClinicApplications)(req, res, prisma);
     }
     catch (e) {
         console.log(e);

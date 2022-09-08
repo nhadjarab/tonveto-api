@@ -14,6 +14,8 @@ const authentication_1 = require("../authentication/authentication");
 const addCommentVet = (req, res, prisma) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { logged_in_id } = req.headers;
+        if (!logged_in_id)
+            return res.status(400).json("Missing logged in id");
         const { text, vet_id } = req.body;
         if (text == undefined || vet_id == undefined)
             return res.status(400).json("Missing fields");
@@ -52,6 +54,8 @@ const editCommentVet = (req, res, prisma) => __awaiter(void 0, void 0, void 0, f
     try {
         const { id } = req.params;
         const { logged_in_id } = req.headers;
+        if (!logged_in_id)
+            return res.status(400).json("Missing logged in id");
         if (!id || id === "")
             return res.status(400).json("Missing fields");
         const { text } = req.body;
@@ -97,6 +101,8 @@ const deleteCommentVet = (req, res, prisma) => __awaiter(void 0, void 0, void 0,
         if (!id || id === "")
             return res.status(400).json("Missing fields");
         const { logged_in_id } = req.headers;
+        if (!logged_in_id)
+            return res.status(400).json("Missing logged in id");
         const payload = (0, authentication_1.handleTokenVerification)(req, res);
         if (payload.userId != logged_in_id)
             return res.status(401).json("Unauthorized");
@@ -124,6 +130,8 @@ exports.deleteCommentVet = deleteCommentVet;
 const addCommentClinic = (req, res, prisma) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { logged_in_id } = req.headers;
+        if (!logged_in_id)
+            return res.status(400).json("Missing logged in id");
         const { text, clinic_id } = req.body;
         if (text == undefined || clinic_id == undefined)
             return res.status(400).json("Missing fields");
@@ -162,6 +170,8 @@ const editCommentClinic = (req, res, prisma) => __awaiter(void 0, void 0, void 0
     try {
         const { id } = req.params;
         const { logged_in_id } = req.headers;
+        if (!logged_in_id)
+            return res.status(400).json("Missing logged in id");
         if (!id || id === "")
             return res.status(400).json("Missing fields");
         const { text } = req.body;
@@ -207,6 +217,8 @@ const deleteCommentClinic = (req, res, prisma) => __awaiter(void 0, void 0, void
         if (!id || id === "")
             return res.status(400).json("Missing fields");
         const { logged_in_id } = req.headers;
+        if (!logged_in_id)
+            return res.status(400).json("Missing logged in id");
         const payload = (0, authentication_1.handleTokenVerification)(req, res);
         if (payload.userId != logged_in_id)
             return res.status(401).json("Unauthorized");
@@ -237,6 +249,8 @@ const reportVetComment = (req, res, prisma) => __awaiter(void 0, void 0, void 0,
         if (!id || id === "")
             return res.status(400).json("Missing fields");
         const { logged_in_id } = req.headers;
+        if (!logged_in_id)
+            return res.status(400).json("Missing logged in id");
         const { user_type, vet_id } = req.body;
         if (user_type == undefined || vet_id == undefined)
             return res.status(400).json("Missing fields");
@@ -298,6 +312,8 @@ const reportClinicComment = (req, res, prisma) => __awaiter(void 0, void 0, void
         if (!id || id === "")
             return res.status(400).json("Missing fields");
         const { logged_in_id } = req.headers;
+        if (!logged_in_id)
+            return res.status(400).json("Missing logged in id");
         const { user_type, clinic_id } = req.body;
         if (user_type == undefined || clinic_id == undefined)
             return res.status(400).json("Missing fields");

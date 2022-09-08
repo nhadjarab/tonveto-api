@@ -14,6 +14,8 @@ const authentication_1 = require("../authentication/authentication");
 const getAllUsers = (req, res, prisma) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { logged_in_id } = req.headers;
+        if (!logged_in_id)
+            return res.status(400).json("Missing logged in id");
         const payload = (0, authentication_1.handleTokenVerification)(req, res);
         if (payload.userId !== logged_in_id)
             return res.status(401).json("Unauthorized");
@@ -45,6 +47,8 @@ exports.getAllUsers = getAllUsers;
 const getAllVets = (req, res, prisma) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { logged_in_id } = req.headers;
+        if (!logged_in_id)
+            return res.status(400).json("Missing logged in id");
         const payload = (0, authentication_1.handleTokenVerification)(req, res);
         if (payload.userId !== logged_in_id)
             return res.status(401).json("Unauthorized");
@@ -78,6 +82,8 @@ exports.getAllVets = getAllVets;
 const getAllClinics = (req, res, prisma) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { logged_in_id } = req.headers;
+        if (!logged_in_id)
+            return res.status(400).json("Missing logged in id");
         const payload = (0, authentication_1.handleTokenVerification)(req, res);
         if (payload.userId !== logged_in_id)
             return res.status(401).json("Unauthorized");
@@ -107,6 +113,8 @@ exports.getAllClinics = getAllClinics;
 const getAllAppointments = (req, res, prisma) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { logged_in_id } = req.headers;
+        if (!logged_in_id)
+            return res.status(400).json("Missing logged in id");
         const payload = (0, authentication_1.handleTokenVerification)(req, res);
         if (payload.userId !== logged_in_id)
             return res.status(401).json("Unauthorized");
@@ -139,6 +147,8 @@ const approveClinic = (req, res, prisma) => __awaiter(void 0, void 0, void 0, fu
             return res.status(400).json("Missing id");
         }
         const { logged_in_id } = req.headers;
+        if (!logged_in_id)
+            return res.status(400).json("Missing logged in id");
         const payload = (0, authentication_1.handleTokenVerification)(req, res);
         if (payload.userId !== logged_in_id)
             return res.status(401).json("Unauthorized");
@@ -178,6 +188,8 @@ const approveVet = (req, res, prisma) => __awaiter(void 0, void 0, void 0, funct
             return res.status(400).json("Missing id");
         }
         const { logged_in_id } = req.headers;
+        if (!logged_in_id)
+            return res.status(400).json("Missing logged in id");
         const payload = (0, authentication_1.handleTokenVerification)(req, res);
         if (payload.userId !== logged_in_id)
             return res.status(401).json("Unauthorized");
@@ -213,6 +225,8 @@ exports.approveVet = approveVet;
 const getCommentReports = (req, res, prisma) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { logged_in_id } = req.headers;
+        if (!logged_in_id)
+            return res.status(400).json("Missing logged in id");
         const payload = (0, authentication_1.handleTokenVerification)(req, res);
         if (payload.userId !== logged_in_id)
             return res.status(401).json("Unauthorized");
@@ -248,6 +262,8 @@ const approveCommentReport = (req, res, prisma) => __awaiter(void 0, void 0, voi
             return res.status(400).json("Missing id");
         }
         const { logged_in_id } = req.headers;
+        if (!logged_in_id)
+            return res.status(400).json("Missing logged in id");
         const { commentType, commentId } = req.body;
         if (commentType == undefined || commentId == undefined)
             return res.status(400).json("Missing comment fields");
@@ -315,6 +331,8 @@ const rejectCommentReport = (req, res, prisma) => __awaiter(void 0, void 0, void
             return res.status(400).json("Missing id");
         }
         const { logged_in_id } = req.headers;
+        if (!logged_in_id)
+            return res.status(400).json("Missing logged in id");
         const { commentType, commentId } = req.body;
         if (commentType == undefined || commentId == undefined)
             return res.status(400).json("Missing comment fields");
@@ -368,6 +386,8 @@ exports.rejectCommentReport = rejectCommentReport;
 const getAllVetApplications = (req, res, prisma) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { logged_in_id } = req.headers;
+        if (!logged_in_id)
+            return res.status(400).json("Missing logged in id");
         const payload = (0, authentication_1.handleTokenVerification)(req, res);
         if (payload.userId !== logged_in_id)
             return res.status(401).json("Unauthorized");
@@ -393,6 +413,8 @@ exports.getAllVetApplications = getAllVetApplications;
 const getAllClinicApplications = (req, res, prisma) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { logged_in_id } = req.headers;
+        if (!logged_in_id)
+            return res.status(400).json("Missing logged in id");
         const payload = (0, authentication_1.handleTokenVerification)(req, res);
         if (payload.userId !== logged_in_id)
             return res.status(401).json("Unauthorized");

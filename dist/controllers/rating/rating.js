@@ -14,6 +14,8 @@ const authentication_1 = require("../authentication/authentication");
 const addRatingVet = (req, res, prisma) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { logged_in_id } = req.headers;
+        if (!logged_in_id)
+            return res.status(400).json("Missing logged in id");
         const { rating, vet_id } = req.body;
         if (rating == undefined || vet_id == undefined)
             return res.status(400).json("Missing fields");
@@ -56,6 +58,8 @@ const editRatingVet = (req, res, prisma) => __awaiter(void 0, void 0, void 0, fu
         if (!id)
             return res.status(400).json("Missing id");
         const { logged_in_id } = req.headers;
+        if (!logged_in_id)
+            return res.status(400).json("Missing logged in id");
         const { rating } = req.body;
         if (rating == undefined)
             return res.status(400).json("Missing fields");
@@ -101,6 +105,8 @@ const deleteRatingVet = (req, res, prisma) => __awaiter(void 0, void 0, void 0, 
         if (!id)
             return res.status(400).json("Missing id");
         const { logged_in_id } = req.headers;
+        if (!logged_in_id)
+            return res.status(400).json("Missing logged in id");
         const payload = (0, authentication_1.handleTokenVerification)(req, res);
         if (payload.userId != logged_in_id)
             return res.status(401).json("Unauthorized");
@@ -128,6 +134,8 @@ exports.deleteRatingVet = deleteRatingVet;
 const addRatingClinic = (req, res, prisma) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { logged_in_id } = req.headers;
+        if (!logged_in_id)
+            return res.status(400).json("Missing logged in id");
         const { rating, clinic_id } = req.body;
         if (rating == undefined || clinic_id == undefined)
             return res.status(400).json("Missing fields");
@@ -170,6 +178,8 @@ const editRatingClinic = (req, res, prisma) => __awaiter(void 0, void 0, void 0,
         if (!id)
             return res.status(400).json("Missing id");
         const { logged_in_id } = req.headers;
+        if (!logged_in_id)
+            return res.status(400).json("Missing logged in id");
         const { rating } = req.body;
         if (rating == undefined)
             return res.status(400).json("Missing fields");
@@ -215,6 +225,8 @@ const deleteRatingClinic = (req, res, prisma) => __awaiter(void 0, void 0, void 
         if (!id)
             return res.status(400).json("Missing id");
         const { logged_in_id } = req.headers;
+        if (!logged_in_id)
+            return res.status(400).json("Missing logged in id");
         const payload = (0, authentication_1.handleTokenVerification)(req, res);
         if (payload.userId != logged_in_id)
             return res.status(401).json("Unauthorized");

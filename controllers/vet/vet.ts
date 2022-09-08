@@ -1,6 +1,7 @@
 import { PrismaClient } from "@prisma/client";
 import { Request, Response } from "express";
 import { JsonWebTokenError } from "jsonwebtoken";
+import { json } from "stream/consumers";
 import User from "../../models/User";
 
 import { handleTokenVerification } from "../authentication/authentication";
@@ -122,7 +123,9 @@ export const getVet = async (
 
     if (!id) return res.status(400).json("Missing fields");
 
-    const { logged_in_id } = req.headers;
+     const { logged_in_id } = req.headers;
+
+    if(!logged_in_id) return res.status(400).json("Missing logged in id")
 
     const payload: JWTPayload = handleTokenVerification(req, res) as JWTPayload;
 
@@ -173,7 +176,11 @@ export const joinClinic = async (
 
     if (!id) return res.status(400).json("Missing fields");
 
-    const { logged_in_id } = req.headers;
+     const { logged_in_id } = req.headers;
+
+    if(!logged_in_id) return res.status(400).json("Missing logged in id")
+
+    if(!logged_in_id) return res.status(400).json("Missing logged in id")
 
     const payload: JWTPayload = handleTokenVerification(req, res) as JWTPayload;
 
@@ -207,6 +214,50 @@ export const joinClinic = async (
         clinic_id: id,
       },
     });
+    
+
+    return res.status(200).json(vetClinic)
+
+  } catch (e) {
+    res.status(500).json(e);
+  }
+};
+
+export const isVetInClinic = async (
+  req: Request,
+  res: Response,
+  prisma: PrismaClient
+) => {
+  try {
+    const { id } = req.params;
+
+    if (!id) return res.status(400).json("Missing fields");
+
+     const { logged_in_id } = req.headers;
+
+    if(!logged_in_id) return res.status(400).json("Missing logged in id")
+
+    const payload: JWTPayload = handleTokenVerification(req, res) as JWTPayload;
+
+    if (payload.userId != logged_in_id) {
+      return res.status(401).json("Unauthorized");
+    }
+
+    const vetProfile = await prisma.vet.findUnique({
+      where: {
+        id: logged_in_id,
+      },
+    });
+
+    if (!vetProfile) return res.status(404).json("Vet does not exist");
+
+    const isVetPartOfClinic = await prisma.vetClinic.findMany({
+      where: {
+        vet_id: id,
+      },
+    });
+
+    return res.status(200).json(isVetInClinic);
   } catch (e) {
     res.status(500).json(e);
   }

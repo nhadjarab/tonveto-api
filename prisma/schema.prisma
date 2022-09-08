@@ -55,7 +55,7 @@ model Vet {
   email                String          @unique
   birth_date           String
   phone_number         String
-  identification_order Int             @default(1111111111)
+  identification_order String          @default("1111111111")
   profile_complete     Boolean         @default(false)
   is_approved          Boolean         @default(false)
   type                 String          @default("vet")
@@ -86,7 +86,7 @@ model VetClinic {
 model Specialty {
   id     String @id @unique @default(cuid())
   name   String
-  price  Int
+  price  String
   vet    Vet    @relation(fields: [vet_id], references: [id])
   vet_id String
 }

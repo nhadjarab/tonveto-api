@@ -104,8 +104,10 @@ export const registerVet = async (
       },
     });
 
-    res.status(201).json(vet);
+    return res.status(200).json(vet);
   } catch (e) {
+    console.log(e);
+
     res.status(500).json(e);
   }
 };
@@ -149,8 +151,9 @@ export const registerAdmin = async (
       },
     });
 
-    res.status(201).json(admin);
+    return res.status(200).json(admin);
   } catch (e) {
+    console.log(e);
     return res.status(500).json(e);
   }
 };
@@ -268,7 +271,9 @@ export const loginAdmin = async (
       },
     })!;
 
+    console.log("Generating token ");
     const jwtToken = generateToken(adminProfile?.id as string);
+    console.log(jwtToken);
 
     res.status(200).json({ adminProfile, jwtToken });
   } catch (e) {
@@ -277,11 +282,21 @@ export const loginAdmin = async (
 };
 
 export const generateToken = (userId: string): string => {
-  return sign({ userId }, private_key, { algorithm: "RS256" });
+  try {
+    return sign({ userId }, private_key, { algorithm: "RS256" });
+  } catch (e) {
+    console.log(e);
+    return JSON.stringify(e);
+  }
 };
 
 export const verifyToken = (token: string) => {
-  return verify(token, public_key, { algorithms: ["RS256"] });
+  try {
+    return verify(token, public_key, { algorithms: ["RS256"] });
+  } catch (e) {
+    console.log(e);
+    return JSON.stringify(e);
+  }
 };
 
 export const handleTokenVerification = (req: Request, res: Response) => {

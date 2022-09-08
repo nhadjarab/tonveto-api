@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.joinClinic = exports.getVet = exports.updateVet = void 0;
+exports.isVetInClinic = exports.joinClinic = exports.getVet = exports.updateVet = void 0;
 const authentication_1 = require("../authentication/authentication");
 const updateVet = (req, res, prisma) => __awaiter(void 0, void 0, void 0, function* () {
     try {
@@ -90,6 +90,8 @@ const getVet = (req, res, prisma) => __awaiter(void 0, void 0, void 0, function*
         if (!id)
             return res.status(400).json("Missing fields");
         const { logged_in_id } = req.headers;
+        if (!logged_in_id)
+            return res.status(400).json("Missing logged in id");
         const payload = (0, authentication_1.handleTokenVerification)(req, res);
         if (payload.userId != logged_in_id) {
             return res.status(401).json("Unauthorized");
@@ -132,6 +134,10 @@ const joinClinic = (req, res, prisma) => __awaiter(void 0, void 0, void 0, funct
         if (!id)
             return res.status(400).json("Missing fields");
         const { logged_in_id } = req.headers;
+        if (!logged_in_id)
+            return res.status(400).json("Missing logged in id");
+        if (!logged_in_id)
+            return res.status(400).json("Missing logged in id");
         const payload = (0, authentication_1.handleTokenVerification)(req, res);
         if (payload.userId != logged_in_id) {
             return res.status(401).json("Unauthorized");
@@ -159,12 +165,44 @@ const joinClinic = (req, res, prisma) => __awaiter(void 0, void 0, void 0, funct
                 clinic_id: id,
             },
         });
+        return res.status(200).json(vetClinic);
     }
     catch (e) {
         res.status(500).json(e);
     }
 });
 exports.joinClinic = joinClinic;
+const isVetInClinic = (req, res, prisma) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const { id } = req.params;
+        if (!id)
+            return res.status(400).json("Missing fields");
+        const { logged_in_id } = req.headers;
+        if (!logged_in_id)
+            return res.status(400).json("Missing logged in id");
+        const payload = (0, authentication_1.handleTokenVerification)(req, res);
+        if (payload.userId != logged_in_id) {
+            return res.status(401).json("Unauthorized");
+        }
+        const vetProfile = yield prisma.vet.findUnique({
+            where: {
+                id: logged_in_id,
+            },
+        });
+        if (!vetProfile)
+            return res.status(404).json("Vet does not exist");
+        const isVetPartOfClinic = yield prisma.vetClinic.findMany({
+            where: {
+                vet_id: id,
+            },
+        });
+        return res.status(200).json(exports.isVetInClinic);
+    }
+    catch (e) {
+        res.status(500).json(e);
+    }
+});
+exports.isVetInClinic = isVetInClinic;
 const isProfileComplete = (first_name, last_name, email, birth_date, phone_number, bank_details, identification_order) => {
     return (first_name != undefined &&
         last_name != undefined &&

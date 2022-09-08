@@ -94,9 +94,10 @@ const registerVet = (req, res, prisma) => __awaiter(void 0, void 0, void 0, func
                 bank_details: "",
             },
         });
-        res.status(201).json(vet);
+        return res.status(200).json(vet);
     }
     catch (e) {
+        console.log(e);
         res.status(500).json(e);
     }
 });
@@ -131,9 +132,10 @@ const registerAdmin = (req, res, prisma) => __awaiter(void 0, void 0, void 0, fu
                 phone_number: "",
             },
         });
-        res.status(201).json(admin);
+        return res.status(200).json(admin);
     }
     catch (e) {
+        console.log(e);
         return res.status(500).json(e);
     }
 });
@@ -227,7 +229,9 @@ const loginAdmin = (req, res, prisma) => __awaiter(void 0, void 0, void 0, funct
                 email,
             },
         });
+        console.log("Generating token ");
         const jwtToken = (0, exports.generateToken)(adminProfile === null || adminProfile === void 0 ? void 0 : adminProfile.id);
+        console.log(jwtToken);
         res.status(200).json({ adminProfile, jwtToken });
     }
     catch (e) {
@@ -236,11 +240,23 @@ const loginAdmin = (req, res, prisma) => __awaiter(void 0, void 0, void 0, funct
 });
 exports.loginAdmin = loginAdmin;
 const generateToken = (userId) => {
-    return (0, jsonwebtoken_1.sign)({ userId }, private_key, { algorithm: "RS256" });
+    try {
+        return (0, jsonwebtoken_1.sign)({ userId }, private_key, { algorithm: "RS256" });
+    }
+    catch (e) {
+        console.log(e);
+        return JSON.stringify(e);
+    }
 };
 exports.generateToken = generateToken;
 const verifyToken = (token) => {
-    return (0, jsonwebtoken_1.verify)(token, public_key, { algorithms: ["RS256"] });
+    try {
+        return (0, jsonwebtoken_1.verify)(token, public_key, { algorithms: ["RS256"] });
+    }
+    catch (e) {
+        console.log(e);
+        return JSON.stringify(e);
+    }
 };
 exports.verifyToken = verifyToken;
 const handleTokenVerification = (req, res) => {

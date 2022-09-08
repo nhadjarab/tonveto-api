@@ -22,7 +22,12 @@ import {
   openTimeSlot,
   updateAppointment,
 } from "./controllers/appointment/appointment";
-import { getVet, joinClinic, updateVet } from "./controllers/vet/vet";
+import {
+  getVet,
+  isVetInClinic,
+  joinClinic,
+  updateVet,
+} from "./controllers/vet/vet";
 import {
   addVetToClinic,
   approveNewVet,
@@ -90,7 +95,7 @@ dotenv.config();
 
 const app: Express = express();
 app.use(express.json());
-app.use(cors())
+app.use(cors());
 
 const port = process.env.PORT || 3005;
 
@@ -171,6 +176,14 @@ app.put("/user/:id", async (req: Request, res: Response) => {
 app.get("/vet/:id", async (req: Request, res: Response) => {
   try {
     getVet(req, res, prisma);
+  } catch (e) {
+    console.log(e);
+  }
+});
+
+app.get("/vetClinics/:id", async (req: Request, res: Response) => {
+  try {
+    isVetInClinic(req, res, prisma);
   } catch (e) {
     console.log(e);
   }
@@ -257,15 +270,16 @@ app.delete("/clinic/vet/:id", async (req: Request, res: Response) => {
   }
 });
 
-app.delete("/clinic/vetApplication/:id", async (req: Request, res: Response) => {
-  try {
-    rejectNewVet(req, res, prisma);
-  } catch (e) {
-    console.log(e);
+app.delete(
+  "/clinic/vetApplication/:id",
+  async (req: Request, res: Response) => {
+    try {
+      rejectNewVet(req, res, prisma);
+    } catch (e) {
+      console.log(e);
+    }
   }
-});
-
-
+);
 
 // ===========Pet ROUTES============
 app.post("/pet", async (req: Request, res: Response) => {

@@ -8,7 +8,9 @@ export const addRatingVet = async (
   prisma: PrismaClient
 ) => {
   try {
-    const { logged_in_id } = req.headers;
+     const { logged_in_id } = req.headers;
+
+    if(!logged_in_id) return res.status(400).json("Missing logged in id")
 
     const { rating, vet_id } = req.body;
 
@@ -63,7 +65,9 @@ export const editRatingVet = async (
 
     if (!id) return res.status(400).json("Missing id");
 
-    const { logged_in_id } = req.headers;
+     const { logged_in_id } = req.headers;
+
+    if(!logged_in_id) return res.status(400).json("Missing logged in id")
 
     const { rating } = req.body;
 
@@ -120,7 +124,9 @@ export const deleteRatingVet = async (
 
     if (!id) return res.status(400).json("Missing id");
 
-    const { logged_in_id } = req.headers;
+     const { logged_in_id } = req.headers;
+
+    if(!logged_in_id) return res.status(400).json("Missing logged in id")
 
     const payload: JWTPayload = handleTokenVerification(req, res) as JWTPayload;
 
@@ -155,7 +161,9 @@ export const addRatingClinic = async (
   prisma: PrismaClient
 ) => {
   try {
-    const { logged_in_id } = req.headers;
+     const { logged_in_id } = req.headers;
+
+    if(!logged_in_id) return res.status(400).json("Missing logged in id")
 
     const { rating, clinic_id } = req.body;
 
@@ -210,7 +218,9 @@ export const editRatingClinic = async (
 
     if (!id) return res.status(400).json("Missing id");
 
-    const { logged_in_id } = req.headers;
+     const { logged_in_id } = req.headers;
+
+    if(!logged_in_id) return res.status(400).json("Missing logged in id")
 
     const { rating } = req.body;
 
@@ -267,7 +277,9 @@ export const deleteRatingClinic = async (
 
     if (!id) return res.status(400).json("Missing id");
 
-    const { logged_in_id } = req.headers;
+     const { logged_in_id } = req.headers;
+
+    if(!logged_in_id) return res.status(400).json("Missing logged in id")
 
     const payload: JWTPayload = handleTokenVerification(req, res) as JWTPayload;
 
