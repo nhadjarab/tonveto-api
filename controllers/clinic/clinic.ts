@@ -329,11 +329,11 @@ export const removeVetFromClinic = async (
 
     if (!id || id === "") return res.status(400).json("Missing fields");
 
-     const { logged_in_id } = req.headers;
+     const { logged_in_id , clinic_id} = req.headers;
 
     if(!logged_in_id) return res.status(400).json("Missing logged in id")
 
-    const { clinic_id } = req.body;
+  
 
     if (clinic_id == undefined) return res.status(400).json("Missing fields");
 
@@ -344,7 +344,7 @@ export const removeVetFromClinic = async (
 
     const clinic = await prisma.clinic.findUnique({
       where: {
-        id: clinic_id,
+        id: clinic_id as string,
       },
       include: {
         vets: {
@@ -375,7 +375,7 @@ export const removeVetFromClinic = async (
     const vetClinic = await prisma.vetClinic.delete({
       where: {
         vet_id_clinic_id: {
-          clinic_id,
+          clinic_id : clinic_id as string,
           vet_id: id,
         },
       },
@@ -480,11 +480,9 @@ export const rejectNewVet = async (
 
     if (!id || id === "") return res.status(400).json("Missing fields");
 
-     const { logged_in_id } = req.headers;
+     const { logged_in_id , clinic_id } = req.headers;
 
     if(!logged_in_id) return res.status(400).json("Missing logged in id")
-
-    const { clinic_id } = req.body;
 
     if (clinic_id == undefined) return res.status(400).json("Missing fields");
 
@@ -495,7 +493,7 @@ export const rejectNewVet = async (
 
     const clinic = await prisma.clinic.findUnique({
       where: {
-        id: clinic_id,
+        id: clinic_id as string,
       },
       include: {
         vets: {
@@ -524,7 +522,7 @@ export const rejectNewVet = async (
       where: {
         vet_id_clinic_id: {
           vet_id: id,
-          clinic_id,
+          clinic_id : clinic_id as string,
         },
       },
     });
@@ -539,7 +537,7 @@ export const rejectNewVet = async (
       where: {
         vet_id_clinic_id: {
           vet_id: id,
-          clinic_id,
+          clinic_id : clinic_id as string,
         },
       },
     });

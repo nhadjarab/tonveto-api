@@ -322,12 +322,11 @@ export const approveCommentReport = async (
       return res.status(400).json("Missing id");
     }
 
-     const { logged_in_id } = req.headers;
+     const { logged_in_id , commentType, commentId} = req.headers;
 
     if(!logged_in_id) return res.status(400).json("Missing logged in id")
 
-    const { commentType, commentId } = req.body;
-
+  
     if (commentType == undefined || commentId == undefined)
       return res.status(400).json("Missing comment fields");
 
@@ -347,7 +346,7 @@ export const approveCommentReport = async (
     if (commentType === "vet") {
       const comment = await prisma.commentVet.findUnique({
         where: {
-          id: commentId,
+          id: commentId as string,
         },
       });
 
@@ -360,13 +359,13 @@ export const approveCommentReport = async (
 
       await prisma.commentVet.delete({
         where: {
-          id: commentId,
+          id: commentId as string,
         },
       });
     } else if (commentType === "clinic") {
       const comment = await prisma.commentClinic.findUnique({
         where: {
-          id: commentId,
+          id: commentId as string,
         },
       });
 
@@ -379,7 +378,7 @@ export const approveCommentReport = async (
 
       await prisma.commentClinic.delete({
         where: {
-          id: commentId,
+          id: commentId as string,
         },
       });
     } else {
@@ -403,11 +402,9 @@ export const rejectCommentReport = async (
       return res.status(400).json("Missing id");
     }
 
-     const { logged_in_id } = req.headers;
+     const { logged_in_id , commentType, commentId  } = req.headers;
 
     if(!logged_in_id) return res.status(400).json("Missing logged in id")
-
-    const { commentType, commentId } = req.body;
 
     if (commentType == undefined || commentId == undefined)
       return res.status(400).json("Missing comment fields");
@@ -428,7 +425,7 @@ export const rejectCommentReport = async (
     if (commentType === "vet") {
       const comment = await prisma.commentVet.findUnique({
         where: {
-          id: commentId,
+          id: commentId as string,
         },
       });
 
@@ -442,7 +439,7 @@ export const rejectCommentReport = async (
     } else if (commentType === "clinic") {
       const comment = await prisma.commentClinic.findUnique({
         where: {
-          id: commentId,
+          id: commentId as string,
         },
       });
 

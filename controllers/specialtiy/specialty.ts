@@ -131,7 +131,7 @@ export const deleteSpecialty = async (
 
     if (!id) return res.status(400).json("Missing fields");
 
-    const { owner_id } = req.body;
+    const { owner_id } = req.headers;
 
     if (owner_id == undefined) return res.status(400).json("Missing fields");
 

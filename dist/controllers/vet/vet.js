@@ -108,6 +108,9 @@ const getVet = (req, res, prisma) => __awaiter(void 0, void 0, void 0, function*
                 CommentVet: true,
                 clinics: {
                     include: { clinic: true },
+                    where: {
+                        approved: true,
+                    },
                 },
             },
         });

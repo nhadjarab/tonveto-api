@@ -123,9 +123,9 @@ export const getVet = async (
 
     if (!id) return res.status(400).json("Missing fields");
 
-     const { logged_in_id } = req.headers;
+    const { logged_in_id } = req.headers;
 
-    if(!logged_in_id) return res.status(400).json("Missing logged in id")
+    if (!logged_in_id) return res.status(400).json("Missing logged in id");
 
     const payload: JWTPayload = handleTokenVerification(req, res) as JWTPayload;
 
@@ -145,6 +145,9 @@ export const getVet = async (
         CommentVet: true,
         clinics: {
           include: { clinic: true },
+          where: {
+            approved: true,
+          },
         },
       },
     });
@@ -176,11 +179,11 @@ export const joinClinic = async (
 
     if (!id) return res.status(400).json("Missing fields");
 
-     const { logged_in_id } = req.headers;
+    const { logged_in_id } = req.headers;
 
-    if(!logged_in_id) return res.status(400).json("Missing logged in id")
+    if (!logged_in_id) return res.status(400).json("Missing logged in id");
 
-    if(!logged_in_id) return res.status(400).json("Missing logged in id")
+    if (!logged_in_id) return res.status(400).json("Missing logged in id");
 
     const payload: JWTPayload = handleTokenVerification(req, res) as JWTPayload;
 
@@ -214,10 +217,8 @@ export const joinClinic = async (
         clinic_id: id,
       },
     });
-    
 
-    return res.status(200).json(vetClinic)
-
+    return res.status(200).json(vetClinic);
   } catch (e) {
     res.status(500).json(e);
   }
@@ -233,9 +234,9 @@ export const isVetInClinic = async (
 
     if (!id) return res.status(400).json("Missing fields");
 
-     const { logged_in_id } = req.headers;
+    const { logged_in_id } = req.headers;
 
-    if(!logged_in_id) return res.status(400).json("Missing logged in id")
+    if (!logged_in_id) return res.status(400).json("Missing logged in id");
 
     const payload: JWTPayload = handleTokenVerification(req, res) as JWTPayload;
 

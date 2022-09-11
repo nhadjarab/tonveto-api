@@ -141,9 +141,9 @@ export const getPet = async (
 
     if (!id || id === "") return res.status(400).json("Missing fields");
 
-     const { logged_in_id } = req.headers;
+    const { logged_in_id } = req.headers;
 
-    if(!logged_in_id) return res.status(400).json("Missing logged in id")
+    if (!logged_in_id) return res.status(400).json("Missing logged in id");
 
     const payload: JWTPayload = handleTokenVerification(req, res) as JWTPayload;
 
@@ -182,7 +182,7 @@ export const deletePet = async (
 
     if (!id || id === "") return res.status(400).json("Missing fields");
 
-    const { owner_id } = req.body;
+    const { owner_id } = req.headers;
 
     if (owner_id == undefined) return res.status(400).json("Missing fields");
 

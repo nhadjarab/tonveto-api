@@ -200,7 +200,7 @@ export const deleteCalendar = async (
       return res.status(400).json("Missing id");
     }
 
-    const { owner_id } = req.body;
+    const { owner_id } = req.headers;
 
     const payload: JWTPayload = handleTokenVerification(req, res) as JWTPayload;
 

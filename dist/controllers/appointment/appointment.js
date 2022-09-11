@@ -32,6 +32,9 @@ const addAppointment = (req, res, prisma) => __awaiter(void 0, void 0, void 0, f
             return res.status(401).json("Unauthorized");
         if (!(0, moment_1.default)(date).isValid())
             return res.status(400).json("Invalid date");
+        const dayDifferece = (0, moment_1.default)(date).diff((0, moment_1.default)(), "days");
+        if (dayDifferece < 0)
+            return res.status(400).json("Invalid date");
         const doesUserExist = yield prisma.user.findUnique({
             where: {
                 id: user_id,
@@ -129,6 +132,9 @@ const updateAppointment = (req, res, prisma) => __awaiter(void 0, void 0, void 0
         if (payload.userId != user_id)
             return res.status(401).json("Unauthorized");
         if (!(0, moment_1.default)(date).isValid())
+            return res.status(400).json("Invalid date");
+        const dayDifferece = (0, moment_1.default)(date).diff((0, moment_1.default)(), "days");
+        if (dayDifferece < 0)
             return res.status(400).json("Invalid date");
         const doesUserExist = yield prisma.user.findUnique({
             where: {

@@ -397,10 +397,9 @@ const rejectNewVet = (req, res, prisma) => __awaiter(void 0, void 0, void 0, fun
         const { id } = req.params;
         if (!id || id === "")
             return res.status(400).json("Missing fields");
-        const { logged_in_id } = req.headers;
+        const { logged_in_id, clinic_id } = req.headers;
         if (!logged_in_id)
             return res.status(400).json("Missing logged in id");
-        const { clinic_id } = req.body;
         if (clinic_id == undefined)
             return res.status(400).json("Missing fields");
         const payload = (0, authentication_1.handleTokenVerification)(req, res);
@@ -435,7 +434,7 @@ const rejectNewVet = (req, res, prisma) => __awaiter(void 0, void 0, void 0, fun
             where: {
                 vet_id_clinic_id: {
                     vet_id: id,
-                    clinic_id,
+                    clinic_id: clinic_id,
                 },
             },
         });
@@ -447,7 +446,7 @@ const rejectNewVet = (req, res, prisma) => __awaiter(void 0, void 0, void 0, fun
             where: {
                 vet_id_clinic_id: {
                     vet_id: id,
-                    clinic_id,
+                    clinic_id: clinic_id,
                 },
             },
         });

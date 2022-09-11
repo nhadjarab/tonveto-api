@@ -31,6 +31,10 @@ export const addAppointment = async (
 
     if (!moment(date).isValid()) return res.status(400).json("Invalid date");
 
+    const dayDifferece = moment(date).diff(moment(), "days");
+
+    if (dayDifferece < 0) return res.status(400).json("Invalid date");
+
     const doesUserExist = await prisma.user.findUnique({
       where: {
         id: user_id,
@@ -164,6 +168,10 @@ export const updateAppointment = async (
 
     if (!moment(date).isValid()) return res.status(400).json("Invalid date");
 
+    const dayDifferece = moment(date).diff(moment(), "days");
+
+    if (dayDifferece < 0) return res.status(400).json("Invalid date");
+
     const doesUserExist = await prisma.user.findUnique({
       where: {
         id: user_id,
@@ -283,9 +291,9 @@ export const getAppointment = async (
 
     if (!id || id === "") return res.status(400).json("Missing id");
 
-     const { logged_in_id } = req.headers;
+    const { logged_in_id } = req.headers;
 
-    if(!logged_in_id) return res.status(400).json("Missing logged in id")
+    if (!logged_in_id) return res.status(400).json("Missing logged in id");
 
     const payload: JWTPayload = handleTokenVerification(req, res) as JWTPayload;
 
@@ -321,7 +329,7 @@ export const cancelAppointments = async (
 
     if (!id || id === "") return res.status(400).json("Missing id");
 
-    const { user_id } = req.body;
+    const { user_id } = req.headers;
 
     if (user_id == undefined) return res.status(400).json("Missing user_id");
 
