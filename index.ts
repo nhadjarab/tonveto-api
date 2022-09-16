@@ -16,11 +16,14 @@ import { getUser, updateUser } from "./controllers/user/user";
 import { addPet, deletePet, getPet, updatePet } from "./controllers/pet/pet";
 import {
   addAppointment,
+  addAppointmentVet,
   cancelAppointments,
+  cancelAppointmentVet,
   closeTimeSlot,
   getAppointment,
   openTimeSlot,
   updateAppointment,
+  updateAppointmentVet,
 } from "./controllers/appointment/appointment";
 import {
   getVet,
@@ -323,9 +326,17 @@ app.post("/appointment", async (req: Request, res: Response) => {
   }
 });
 
-app.put("/appointment/:id", async (req: Request, res: Response) => {
+app.post("/appointmentVet", async (req: Request, res: Response) => {
   try {
-    updateAppointment(req, res, prisma);
+    addAppointmentVet(req, res, prisma);
+  } catch (e) {
+    console.log(e);
+  }
+});
+
+app.put("/appointmentVet/:id", async (req: Request, res: Response) => {
+  try {
+    updateAppointmentVet(req, res, prisma);
   } catch (e) {
     console.log(e);
   }
@@ -342,6 +353,14 @@ app.get("/appointment/:id", async (req: Request, res: Response) => {
 app.delete("/appointment/:id", async (req: Request, res: Response) => {
   try {
     cancelAppointments(req, res, prisma);
+  } catch (e) {
+    console.log(e);
+  }
+});
+
+app.delete("/appointmentVet/:id", async (req: Request, res: Response) => {
+  try {
+    cancelAppointmentVet(req, res, prisma);
   } catch (e) {
     console.log(e);
   }

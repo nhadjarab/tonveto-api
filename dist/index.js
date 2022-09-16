@@ -253,9 +253,17 @@ app.post("/appointment", (req, res) => __awaiter(void 0, void 0, void 0, functio
         console.log(e);
     }
 }));
-app.put("/appointment/:id", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+app.post("/appointmentVet", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        (0, appointment_1.updateAppointment)(req, res, prisma);
+        (0, appointment_1.addAppointmentVet)(req, res, prisma);
+    }
+    catch (e) {
+        console.log(e);
+    }
+}));
+app.put("/appointmentVet/:id", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        (0, appointment_1.updateAppointmentVet)(req, res, prisma);
     }
     catch (e) {
         console.log(e);
@@ -272,6 +280,14 @@ app.get("/appointment/:id", (req, res) => __awaiter(void 0, void 0, void 0, func
 app.delete("/appointment/:id", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         (0, appointment_1.cancelAppointments)(req, res, prisma);
+    }
+    catch (e) {
+        console.log(e);
+    }
+}));
+app.delete("/appointmentVet/:id", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        (0, appointment_1.cancelAppointmentVet)(req, res, prisma);
     }
     catch (e) {
         console.log(e);

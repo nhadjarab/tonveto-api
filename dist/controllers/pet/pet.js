@@ -139,7 +139,7 @@ const deletePet = (req, res, prisma) => __awaiter(void 0, void 0, void 0, functi
         const { id } = req.params;
         if (!id || id === "")
             return res.status(400).json("Missing fields");
-        const { owner_id } = req.body;
+        const { owner_id } = req.headers;
         if (owner_id == undefined)
             return res.status(400).json("Missing fields");
         const payload = (0, authentication_1.handleTokenVerification)(req, res);

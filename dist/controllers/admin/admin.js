@@ -261,10 +261,9 @@ const approveCommentReport = (req, res, prisma) => __awaiter(void 0, void 0, voi
         if (!id || id === "") {
             return res.status(400).json("Missing id");
         }
-        const { logged_in_id } = req.headers;
+        const { logged_in_id, commentType, commentId } = req.headers;
         if (!logged_in_id)
             return res.status(400).json("Missing logged in id");
-        const { commentType, commentId } = req.body;
         if (commentType == undefined || commentId == undefined)
             return res.status(400).json("Missing comment fields");
         const payload = (0, authentication_1.handleTokenVerification)(req, res);
@@ -330,10 +329,9 @@ const rejectCommentReport = (req, res, prisma) => __awaiter(void 0, void 0, void
         if (!id || id === "") {
             return res.status(400).json("Missing id");
         }
-        const { logged_in_id } = req.headers;
+        const { logged_in_id, commentType, commentId } = req.headers;
         if (!logged_in_id)
             return res.status(400).json("Missing logged in id");
-        const { commentType, commentId } = req.body;
         if (commentType == undefined || commentId == undefined)
             return res.status(400).json("Missing comment fields");
         const payload = (0, authentication_1.handleTokenVerification)(req, res);

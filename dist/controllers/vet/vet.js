@@ -103,7 +103,13 @@ const getVet = (req, res, prisma) => __awaiter(void 0, void 0, void 0, function*
             include: {
                 RatingVet: {},
                 specialities: true,
-                appointments: true,
+                appointments: {
+                    include: {
+                        pet: true,
+                        user: true,
+                        MedicalReport: true,
+                    },
+                },
                 calendar: true,
                 CommentVet: true,
                 clinics: {

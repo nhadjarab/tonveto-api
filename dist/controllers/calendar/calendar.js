@@ -150,7 +150,7 @@ const deleteCalendar = (req, res, prisma) => __awaiter(void 0, void 0, void 0, f
         if (!id || id === "") {
             return res.status(400).json("Missing id");
         }
-        const { owner_id } = req.body;
+        const { owner_id } = req.headers;
         const payload = (0, authentication_1.handleTokenVerification)(req, res);
         if (payload.userId != owner_id)
             return res.status(401).json("Unauthorized");
