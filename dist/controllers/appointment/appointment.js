@@ -333,6 +333,8 @@ const closeTimeSlot = (req, res, prisma) => __awaiter(void 0, void 0, void 0, fu
             return res.status(400).json("Time must be in increments of 20 minutes");
         }
         const weekDayWorkingHours = JSON.parse(vetCalender[weekDay]);
+        if (weekDayWorkingHours === "closed")
+            return res.status(400).json("Vet is not available on this day");
         const isBetweenWorkingHours = (0, moment_1.default)(`${date}  ${time}`).isBetween(`${date}  ${weekDayWorkingHours.morning.start_at}`, `${date}  ${weekDayWorkingHours.morning.end_at}`) ||
             (0, moment_1.default)(`${date}  ${time}`).isBetween(`${date}  ${weekDayWorkingHours.afternoon.start_at}`, `${date}  ${weekDayWorkingHours.afternoon.end_at}`);
         if (!isBetweenWorkingHours)
@@ -429,6 +431,8 @@ const openTimeSlot = (req, res, prisma) => __awaiter(void 0, void 0, void 0, fun
             return res.status(400).json("Time must be in increments of 20 minutes");
         }
         const weekDayWorkingHours = JSON.parse(vetCalender[weekDay]);
+        if (weekDayWorkingHours === "closed")
+            return res.status(400).json("Vet is not available on this day");
         const isBetweenWorkingHours = (0, moment_1.default)(`${date}  ${time}`).isBetween(`${date}  ${weekDayWorkingHours.morning.start_at}`, `${date}  ${weekDayWorkingHours.morning.end_at}`) ||
             (0, moment_1.default)(`${date}  ${time}`).isBetween(`${date}  ${weekDayWorkingHours.afternoon.start_at}`, `${date}  ${weekDayWorkingHours.afternoon.end_at}`);
         if (!isBetweenWorkingHours)

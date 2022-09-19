@@ -415,7 +415,11 @@ export const closeTimeSlot = async (
     const dateValue = new Date(date);
     const day = dateValue.getDay() as number;
 
+
+
     const weekDay = (weekDays as any)[day];
+
+
 
     const vetCalender = await prisma.calendar.findUnique({
       where: {
@@ -430,6 +434,9 @@ export const closeTimeSlot = async (
       return res.status(400).json("Time must be in increments of 20 minutes");
     }
     const weekDayWorkingHours = JSON.parse((vetCalender as any)[weekDay]);
+
+    if(weekDayWorkingHours === "closed") return res.status(400).json("Vet is not available on this day");
+
 
     const isBetweenWorkingHours =
       moment(`${date}  ${time}`).isBetween(
@@ -558,6 +565,9 @@ export const openTimeSlot = async (
       return res.status(400).json("Time must be in increments of 20 minutes");
     }
     const weekDayWorkingHours = JSON.parse((vetCalender as any)[weekDay]);
+
+    if(weekDayWorkingHours === "closed") return res.status(400).json("Vet is not available on this day");
+
 
     const isBetweenWorkingHours =
       moment(`${date}  ${time}`).isBetween(
