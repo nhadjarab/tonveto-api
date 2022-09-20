@@ -367,6 +367,24 @@ export const cancelAppointments = async (
     if (!doesAppointmentExist)
       return res.status(404).json("Appointment not found");
 
+    const payment = await prisma.pendingPayment.findFirst({
+      where: {
+        appointment_id: id,
+      },
+    });
+
+    if (payment) {
+      await stripe.refunds.create({
+        payment_intent: payment.payment_id,
+      });
+
+      await prisma.pendingPayment.delete({
+        where: {
+          id: payment.id,
+        },
+      });
+    }
+
     const appointment = await prisma.appointment.delete({
       where: {
         id,

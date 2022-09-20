@@ -148,7 +148,11 @@ export const getVet = async (
           },
         },
         calendar: true,
-        CommentVet: true,
+        CommentVet: {
+          include: {
+            owner: true,
+          },
+        },
         clinics: {
           include: { clinic: true },
           where: {
