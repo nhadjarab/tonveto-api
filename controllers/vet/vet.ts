@@ -23,6 +23,7 @@ export const updateVet = async (
       last_name,
       phone_number,
       bank_details,
+      identification_order,
     } = req.body;
 
     if (
@@ -31,7 +32,8 @@ export const updateVet = async (
       first_name == undefined ||
       last_name == undefined ||
       phone_number == undefined ||
-      bank_details == undefined 
+      bank_details == undefined ||
+      identification_order == undefined
     )
       return res.status(400).json("Missing fields");
 
@@ -67,7 +69,19 @@ export const updateVet = async (
       });
     }
 
+    const doesVetWithIdentificationOrderExist = await prisma.vet.findFirst({
+      where: {
+        identification_order,
+      },
+    });
 
+    if (
+      doesVetWithIdentificationOrderExist &&
+      doesVetWithIdentificationOrderExist.id != id
+    )
+      return res
+        .status(400)
+        .json("A vet with identification order already exists");
 
     const vetProfile = await prisma.vet.update({
       where: {
@@ -80,6 +94,7 @@ export const updateVet = async (
         birth_date,
         phone_number,
         bank_details,
+        identification_order,
         profile_complete: isProfileComplete(
           first_name,
           last_name,
@@ -87,7 +102,7 @@ export const updateVet = async (
           birth_date,
           phone_number,
           bank_details,
-          oldVet.identification_order
+          identification_order
         ),
       },
     });
