@@ -44,8 +44,8 @@ export const addCalendar = async (
 
     if (!doesUserExist) return res.status(404).json("Vet does not exist");
 
-    if (!doesUserExist.is_approved)
-      return res.status(400).json("Vet is not approved yet");
+    // if (!doesUserExist.is_approved)
+    //   return res.status(400).json("Vet is not approved yet");
 
     const newCalendar = await prisma.calendar.create({
       data: {
