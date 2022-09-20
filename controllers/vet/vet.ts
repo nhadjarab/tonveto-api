@@ -264,7 +264,7 @@ export const isVetInClinic = async (
       },
     });
 
-    return res.status(200).json(isVetInClinic);
+    return res.status(200).json(isVetPartOfClinic);
   } catch (e) {
     res.status(500).json(e);
   }
