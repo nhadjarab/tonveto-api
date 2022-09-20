@@ -205,7 +205,7 @@ const isVetInClinic = (req, res, prisma) => __awaiter(void 0, void 0, void 0, fu
                 vet_id: id,
             },
         });
-        return res.status(200).json(exports.isVetInClinic);
+        return res.status(200).json(isVetPartOfClinic);
     }
     catch (e) {
         res.status(500).json(e);

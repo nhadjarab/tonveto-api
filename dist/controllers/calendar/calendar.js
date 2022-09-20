@@ -34,8 +34,8 @@ const addCalendar = (req, res, prisma) => __awaiter(void 0, void 0, void 0, func
         });
         if (!doesUserExist)
             return res.status(404).json("Vet does not exist");
-        if (!doesUserExist.is_approved)
-            return res.status(400).json("Vet is not approved yet");
+        // if (!doesUserExist.is_approved)
+        //   return res.status(400).json("Vet is not approved yet");
         const newCalendar = yield prisma.calendar.create({
             data: {
                 monday: JSON.stringify(monday),

@@ -13,13 +13,14 @@ exports.getClinicApplicants = exports.rejectNewVet = exports.approveNewVet = exp
 const authentication_1 = require("../authentication/authentication");
 const createClinic = (req, res, prisma) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const { name, address, city, country, phone_number, owner_id } = req.body;
+        const { name, address, city, country, phone_number, owner_id, zip_code } = req.body;
         if (name == undefined ||
             address == undefined ||
             city == undefined ||
             country == undefined ||
             phone_number == undefined ||
-            owner_id == undefined) {
+            owner_id == undefined ||
+            zip_code == undefined) {
             return res.status(400).json("Missing fields");
         }
         const payload = (0, authentication_1.handleTokenVerification)(req, res);
@@ -42,6 +43,7 @@ const createClinic = (req, res, prisma) => __awaiter(void 0, void 0, void 0, fun
                 country,
                 phone_number,
                 owner_id,
+                zip_code
             },
         });
         const clinicVet = yield prisma.vetClinic.create({
@@ -66,13 +68,14 @@ const updateClinic = (req, res, prisma) => __awaiter(void 0, void 0, void 0, fun
         const { logged_in_id } = req.headers;
         if (!logged_in_id)
             return res.status(400).json("Missing logged in id");
-        const { name, address, city, country, phone_number, owner_id } = req.body;
+        const { name, address, city, country, phone_number, owner_id, zip_code } = req.body;
         if (name == undefined ||
             address == undefined ||
             city == undefined ||
             country == undefined ||
             phone_number == undefined ||
-            owner_id == undefined) {
+            owner_id == undefined ||
+            zip_code == undefined) {
             return res.status(400).json("Missing fields");
         }
         const payload = (0, authentication_1.handleTokenVerification)(req, res);
@@ -109,6 +112,7 @@ const updateClinic = (req, res, prisma) => __awaiter(void 0, void 0, void 0, fun
                 country,
                 phone_number,
                 owner_id,
+                zip_code,
             },
         });
         res.status(200).json(newClinic);

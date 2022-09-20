@@ -8,7 +8,7 @@ export const createClinic = async (
   prisma: PrismaClient
 ) => {
   try {
-    const { name, address, city, country, phone_number, owner_id } = req.body;
+    const { name, address, city, country, phone_number, owner_id , zip_code} = req.body;
 
     if (
       name == undefined ||
@@ -16,7 +16,8 @@ export const createClinic = async (
       city == undefined ||
       country == undefined ||
       phone_number == undefined ||
-      owner_id == undefined
+      owner_id == undefined ||
+      zip_code == undefined
     ) {
       return res.status(400).json("Missing fields");
     }
@@ -33,7 +34,6 @@ export const createClinic = async (
 
     if (!isUserVet) return res.status(404).json("Vet does not exist");
     if (isUserVet.type != "vet") return res.status(401).json("Unauthorized");
-    
 
     const newClinic = await prisma.clinic.create({
       data: {
@@ -43,6 +43,7 @@ export const createClinic = async (
         country,
         phone_number,
         owner_id,
+        zip_code
       },
     });
 
@@ -70,11 +71,12 @@ export const updateClinic = async (
 
     if (!id || id === "") return res.status(400).json("Missing fields");
 
-     const { logged_in_id } = req.headers;
+    const { logged_in_id } = req.headers;
 
-    if(!logged_in_id) return res.status(400).json("Missing logged in id")
+    if (!logged_in_id) return res.status(400).json("Missing logged in id");
 
-    const { name, address, city, country, phone_number, owner_id } = req.body;
+    const { name, address, city, country, phone_number, owner_id, zip_code } =
+      req.body;
 
     if (
       name == undefined ||
@@ -82,7 +84,8 @@ export const updateClinic = async (
       city == undefined ||
       country == undefined ||
       phone_number == undefined ||
-      owner_id == undefined
+      owner_id == undefined ||
+      zip_code == undefined
     ) {
       return res.status(400).json("Missing fields");
     }
@@ -125,6 +128,7 @@ export const updateClinic = async (
         country,
         phone_number,
         owner_id,
+        zip_code,
       },
     });
 
@@ -144,9 +148,9 @@ export const getClinic = async (
 
     if (!id || id === "") return res.status(400).json("Missing fields");
 
-     const { logged_in_id } = req.headers;
+    const { logged_in_id } = req.headers;
 
-    if(!logged_in_id) return res.status(400).json("Missing logged in id")
+    if (!logged_in_id) return res.status(400).json("Missing logged in id");
 
     const payload: JWTPayload = handleTokenVerification(req, res) as JWTPayload;
 
@@ -198,9 +202,9 @@ export const deleteClinic = async (
 
     if (!id || id === "") return res.status(400).json("Missing fields");
 
-     const { logged_in_id } = req.headers;
+    const { logged_in_id } = req.headers;
 
-    if(!logged_in_id) return res.status(400).json("Missing logged in id")
+    if (!logged_in_id) return res.status(400).json("Missing logged in id");
 
     const payload: JWTPayload = handleTokenVerification(req, res) as JWTPayload;
 
@@ -260,9 +264,9 @@ export const addVetToClinic = async (
   try {
     const { vet_id, clinic_id } = req.body;
 
-     const { logged_in_id } = req.headers;
+    const { logged_in_id } = req.headers;
 
-    if(!logged_in_id) return res.status(400).json("Missing logged in id")
+    if (!logged_in_id) return res.status(400).json("Missing logged in id");
 
     if (vet_id == undefined || clinic_id == undefined)
       return res.status(400).json("Missing fields");
@@ -329,11 +333,9 @@ export const removeVetFromClinic = async (
 
     if (!id || id === "") return res.status(400).json("Missing fields");
 
-     const { logged_in_id , clinic_id} = req.headers;
+    const { logged_in_id, clinic_id } = req.headers;
 
-    if(!logged_in_id) return res.status(400).json("Missing logged in id")
-
-  
+    if (!logged_in_id) return res.status(400).json("Missing logged in id");
 
     if (clinic_id == undefined) return res.status(400).json("Missing fields");
 
@@ -375,7 +377,7 @@ export const removeVetFromClinic = async (
     const vetClinic = await prisma.vetClinic.delete({
       where: {
         vet_id_clinic_id: {
-          clinic_id : clinic_id as string,
+          clinic_id: clinic_id as string,
           vet_id: id,
         },
       },
@@ -397,9 +399,9 @@ export const approveNewVet = async (
 
     if (!id || id === "") return res.status(400).json("Missing fields");
 
-     const { logged_in_id } = req.headers;
+    const { logged_in_id } = req.headers;
 
-    if(!logged_in_id) return res.status(400).json("Missing logged in id")
+    if (!logged_in_id) return res.status(400).json("Missing logged in id");
 
     const { clinic_id } = req.body;
 
@@ -480,9 +482,9 @@ export const rejectNewVet = async (
 
     if (!id || id === "") return res.status(400).json("Missing fields");
 
-     const { logged_in_id , clinic_id } = req.headers;
+    const { logged_in_id, clinic_id } = req.headers;
 
-    if(!logged_in_id) return res.status(400).json("Missing logged in id")
+    if (!logged_in_id) return res.status(400).json("Missing logged in id");
 
     if (clinic_id == undefined) return res.status(400).json("Missing fields");
 
@@ -522,7 +524,7 @@ export const rejectNewVet = async (
       where: {
         vet_id_clinic_id: {
           vet_id: id,
-          clinic_id : clinic_id as string,
+          clinic_id: clinic_id as string,
         },
       },
     });
@@ -537,7 +539,7 @@ export const rejectNewVet = async (
       where: {
         vet_id_clinic_id: {
           vet_id: id,
-          clinic_id : clinic_id as string,
+          clinic_id: clinic_id as string,
         },
       },
     });
@@ -558,9 +560,9 @@ export const getClinicApplicants = async (
 
     if (!id || id === "") return res.status(400).json("Missing fields");
 
-     const { logged_in_id } = req.headers;
+    const { logged_in_id } = req.headers;
 
-    if(!logged_in_id) return res.status(400).json("Missing logged in id")
+    if (!logged_in_id) return res.status(400).json("Missing logged in id");
 
     const payload: JWTPayload = handleTokenVerification(req, res) as JWTPayload;
 

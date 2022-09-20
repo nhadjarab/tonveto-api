@@ -13,8 +13,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.handleTokenVerification = exports.verifyToken = exports.generateToken = exports.loginAdmin = exports.loginVet = exports.login = exports.registerAdmin = exports.registerVet = exports.register = void 0;
+const fs_1 = __importDefault(require("fs"));
 const jsonwebtoken_1 = require("jsonwebtoken");
 const bcrypt_1 = __importDefault(require("bcrypt"));
+const private_key = fs_1.default.readFileSync(__dirname + "/vetolib.rsa");
+const public_key = fs_1.default.readFileSync(__dirname + "/vetolib.rsa.pub");
 const register = (req, res, prisma) => __awaiter(void 0, void 0, void 0, function* () {
     const { email, password } = req.body;
     // return 400 if email or password is missing
@@ -238,7 +241,7 @@ const loginAdmin = (req, res, prisma) => __awaiter(void 0, void 0, void 0, funct
 exports.loginAdmin = loginAdmin;
 const generateToken = (userId) => {
     try {
-        return (0, jsonwebtoken_1.sign)({ userId }, process.env.PRIVATE_KEY, { algorithm: "RS256" });
+        return (0, jsonwebtoken_1.sign)({ userId }, private_key, { algorithm: "RS256" });
     }
     catch (e) {
         console.log(e);
@@ -248,7 +251,7 @@ const generateToken = (userId) => {
 exports.generateToken = generateToken;
 const verifyToken = (token) => {
     try {
-        return (0, jsonwebtoken_1.verify)(token, process.env.PUBLIC_KEY, { algorithms: ["RS256"] });
+        return (0, jsonwebtoken_1.verify)(token, public_key, { algorithms: ["RS256"] });
     }
     catch (e) {
         console.log(e);

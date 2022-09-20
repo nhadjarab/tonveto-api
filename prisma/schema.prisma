@@ -99,6 +99,7 @@ model Clinic {
   country       String
   phone_number  String
   owner_id      String
+  zip_code      String          @default("00000")
   is_approved   Boolean         @default(false)
   owner         Vet             @relation(fields: [owner_id], references: [id])
   vets          VetClinic[]
