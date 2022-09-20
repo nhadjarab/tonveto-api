@@ -67,19 +67,7 @@ export const updateVet = async (
       });
     }
 
-    const doesVetWithIdentificationOrderExist = await prisma.vet.findFirst({
-      where: {
-        identification_order,
-      },
-    });
 
-    if (
-      doesVetWithIdentificationOrderExist &&
-      doesVetWithIdentificationOrderExist.id != id
-    )
-      return res
-        .status(400)
-        .json("A vet with identification order already exists");
 
     const vetProfile = await prisma.vet.update({
       where: {
@@ -92,7 +80,6 @@ export const updateVet = async (
         birth_date,
         phone_number,
         bank_details,
-        identification_order,
         profile_complete: isProfileComplete(
           first_name,
           last_name,
@@ -100,7 +87,7 @@ export const updateVet = async (
           birth_date,
           phone_number,
           bank_details,
-          identification_order
+          oldVet.identification_order
         ),
       },
     });
