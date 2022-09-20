@@ -23,7 +23,6 @@ export const updateVet = async (
       last_name,
       phone_number,
       bank_details,
-      identification_order,
     } = req.body;
 
     if (
@@ -32,8 +31,7 @@ export const updateVet = async (
       first_name == undefined ||
       last_name == undefined ||
       phone_number == undefined ||
-      bank_details == undefined ||
-      identification_order == undefined
+      bank_details == undefined 
     )
       return res.status(400).json("Missing fields");
 
