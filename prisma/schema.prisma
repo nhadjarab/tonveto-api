@@ -49,17 +49,18 @@ model User {
 }
 
 model Vet {
-  id                   String          @id @unique @default(cuid())
+  id                   String           @id @unique @default(cuid())
   first_name           String
   last_name            String
-  email                String          @unique
+  email                String           @unique
   birth_date           String
   phone_number         String
-  identification_order String          @default("1111111111")
-  profile_complete     Boolean         @default(false)
-  is_approved          Boolean         @default(false)
-  type                 String          @default("vet")
+  identification_order String           @default("1111111111")
+  profile_complete     Boolean          @default(false)
+  is_approved          Boolean          @default(false)
+  type                 String           @default("vet")
   bank_details         String
+  balance              Float            @default(0)
   specialities         Specialty[]
   appointments         Appointment[]
   clinics              VetClinic[]
@@ -68,6 +69,7 @@ model Vet {
   MedicalReport        MedicalReport[]
   CommentVet           CommentVet[]
   RatingVet            RatingVet[]
+  PendingPayment       PendingPayment[]
 
   @@unique([id, identification_order])
 }
@@ -214,4 +216,14 @@ model CommentVetReport {
   reporter_type String
   vet_id        String
   report_type   String     @default("vet")
+}
+
+model PendingPayment {
+  id             String @id @unique @default(cuid())
+  amount         Float
+  vet_id         String
+  user_id        String
+  appointment_id String
+  payment_id     String
+  vet            Vet    @relation(fields: [vet_id], references: [id])
 }

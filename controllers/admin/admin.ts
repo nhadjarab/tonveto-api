@@ -162,6 +162,41 @@ export const getAllAppointments = async (
     console.log(e);
   }
 };
+export const getAllPayments = async (
+  req: Request,
+  res: Response,
+  prisma: PrismaClient
+) => {
+  try {
+     const { logged_in_id } = req.headers;
+
+    if(!logged_in_id) return res.status(400).json("Missing logged in id")
+
+    const payload: JWTPayload = handleTokenVerification(req, res) as JWTPayload;
+
+    if (payload.userId !== logged_in_id)
+      return res.status(401).json("Unauthorized");
+
+    const admin = await prisma.admin.findUnique({
+      where: {
+        id: logged_in_id,
+      },
+    });
+
+    if (!admin) return res.status(404).json("Admin not found");
+
+    const appointments = await prisma.pendingPayment.findMany({
+      include: {
+        vet: true,
+      },
+    });
+
+    res.status(200).json(appointments);
+  } catch (e) {
+    console.log(e);
+  }
+};
+
 
 export const approveClinic = async (
   req: Request,

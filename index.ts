@@ -66,6 +66,7 @@ import {
   getAllAppointments,
   getAllClinicApplications,
   getAllClinics,
+  getAllPayments,
   getAllUsers,
   getAllVetApplications,
   getAllVets,
@@ -90,7 +91,8 @@ import {
   editRatingClinic,
   editRatingVet,
 } from "./controllers/rating/rating";
-import { search } from "./controllers/search/search";
+import { advancedSearch, search } from "./controllers/search/search";
+import { addPayment } from "./controllers/billing/billing";
 
 const prisma = new PrismaClient();
 
@@ -617,6 +619,14 @@ app.get("/getAllAppointments", async (req: Request, res: Response) => {
   }
 });
 
+app.get("/getAllPayments", async (req: Request, res: Response) => {
+  try {
+    getAllPayments(req, res, prisma);
+  } catch (e) {
+    console.log(e);
+  }
+});
+
 app.get("/getAllCommentReports", async (req: Request, res: Response) => {
   try {
     getCommentReports(req, res, prisma);
@@ -677,6 +687,25 @@ app.delete("/rejectCommentReport/:id", async (req: Request, res: Response) => {
 app.get("/search/:query", async (req: Request, res: Response) => {
   try {
     search(req, res, prisma);
+  } catch (e) {
+    console.log(e);
+  }
+});
+
+app.get("/advancedSearch", async (req: Request, res: Response) => {
+  try {
+    advancedSearch(req, res, prisma);
+  } catch (e) {
+    console.log(e);
+  }
+});
+
+
+
+// ===========Payment ROUTERS============
+app.post("/payment", async (req: Request, res: Response) => {
+  try {
+    addPayment(req, res, prisma);
   } catch (e) {
     console.log(e);
   }

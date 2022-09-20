@@ -3,10 +3,15 @@ import { Request, Response } from "express";
 import { handleTokenVerification } from "../authentication/authentication";
 import { weekDays } from "../../utils/helps";
 import moment from "moment";
+import Stripe from "stripe";
 
 import sgMail from "@sendgrid/mail";
 
 sgMail.setApiKey(process.env.SENDGRID as string);
+
+const stripe = new Stripe(process.env.STRIPE_KEY as string, {
+  apiVersion: "2022-08-01",
+});
 
 export const addAppointment = async (
   req: Request,
@@ -85,8 +90,8 @@ export const addAppointment = async (
     }
     const weekDayWorkingHours = JSON.parse((vetCalender as any)[weekDay]);
 
-    if(weekDayWorkingHours === "closed") return res.status(400).json("Vet is not available on this day");
-
+    if (weekDayWorkingHours === "closed")
+      return res.status(400).json("Vet is not available on this day");
 
     const isBetweenWorkingHours =
       moment(`${date}  ${time}`).isBetween(
@@ -237,8 +242,9 @@ export const updateAppointment = async (
     }
     const weekDayWorkingHours = JSON.parse((vetCalender as any)[weekDay]);
 
-    if(weekDayWorkingHours === "closed") return res.status(400).json("Vet is not available on this day");
-    
+    if (weekDayWorkingHours === "closed")
+      return res.status(400).json("Vet is not available on this day");
+
     const isBetweenWorkingHours =
       moment(`${date}  ${time}`).isBetween(
         `${date}  ${weekDayWorkingHours.morning.start_at}`,
@@ -415,11 +421,7 @@ export const closeTimeSlot = async (
     const dateValue = new Date(date);
     const day = dateValue.getDay() as number;
 
-
-
     const weekDay = (weekDays as any)[day];
-
-
 
     const vetCalender = await prisma.calendar.findUnique({
       where: {
@@ -435,8 +437,8 @@ export const closeTimeSlot = async (
     }
     const weekDayWorkingHours = JSON.parse((vetCalender as any)[weekDay]);
 
-    if(weekDayWorkingHours === "closed") return res.status(400).json("Vet is not available on this day");
-
+    if (weekDayWorkingHours === "closed")
+      return res.status(400).json("Vet is not available on this day");
 
     const isBetweenWorkingHours =
       moment(`${date}  ${time}`).isBetween(
@@ -566,8 +568,8 @@ export const openTimeSlot = async (
     }
     const weekDayWorkingHours = JSON.parse((vetCalender as any)[weekDay]);
 
-    if(weekDayWorkingHours === "closed") return res.status(400).json("Vet is not available on this day");
-
+    if (weekDayWorkingHours === "closed")
+      return res.status(400).json("Vet is not available on this day");
 
     const isBetweenWorkingHours =
       moment(`${date}  ${time}`).isBetween(
@@ -682,7 +684,8 @@ export const addAppointmentVet = async (
     }
     const weekDayWorkingHours = JSON.parse((vetCalender as any)[weekDay]);
 
-    if(weekDayWorkingHours === "closed") return res.status(400).json("Vet is not available on this day");
+    if (weekDayWorkingHours === "closed")
+      return res.status(400).json("Vet is not available on this day");
 
     const isBetweenWorkingHours =
       moment(`${date}  ${time}`).isBetween(
@@ -833,8 +836,8 @@ export const updateAppointmentVet = async (
     }
     const weekDayWorkingHours = JSON.parse((vetCalender as any)[weekDay]);
 
-    if(weekDayWorkingHours === "closed") return res.status(400).json("Vet is not available on this day");
-
+    if (weekDayWorkingHours === "closed")
+      return res.status(400).json("Vet is not available on this day");
 
     const isBetweenWorkingHours =
       moment(`${date}  ${time}`).isBetween(
@@ -920,6 +923,24 @@ export const cancelAppointmentVet = async (
     if (!doesAppointmentExist)
       return res.status(404).json("Appointment not found");
 
+    const payment = await prisma.pendingPayment.findFirst({
+      where: {
+        appointment_id: id,
+      },
+    });
+
+    if (payment) {
+      await stripe.refunds.create({
+        payment_intent: payment.payment_id,
+      });
+
+      await prisma.pendingPayment.delete({
+        where: {
+          id: payment.id,
+        },
+      });
+    }
+
     const appointment = await prisma.appointment.delete({
       where: {
         id,
@@ -941,5 +962,3 @@ export const cancelAppointmentVet = async (
     console.log(e);
   }
 };
-
-
