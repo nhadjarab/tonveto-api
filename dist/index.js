@@ -30,6 +30,7 @@ const admin_1 = require("./controllers/admin/admin");
 const comment_1 = require("./controllers/comment/comment");
 const rating_1 = require("./controllers/rating/rating");
 const search_1 = require("./controllers/search/search");
+const billing_1 = require("./controllers/billing/billing");
 const prisma = new client_1.PrismaClient();
 dotenv_1.default.config();
 const app = (0, express_1.default)();
@@ -547,6 +548,14 @@ app.get("/getAllAppointments", (req, res) => __awaiter(void 0, void 0, void 0, f
         console.log(e);
     }
 }));
+app.get("/getAllPayments", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        (0, admin_1.getAllPayments)(req, res, prisma);
+    }
+    catch (e) {
+        console.log(e);
+    }
+}));
 app.get("/getAllCommentReports", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         (0, admin_1.getCommentReports)(req, res, prisma);
@@ -607,6 +616,23 @@ app.delete("/rejectCommentReport/:id", (req, res) => __awaiter(void 0, void 0, v
 app.get("/search/:query", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         (0, search_1.search)(req, res, prisma);
+    }
+    catch (e) {
+        console.log(e);
+    }
+}));
+app.get("/advancedSearch", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        (0, search_1.advancedSearch)(req, res, prisma);
+    }
+    catch (e) {
+        console.log(e);
+    }
+}));
+// ===========Payment ROUTERS============
+app.post("/payment", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        (0, billing_1.addPayment)(req, res, prisma);
     }
     catch (e) {
         console.log(e);

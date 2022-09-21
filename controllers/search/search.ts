@@ -17,15 +17,12 @@ export const search = async (
       where: {
         is_approved: true,
       },
-      include: {
-        RatingClinic: true,
-      },
+
     });
 
     const vets = await prisma.vet.findMany({
       include: {
         specialities: true,
-        RatingVet: true,
       },
       where: {
         is_approved: true,
@@ -34,7 +31,7 @@ export const search = async (
 
     let vetsWithRatings: any = [];
 
-    vets.forEach(async (vet) => {
+    for await (const vet of vets) {
       const vetRating = await prisma.ratingVet.aggregate({
         where: {
           vet_id: vet.id,
@@ -45,12 +42,12 @@ export const search = async (
       });
 
       vetsWithRatings.push({ ...vet, vetRating });
-    });
+    }
 
+    let clinicsWithRatings: any = [];
 
-    let clinicsWithRatings : any = []
-
-     clinics.forEach(async (clinic) => {
+  
+    for await (const clinic of clinics) {
       const clinicRating = await prisma.ratingClinic.aggregate({
         where: {
           clinic_id: clinic.id,
@@ -61,11 +58,11 @@ export const search = async (
       });
 
       clinicsWithRatings.push({ ...clinic, clinicRating });
-    });
+    }
 
     // Filter clinics and vets by query
     const filteredClinics = clinicsWithRatings.filter(
-      (clinic : Clinic) =>
+      (clinic: Clinic) =>
         clinic.name.toLowerCase().includes(query.toLowerCase()) ||
         clinic.city.toLowerCase().includes(query.toLowerCase()) ||
         clinic.address.toLowerCase().includes(query.toLowerCase()) ||
@@ -114,15 +111,12 @@ export const advancedSearch = async (
       where: {
         is_approved: true,
       },
-      include: {
-        RatingClinic: true,
-      },
+  
     });
 
     const vets = await prisma.vet.findMany({
       include: {
         specialities: true,
-        RatingVet: true,
       },
       where: {
         is_approved: true,
@@ -131,7 +125,7 @@ export const advancedSearch = async (
 
     let vetsWithRatings: any = [];
 
-    vets.forEach(async (vet) => {
+    for await (const vet of vets) {
       const vetRating = await prisma.ratingVet.aggregate({
         where: {
           vet_id: vet.id,
@@ -142,12 +136,12 @@ export const advancedSearch = async (
       });
 
       vetsWithRatings.push({ ...vet, vetRating });
-    });
+    }
 
+    let clinicsWithRatings: any = [];
 
-    let clinicsWithRatings : any = []
-
-     clinics.forEach(async (clinic) => {
+  
+    for await (const clinic of clinics) {
       const clinicRating = await prisma.ratingClinic.aggregate({
         where: {
           clinic_id: clinic.id,
@@ -158,7 +152,7 @@ export const advancedSearch = async (
       });
 
       clinicsWithRatings.push({ ...clinic, clinicRating });
-    });
+    }
 
     // check if queries are undefined
     if (
@@ -170,12 +164,10 @@ export const advancedSearch = async (
       address == undefined &&
       country == undefined
     )
-      return res
-        .status(200)
-        .json({
-          filteredClinics: clinicsWithRatings,
-          filteredVets: vetsWithRatings,
-        });
+      return res.status(200).json({
+        filteredClinics: clinicsWithRatings,
+        filteredVets: vetsWithRatings,
+      });
 
     // Filter clinics and vets by query
     const filteredClinics = clinics.filter(

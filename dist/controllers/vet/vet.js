@@ -111,7 +111,11 @@ const getVet = (req, res, prisma) => __awaiter(void 0, void 0, void 0, function*
                     },
                 },
                 calendar: true,
-                CommentVet: true,
+                CommentVet: {
+                    include: {
+                        owner: true,
+                    },
+                },
                 clinics: {
                     include: { clinic: true },
                     where: {

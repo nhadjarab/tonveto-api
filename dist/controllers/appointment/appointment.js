@@ -16,8 +16,12 @@ exports.cancelAppointmentVet = exports.updateAppointmentVet = exports.addAppoint
 const authentication_1 = require("../authentication/authentication");
 const helps_1 = require("../../utils/helps");
 const moment_1 = __importDefault(require("moment"));
+const stripe_1 = __importDefault(require("stripe"));
 const mail_1 = __importDefault(require("@sendgrid/mail"));
 mail_1.default.setApiKey(process.env.SENDGRID);
+const stripe = new stripe_1.default(process.env.STRIPE_KEY, {
+    apiVersion: "2022-08-01",
+});
 const addAppointment = (req, res, prisma) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { date, time, pet_id, vet_id, user_id } = req.body;
@@ -279,6 +283,24 @@ const cancelAppointments = (req, res, prisma) => __awaiter(void 0, void 0, void 
         });
         if (!doesAppointmentExist)
             return res.status(404).json("Appointment not found");
+        const dayDifferece = (0, moment_1.default)(`${doesAppointmentExist.date} ${doesAppointmentExist.time}`).diff((0, moment_1.default)(), "minutes");
+        if (dayDifferece < 0)
+            return res.status(400).json("Cannot schedule past dates");
+        const payment = yield prisma.pendingPayment.findFirst({
+            where: {
+                appointment_id: id,
+            },
+        });
+        if (payment) {
+            yield stripe.refunds.create({
+                payment_intent: payment.payment_id,
+            });
+            yield prisma.pendingPayment.delete({
+                where: {
+                    id: payment.id,
+                },
+            });
+        }
         const appointment = yield prisma.appointment.delete({
             where: {
                 id,
@@ -689,6 +711,24 @@ const cancelAppointmentVet = (req, res, prisma) => __awaiter(void 0, void 0, voi
         });
         if (!doesAppointmentExist)
             return res.status(404).json("Appointment not found");
+        const dayDifferece = (0, moment_1.default)(`${doesAppointmentExist.date} ${doesAppointmentExist.time}`).diff((0, moment_1.default)(), "minutes");
+        if (dayDifferece < 0)
+            return res.status(400).json("Cannot schedule past dates");
+        const payment = yield prisma.pendingPayment.findFirst({
+            where: {
+                appointment_id: id,
+            },
+        });
+        if (payment) {
+            yield stripe.refunds.create({
+                payment_intent: payment.payment_id,
+            });
+            yield prisma.pendingPayment.delete({
+                where: {
+                    id: payment.id,
+                },
+            });
+        }
         const appointment = yield prisma.appointment.delete({
             where: {
                 id,

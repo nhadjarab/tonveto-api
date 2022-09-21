@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getAllClinicApplications = exports.getAllVetApplications = exports.rejectCommentReport = exports.approveCommentReport = exports.getCommentReports = exports.approveVet = exports.approveClinic = exports.getAllAppointments = exports.getAllClinics = exports.getAllVets = exports.getAllUsers = void 0;
+exports.getAllClinicApplications = exports.getAllVetApplications = exports.rejectCommentReport = exports.approveCommentReport = exports.getCommentReports = exports.approveVet = exports.approveClinic = exports.getAllPayments = exports.getAllAppointments = exports.getAllClinics = exports.getAllVets = exports.getAllUsers = void 0;
 const authentication_1 = require("../authentication/authentication");
 const getAllUsers = (req, res, prisma) => __awaiter(void 0, void 0, void 0, function* () {
     try {
@@ -140,6 +140,33 @@ const getAllAppointments = (req, res, prisma) => __awaiter(void 0, void 0, void 
     }
 });
 exports.getAllAppointments = getAllAppointments;
+const getAllPayments = (req, res, prisma) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const { logged_in_id } = req.headers;
+        if (!logged_in_id)
+            return res.status(400).json("Missing logged in id");
+        const payload = (0, authentication_1.handleTokenVerification)(req, res);
+        if (payload.userId !== logged_in_id)
+            return res.status(401).json("Unauthorized");
+        const admin = yield prisma.admin.findUnique({
+            where: {
+                id: logged_in_id,
+            },
+        });
+        if (!admin)
+            return res.status(404).json("Admin not found");
+        const appointments = yield prisma.pendingPayment.findMany({
+            include: {
+                vet: true,
+            },
+        });
+        res.status(200).json(appointments);
+    }
+    catch (e) {
+        console.log(e);
+    }
+});
+exports.getAllPayments = getAllPayments;
 const approveClinic = (req, res, prisma) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { id } = req.params;

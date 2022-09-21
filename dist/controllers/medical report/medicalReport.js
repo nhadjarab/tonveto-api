@@ -48,6 +48,28 @@ const addMedicalReport = (req, res, prisma) => __awaiter(void 0, void 0, void 0,
         });
         if (!doesAppointmentExist)
             return res.status(404).json("Appointment does not exist");
+        const payment = yield prisma.pendingPayment.findFirst({
+            where: {
+                appointment_id: appointment_id,
+            },
+        });
+        if (payment) {
+            yield prisma.vet.update({
+                where: {
+                    id: vet_id,
+                },
+                data: {
+                    balance: {
+                        increment: payment.amount - 2,
+                    },
+                },
+            });
+            yield prisma.pendingPayment.delete({
+                where: {
+                    id: payment.id,
+                },
+            });
+        }
         const medicalReport = yield prisma.medicalReport.create({
             data: {
                 appointment_id,
