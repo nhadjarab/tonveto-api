@@ -129,7 +129,7 @@ export const addAppointment = async (
 
     const msg = {
       to: doesUserExist.email, // Change to your recipient
-      from: "info@aimensahnoun.com", // Change to your verified sender
+      from: "info@tonveto.com", // Change to your verified sender
       subject: "VetoLib Appointment",
       html: `<div><strong>Dear ${doesUserExist.first_name} ${doesUserExist.last_name}</strong> <span> Has booked an appointment with Doctor ${doesVetExist.first_name} ${doesVetExist.last_name} on ${date} ${time} for pet: ${doesPetExist.name}</span></div>
     `,
@@ -273,7 +273,7 @@ export const updateAppointment = async (
 
     const msg = {
       to: doesUserExist.email, // Change to your recipient
-      from: "info@aimensahnoun.com", // Change to your verified sender
+      from: "info@tonveto.com", // Change to your verified sender
       subject: "VetoLib Appointment Update",
       html: `<div><strong>Dear ${doesUserExist.first_name} ${doesUserExist.last_name}</strong> <span> Has booked an appointment with Doctor ${doesVetExist.first_name} ${doesVetExist.last_name} on ${date} ${time} for pet: ${doesPetExist.name}</span></div>
     `,
@@ -402,7 +402,7 @@ export const cancelAppointments = async (
 
     const msg = {
       to: doesUserExist.email, // Change to your recipient
-      from: "info@aimensahnoun.com", // Change to your verified sender
+      from: "info@tonveto.com", // Change to your verified sender
       subject: "VetoLib Appointment Cancelled",
       html: `<div><strong>Dear ${doesUserExist.first_name} ${doesUserExist.last_name}</strong> <span> Has canceled an appointment with id ${appointment.id} successfully </span></div>
     `,
@@ -513,7 +513,7 @@ export const closeTimeSlot = async (
 
       const msg = {
         to: user?.email, // Change to your recipient
-        from: "info@aimensahnoun.com", // Change to your verified sender
+        from: "info@tonveto.com", // Change to your verified sender
         subject: "VetoLib Appointment Cancelled By Vet",
         html: `<div><strong>Dear ${user?.first_name} ${user?.last_name}</strong> <span> Has been canclled by the vet, you are welcome to book another appointment at another time.</span></div>
       `,
@@ -748,7 +748,7 @@ export const addAppointmentVet = async (
 
     const msg = {
       to: doesUserExist.email, // Change to your recipient
-      from: "info@aimensahnoun.com", // Change to your verified sender
+      from: "info@tonveto.com", // Change to your verified sender
       subject: "VetoLib Appointment",
       html: `<div><strong>Dear ${doesUserExist.first_name} ${doesUserExist.last_name}</strong> <span> Has booked an appointment with Doctor ${doesVetExist.first_name} ${doesVetExist.last_name} on ${date} ${time} for pet: ${doesPetExist.name}</span></div>
     `,
@@ -892,7 +892,7 @@ export const updateAppointmentVet = async (
 
     const msg = {
       to: doesUserExist.email, // Change to your recipient
-      from: "info@aimensahnoun.com", // Change to your verified sender
+      from: "info@tonveto.com", // Change to your verified sender
       subject: "VetoLib Appointment Update",
       html: `<div><strong>Dear ${doesUserExist.first_name} ${doesUserExist.last_name}</strong> <span> Has booked an appointment with Doctor ${doesVetExist.first_name} ${doesVetExist.last_name} on ${date} ${time} for pet: ${doesPetExist.name}</span></div>
     `,
@@ -983,7 +983,7 @@ export const cancelAppointmentVet = async (
 
     const msg = {
       to: doesUserExist.email, // Change to your recipient
-      from: "info@aimensahnoun.com", // Change to your verified sender
+      from: "info@tonveto.com", // Change to your verified sender
       subject: "VetoLib Appointment Cancelled",
       html: `<div><strong>Dear ${doesUserExist.first_name} ${doesUserExist.last_name}</strong> <span> Has canceled an appointment with id ${appointment.id} successfully </span></div>
     `,
