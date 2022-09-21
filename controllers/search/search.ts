@@ -1,4 +1,4 @@
-import { PrismaClient } from "@prisma/client";
+import { Clinic, PrismaClient, Specialty, Vet } from "@prisma/client";
 import { Request, Response } from "express";
 
 import { handleTokenVerification } from "../authentication/authentication";
@@ -32,23 +32,58 @@ export const search = async (
       },
     });
 
+    let vetsWithRatings: any = [];
+
+    vets.forEach(async (vet) => {
+      const vetRating = await prisma.ratingVet.aggregate({
+        where: {
+          vet_id: vet.id,
+        },
+        _avg: {
+          rating: true,
+        },
+      });
+
+      vetsWithRatings.push({ ...vet, vetRating });
+    });
+
+
+    let clinicsWithRatings : any = []
+
+     clinics.forEach(async (clinic) => {
+      const clinicRating = await prisma.ratingClinic.aggregate({
+        where: {
+          clinic_id: clinic.id,
+        },
+        _avg: {
+          rating: true,
+        },
+      });
+
+      clinicsWithRatings.push({ ...clinic, clinicRating });
+    });
+
     // Filter clinics and vets by query
-    const filteredClinics = clinics.filter(
-      (clinic) =>
+    const filteredClinics = clinicsWithRatings.filter(
+      (clinic : Clinic) =>
         clinic.name.toLowerCase().includes(query.toLowerCase()) ||
         clinic.city.toLowerCase().includes(query.toLowerCase()) ||
         clinic.address.toLowerCase().includes(query.toLowerCase()) ||
         clinic.country.toLowerCase().includes(query.toLowerCase())
     );
 
-    const filteredVets = vets.filter(
-      (vet) =>
+    const filteredVets = vetsWithRatings.filter(
+      (
+        vet: Vet & {
+          specialities: Specialty[];
+        }
+      ) =>
         vet.first_name.toLowerCase().includes(query.toLowerCase()) ||
         vet.last_name.toLowerCase().includes(query.toLowerCase()) ||
         (vet.first_name + " " + vet.last_name)
           .toLowerCase()
           .includes(query.toLowerCase()) ||
-        vet.specialities.some((speciality) =>
+        vet.specialities!.some((speciality) =>
           speciality.name.toLowerCase().includes(query.toLowerCase())
         )
     );
@@ -94,6 +129,37 @@ export const advancedSearch = async (
       },
     });
 
+    let vetsWithRatings: any = [];
+
+    vets.forEach(async (vet) => {
+      const vetRating = await prisma.ratingVet.aggregate({
+        where: {
+          vet_id: vet.id,
+        },
+        _avg: {
+          rating: true,
+        },
+      });
+
+      vetsWithRatings.push({ ...vet, vetRating });
+    });
+
+
+    let clinicsWithRatings : any = []
+
+     clinics.forEach(async (clinic) => {
+      const clinicRating = await prisma.ratingClinic.aggregate({
+        where: {
+          clinic_id: clinic.id,
+        },
+        _avg: {
+          rating: true,
+        },
+      });
+
+      clinicsWithRatings.push({ ...clinic, clinicRating });
+    });
+
     // check if queries are undefined
     if (
       city == undefined &&
@@ -106,7 +172,10 @@ export const advancedSearch = async (
     )
       return res
         .status(200)
-        .json({ filteredClinics: clinics, filteredVets: vets });
+        .json({
+          filteredClinics: clinicsWithRatings,
+          filteredVets: vetsWithRatings,
+        });
 
     // Filter clinics and vets by query
     const filteredClinics = clinics.filter(
