@@ -367,6 +367,13 @@ export const cancelAppointments = async (
     if (!doesAppointmentExist)
       return res.status(404).json("Appointment not found");
 
+    const dayDifferece = moment(
+      `${doesAppointmentExist.date} ${doesAppointmentExist.time}`
+    ).diff(moment(), "minutes");
+
+    if (dayDifferece < 0)
+      return res.status(400).json("Cannot schedule past dates");
+
     const payment = await prisma.pendingPayment.findFirst({
       where: {
         appointment_id: id,
@@ -940,6 +947,13 @@ export const cancelAppointmentVet = async (
 
     if (!doesAppointmentExist)
       return res.status(404).json("Appointment not found");
+
+    const dayDifferece = moment(
+      `${doesAppointmentExist.date} ${doesAppointmentExist.time}`
+    ).diff(moment(), "minutes");
+
+    if (dayDifferece < 0)
+      return res.status(400).json("Cannot schedule past dates");
 
     const payment = await prisma.pendingPayment.findFirst({
       where: {
