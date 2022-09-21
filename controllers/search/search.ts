@@ -17,11 +17,15 @@ export const search = async (
       where: {
         is_approved: true,
       },
+      include: {
+        RatingClinic: true,
+      },
     });
 
     const vets = await prisma.vet.findMany({
       include: {
         specialities: true,
+        RatingVet: true,
       },
       where: {
         is_approved: true,
@@ -75,11 +79,15 @@ export const advancedSearch = async (
       where: {
         is_approved: true,
       },
+      include: {
+        RatingClinic: true,
+      },
     });
 
     const vets = await prisma.vet.findMany({
       include: {
         specialities: true,
+        RatingVet: true,
       },
       where: {
         is_approved: true,
