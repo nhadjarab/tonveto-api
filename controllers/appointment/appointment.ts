@@ -1071,6 +1071,7 @@ export const getAvailableAppointments = async (
 
     let availableHours: string[] = [];
 
+
     dayHours.forEach((hour) => {
       const isHourAvailable = vetProfile.appointments.every(
         (appointment) => appointment.time !== hour
@@ -1079,7 +1080,7 @@ export const getAvailableAppointments = async (
       if (isHourAvailable) availableHours.push(hour);
     });
 
-    return res.status(200).json(dayHours);
+    return res.status(200).json(availableHours);
   } catch (e) {
     console.log(e);
     res.status(500).json(e);

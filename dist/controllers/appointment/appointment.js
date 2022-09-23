@@ -802,7 +802,7 @@ const getAvailableAppointments = (req, res, prisma) => __awaiter(void 0, void 0,
             if (isHourAvailable)
                 availableHours.push(hour);
         });
-        return res.status(200).json(dayHours);
+        return res.status(200).json(availableHours);
     }
     catch (e) {
         console.log(e);
