@@ -16,8 +16,8 @@ const addCommentVet = (req, res, prisma) => __awaiter(void 0, void 0, void 0, fu
         const { logged_in_id } = req.headers;
         if (!logged_in_id)
             return res.status(400).json("Missing logged in id");
-        const { text, vet_id } = req.body;
-        if (text == undefined || vet_id == undefined)
+        const { text, vet_id, rating } = req.body;
+        if (text == undefined || vet_id == undefined || rating == undefined)
             return res.status(400).json("Missing fields");
         const payload = (0, authentication_1.handleTokenVerification)(req, res);
         if (payload.userId != logged_in_id)
@@ -36,11 +36,19 @@ const addCommentVet = (req, res, prisma) => __awaiter(void 0, void 0, void 0, fu
         });
         if (!vet)
             return res.status(404).json("Vet not found");
+        const ratingObject = yield prisma.ratingVet.create({
+            data: {
+                rating: parseFloat(rating),
+                vet_id: vet_id,
+                owner_id: logged_in_id,
+            },
+        });
         const comment = yield prisma.commentVet.create({
             data: {
                 text,
                 vet_id,
                 owner_id: logged_in_id,
+                rating_id: ratingObject.id,
             },
         });
         res.status(200).json(comment);
@@ -58,8 +66,8 @@ const editCommentVet = (req, res, prisma) => __awaiter(void 0, void 0, void 0, f
             return res.status(400).json("Missing logged in id");
         if (!id || id === "")
             return res.status(400).json("Missing fields");
-        const { text } = req.body;
-        if (text == undefined)
+        const { text, rating } = req.body;
+        if (text == undefined || rating == undefined)
             return res.status(400).json("Missing fields");
         const payload = (0, authentication_1.handleTokenVerification)(req, res);
         if (payload.userId != logged_in_id)
@@ -80,6 +88,14 @@ const editCommentVet = (req, res, prisma) => __awaiter(void 0, void 0, void 0, f
             return res.status(404).json("Comment not found");
         if (doesCommentExist.owner_id != logged_in_id)
             return res.status(401).json("Unauthorized");
+        const ratingObject = yield prisma.ratingVet.update({
+            where: {
+                id: doesCommentExist.rating_id,
+            },
+            data: {
+                rating: parseFloat(rating),
+            },
+        });
         const comment = yield prisma.commentVet.update({
             where: {
                 id,
@@ -115,6 +131,11 @@ const deleteCommentVet = (req, res, prisma) => __awaiter(void 0, void 0, void 0,
             return res.status(404).json("Comment not found");
         if (doesCommentExist.owner_id != logged_in_id)
             return res.status(401).json("Unauthorized");
+        const rating = yield prisma.ratingVet.delete({
+            where: {
+                id: doesCommentExist.rating_id,
+            },
+        });
         const comment = yield prisma.commentVet.delete({
             where: {
                 id,
@@ -132,8 +153,8 @@ const addCommentClinic = (req, res, prisma) => __awaiter(void 0, void 0, void 0,
         const { logged_in_id } = req.headers;
         if (!logged_in_id)
             return res.status(400).json("Missing logged in id");
-        const { text, clinic_id } = req.body;
-        if (text == undefined || clinic_id == undefined)
+        const { text, clinic_id, rating } = req.body;
+        if (text == undefined || clinic_id == undefined || rating == undefined)
             return res.status(400).json("Missing fields");
         const payload = (0, authentication_1.handleTokenVerification)(req, res);
         if (payload.userId != logged_in_id)
@@ -152,11 +173,19 @@ const addCommentClinic = (req, res, prisma) => __awaiter(void 0, void 0, void 0,
         });
         if (!clinic)
             return res.status(404).json("Vet not found");
+        const ratingObject = yield prisma.ratingClinic.create({
+            data: {
+                rating: parseFloat(rating),
+                clinic_id: clinic_id,
+                owner_id: logged_in_id,
+            },
+        });
         const comment = yield prisma.commentClinic.create({
             data: {
                 text,
                 clinic_id,
                 owner_id: logged_in_id,
+                rating_id: ratingObject.id,
             },
         });
         res.status(200).json(comment);
@@ -174,8 +203,8 @@ const editCommentClinic = (req, res, prisma) => __awaiter(void 0, void 0, void 0
             return res.status(400).json("Missing logged in id");
         if (!id || id === "")
             return res.status(400).json("Missing fields");
-        const { text } = req.body;
-        if (text == undefined)
+        const { text, rating } = req.body;
+        if (text == undefined || rating == undefined)
             return res.status(400).json("Missing fields");
         const payload = (0, authentication_1.handleTokenVerification)(req, res);
         if (payload.userId != logged_in_id)
@@ -202,6 +231,14 @@ const editCommentClinic = (req, res, prisma) => __awaiter(void 0, void 0, void 0
             },
             data: {
                 text,
+            },
+        });
+        const ratingObject = yield prisma.ratingClinic.update({
+            where: {
+                id: comment.rating_id,
+            },
+            data: {
+                rating: parseFloat(rating),
             },
         });
         res.status(200).json(comment);
@@ -231,6 +268,11 @@ const deleteCommentClinic = (req, res, prisma) => __awaiter(void 0, void 0, void
             return res.status(404).json("Comment not found");
         if (doesCommentExist.owner_id != logged_in_id)
             return res.status(401).json("Unauthorized");
+        const rating = yield prisma.ratingClinic.delete({
+            where: {
+                id: doesCommentExist.rating_id,
+            },
+        });
         const comment = yield prisma.commentClinic.delete({
             where: {
                 id,

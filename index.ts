@@ -21,6 +21,7 @@ import {
   cancelAppointmentVet,
   closeTimeSlot,
   getAppointment,
+  getAvailableAppointments,
   openTimeSlot,
   updateAppointment,
   updateAppointmentVet,
@@ -351,6 +352,17 @@ app.get("/appointment/:id", async (req: Request, res: Response) => {
     console.log(e);
   }
 });
+
+app.get(
+  "/vetAvailableAppointments/:id",
+  async (req: Request, res: Response) => {
+    try {
+      getAvailableAppointments(req, res, prisma);
+    } catch (e) {
+      console.log(e);
+    }
+  }
+);
 
 app.delete("/appointment/:id", async (req: Request, res: Response) => {
   try {
@@ -699,8 +711,6 @@ app.get("/advancedSearch", async (req: Request, res: Response) => {
     console.log(e);
   }
 });
-
-
 
 // ===========Payment ROUTERS============
 app.post("/payment", async (req: Request, res: Response) => {

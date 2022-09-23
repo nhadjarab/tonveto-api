@@ -77,6 +77,11 @@ export const getAllVets = async (
         },
         MedicalReport: true,
         specialities: true,
+        CommentVet: {
+          include: {
+            rating: true,
+          },
+        },
       },
     });
 

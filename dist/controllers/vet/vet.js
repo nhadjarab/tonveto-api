@@ -114,6 +114,7 @@ const getVet = (req, res, prisma) => __awaiter(void 0, void 0, void 0, function*
                 CommentVet: {
                     include: {
                         owner: true,
+                        rating: true,
                     },
                 },
                 clinics: {

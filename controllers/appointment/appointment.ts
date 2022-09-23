@@ -6,6 +6,7 @@ import moment from "moment";
 import Stripe from "stripe";
 
 import sgMail from "@sendgrid/mail";
+import { json } from "stream/consumers";
 
 sgMail.setApiKey(process.env.SENDGRID as string);
 
@@ -85,8 +86,8 @@ export const addAppointment = async (
     if (!JSON.parse((vetCalender as any)[weekDay]))
       return res.status(400).json("Vet is not available on this day");
 
-    if (parseInt(time.split(":")[1]) % 20 != 0) {
-      return res.status(400).json("Time must be in increments of 20 minutes");
+    if (parseInt(time.split(":")[1]) % 30 != 0) {
+      return res.status(400).json("Time must be in increments of 30 minutes");
     }
     const weekDayWorkingHours = JSON.parse((vetCalender as any)[weekDay]);
 
@@ -237,8 +238,8 @@ export const updateAppointment = async (
     if (!JSON.parse((vetCalender as any)[weekDay]))
       return res.status(400).json("Vet is not available on this day");
 
-    if (parseInt(time.split(":")[1]) % 20 != 0) {
-      return res.status(400).json("Time must be in increments of 20 minutes");
+    if (parseInt(time.split(":")[1]) % 30 != 0) {
+      return res.status(400).json("Time must be in increments of 30 minutes");
     }
     const weekDayWorkingHours = JSON.parse((vetCalender as any)[weekDay]);
 
@@ -457,8 +458,8 @@ export const closeTimeSlot = async (
     if (!JSON.parse((vetCalender as any)[weekDay]))
       return res.status(400).json("Vet is not available on this day");
 
-    if (parseInt(time.split(":")[1]) % 20 != 0) {
-      return res.status(400).json("Time must be in increments of 20 minutes");
+    if (parseInt(time.split(":")[1]) % 30 != 0) {
+      return res.status(400).json("Time must be in increments of 30 minutes");
     }
     const weekDayWorkingHours = JSON.parse((vetCalender as any)[weekDay]);
 
@@ -588,8 +589,8 @@ export const openTimeSlot = async (
     if (!JSON.parse((vetCalender as any)[weekDay]))
       return res.status(400).json("Vet is not available on this day");
 
-    if (parseInt(time.split(":")[1]) % 20 != 0) {
-      return res.status(400).json("Time must be in increments of 20 minutes");
+    if (parseInt(time.split(":")[1]) % 30 != 0) {
+      return res.status(400).json("Time must be in increments of 30 minutes");
     }
     const weekDayWorkingHours = JSON.parse((vetCalender as any)[weekDay]);
 
@@ -704,8 +705,8 @@ export const addAppointmentVet = async (
     if (!JSON.parse((vetCalender as any)[weekDay]))
       return res.status(400).json("Vet is not available on this day");
 
-    if (parseInt(time.split(":")[1]) % 20 != 0) {
-      return res.status(400).json("Time must be in increments of 20 minutes");
+    if (parseInt(time.split(":")[1]) % 30 != 0) {
+      return res.status(400).json("Time must be in increments of 30 minutes");
     }
     const weekDayWorkingHours = JSON.parse((vetCalender as any)[weekDay]);
 
@@ -856,8 +857,8 @@ export const updateAppointmentVet = async (
     if (!JSON.parse((vetCalender as any)[weekDay]))
       return res.status(400).json("Vet is not available on this day");
 
-    if (parseInt(time.split(":")[1]) % 20 != 0) {
-      return res.status(400).json("Time must be in increments of 20 minutes");
+    if (parseInt(time.split(":")[1]) % 30 != 0) {
+      return res.status(400).json("Time must be in increments of 30 minutes");
     }
     const weekDayWorkingHours = JSON.parse((vetCalender as any)[weekDay]);
 
@@ -994,3 +995,105 @@ export const cancelAppointmentVet = async (
     console.log(e);
   }
 };
+
+export const getAvailableAppointments = async (
+  req: Request,
+  res: Response,
+  prisma: PrismaClient
+) => {
+  try {
+    const { id } = req.params;
+
+    if (!id) return res.status(400).json("Missing fields");
+
+    const { logged_in_id, date } = req.headers;
+
+    if (!logged_in_id) return res.status(400).json("Missing logged in id");
+
+    if (!date) return res.status(400).json("Missing date");
+
+    if (!moment(date).isValid()) return res.status(400).json("Invalid date");
+
+    if (moment(date).diff(moment(), "days") < 0)
+      return res.status(400).json("Cannot schedule past dates");
+
+    const payload: JWTPayload = handleTokenVerification(req, res) as JWTPayload;
+
+    if (payload.userId != logged_in_id) {
+      return res.status(401).json("Unauthorized");
+    }
+
+    const vetProfile = await prisma.vet.findUnique({
+      where: {
+        id,
+      },
+      include: {
+        appointments: {
+          where: {
+            date: date as string,
+          },
+        },
+        calendar: true,
+      },
+    });
+
+    const dateValue = new Date(date);
+    const day = dateValue.getDay() as number;
+
+    console.log("day", day);
+    console.log("Week day", (weekDays as any)[day]);
+
+    const weekDay = (weekDays as any)[day];
+
+    if (!vetProfile) return res.status(404).json("Vet does not exist");
+
+    if (!JSON.parse((vetProfile.calendar[0] as any)["thursday"]))
+      return res.status(400).json("Vet is not available on this day");
+
+    const weekDayWorkingHours: any = JSON.parse(
+      (vetProfile.calendar[0] as any)[weekDay]
+    );
+
+    if (weekDayWorkingHours === "closed")
+      return res.status(400).json("Vet is not available on this day");
+
+    const morningHours = eachHalfHour(
+      weekDayWorkingHours.morning!.start_at,
+      weekDayWorkingHours.morning!.end_at
+    );
+
+    const afternoonHours = eachHalfHour(
+      weekDayWorkingHours.afternoon!.start_at,
+      weekDayWorkingHours.afternoon!.end_at
+    );
+
+    const dayHours = [...morningHours, ...afternoonHours];
+
+    let availableHours: string[] = [];
+
+    dayHours.forEach((hour) => {
+      const isHourAvailable = vetProfile.appointments.every(
+        (appointment) => appointment.time !== hour
+      );
+
+      if (isHourAvailable) availableHours.push(hour);
+    });
+
+    return res.status(200).json(dayHours);
+  } catch (e) {
+    console.log(e);
+    res.status(500).json(e);
+  }
+};
+
+var toInt = (time: any) =>
+    ((h: any, m: any) => h * 2 + m! / 30)(
+      ...(time.split(":").map(parseFloat) as [any, any])
+    ),
+  toTime = (int: any) => [Math.floor(int / 2), int % 2 ? "30" : "00"].join(":"),
+  range = (from: any, to: any) =>
+    Array(to - from + 1)
+      .fill(0)
+      .map((_, i) => from + i),
+  eachHalfHour = (t1: any, t2: any) =>
+    range(...([t1, t2].map(toInt) as [any, any])).map(toTime);

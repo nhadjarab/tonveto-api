@@ -278,6 +278,14 @@ app.get("/appointment/:id", (req, res) => __awaiter(void 0, void 0, void 0, func
         console.log(e);
     }
 }));
+app.get("/vetAvailableAppointments/:id", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        (0, appointment_1.getAvailableAppointments)(req, res, prisma);
+    }
+    catch (e) {
+        console.log(e);
+    }
+}));
 app.delete("/appointment/:id", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         (0, appointment_1.cancelAppointments)(req, res, prisma);

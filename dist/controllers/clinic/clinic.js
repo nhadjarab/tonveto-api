@@ -43,7 +43,7 @@ const createClinic = (req, res, prisma) => __awaiter(void 0, void 0, void 0, fun
                 country,
                 phone_number,
                 owner_id,
-                zip_code
+                zip_code,
             },
         });
         const clinicVet = yield prisma.vetClinic.create({
@@ -138,7 +138,11 @@ const getClinic = (req, res, prisma) => __awaiter(void 0, void 0, void 0, functi
                 id,
             },
             include: {
-                CommentClinic: true,
+                CommentClinic: {
+                    include: {
+                        rating: true,
+                    },
+                },
                 vets: {
                     include: {
                         vet: true,

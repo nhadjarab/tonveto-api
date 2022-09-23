@@ -70,6 +70,11 @@ const getAllVets = (req, res, prisma) => __awaiter(void 0, void 0, void 0, funct
                 },
                 MedicalReport: true,
                 specialities: true,
+                CommentVet: {
+                    include: {
+                        rating: true,
+                    },
+                },
             },
         });
         res.status(200).json(vets);
@@ -266,12 +271,20 @@ const getCommentReports = (req, res, prisma) => __awaiter(void 0, void 0, void 0
             return res.status(404).json("Admin not found");
         const vetCommentReports = yield prisma.commentVetReport.findMany({
             include: {
-                comment: true,
+                comment: {
+                    include: {
+                        rating: true,
+                    },
+                },
             },
         });
         const clinicCommentReports = yield prisma.commentClinicReport.findMany({
             include: {
-                comment: true,
+                comment: {
+                    include: {
+                        rating: true,
+                    },
+                },
             },
         });
         const totalReports = [...vetCommentReports, ...clinicCommentReports];
@@ -313,6 +326,11 @@ const approveCommentReport = (req, res, prisma) => __awaiter(void 0, void 0, voi
             commentReport = yield prisma.commentVetReport.delete({
                 where: {
                     id,
+                },
+            });
+            yield prisma.ratingVet.delete({
+                where: {
+                    id: comment.rating_id,
                 },
             });
             yield prisma.commentVet.delete({

@@ -180,6 +180,8 @@ export const getVet = async (
   }
 };
 
+
+
 export const joinClinic = async (
   req: Request,
   res: Response,

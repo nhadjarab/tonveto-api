@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.cancelAppointmentVet = exports.updateAppointmentVet = exports.addAppointmentVet = exports.openTimeSlot = exports.closeTimeSlot = exports.cancelAppointments = exports.getAppointment = exports.updateAppointment = exports.addAppointment = void 0;
+exports.getAvailableAppointments = exports.cancelAppointmentVet = exports.updateAppointmentVet = exports.addAppointmentVet = exports.openTimeSlot = exports.closeTimeSlot = exports.cancelAppointments = exports.getAppointment = exports.updateAppointment = exports.addAppointment = void 0;
 const authentication_1 = require("../authentication/authentication");
 const helps_1 = require("../../utils/helps");
 const moment_1 = __importDefault(require("moment"));
@@ -72,8 +72,8 @@ const addAppointment = (req, res, prisma) => __awaiter(void 0, void 0, void 0, f
         });
         if (!JSON.parse(vetCalender[weekDay]))
             return res.status(400).json("Vet is not available on this day");
-        if (parseInt(time.split(":")[1]) % 20 != 0) {
-            return res.status(400).json("Time must be in increments of 20 minutes");
+        if (parseInt(time.split(":")[1]) % 30 != 0) {
+            return res.status(400).json("Time must be in increments of 30 minutes");
         }
         const weekDayWorkingHours = JSON.parse(vetCalender[weekDay]);
         if (weekDayWorkingHours === "closed")
@@ -184,8 +184,8 @@ const updateAppointment = (req, res, prisma) => __awaiter(void 0, void 0, void 0
         });
         if (!JSON.parse(vetCalender[weekDay]))
             return res.status(400).json("Vet is not available on this day");
-        if (parseInt(time.split(":")[1]) % 20 != 0) {
-            return res.status(400).json("Time must be in increments of 20 minutes");
+        if (parseInt(time.split(":")[1]) % 30 != 0) {
+            return res.status(400).json("Time must be in increments of 30 minutes");
         }
         const weekDayWorkingHours = JSON.parse(vetCalender[weekDay]);
         if (weekDayWorkingHours === "closed")
@@ -351,8 +351,8 @@ const closeTimeSlot = (req, res, prisma) => __awaiter(void 0, void 0, void 0, fu
         });
         if (!JSON.parse(vetCalender[weekDay]))
             return res.status(400).json("Vet is not available on this day");
-        if (parseInt(time.split(":")[1]) % 20 != 0) {
-            return res.status(400).json("Time must be in increments of 20 minutes");
+        if (parseInt(time.split(":")[1]) % 30 != 0) {
+            return res.status(400).json("Time must be in increments of 30 minutes");
         }
         const weekDayWorkingHours = JSON.parse(vetCalender[weekDay]);
         if (weekDayWorkingHours === "closed")
@@ -449,8 +449,8 @@ const openTimeSlot = (req, res, prisma) => __awaiter(void 0, void 0, void 0, fun
         });
         if (!JSON.parse(vetCalender[weekDay]))
             return res.status(400).json("Vet is not available on this day");
-        if (parseInt(time.split(":")[1]) % 20 != 0) {
-            return res.status(400).json("Time must be in increments of 20 minutes");
+        if (parseInt(time.split(":")[1]) % 30 != 0) {
+            return res.status(400).json("Time must be in increments of 30 minutes");
         }
         const weekDayWorkingHours = JSON.parse(vetCalender[weekDay]);
         if (weekDayWorkingHours === "closed")
@@ -530,8 +530,8 @@ const addAppointmentVet = (req, res, prisma) => __awaiter(void 0, void 0, void 0
         });
         if (!JSON.parse(vetCalender[weekDay]))
             return res.status(400).json("Vet is not available on this day");
-        if (parseInt(time.split(":")[1]) % 20 != 0) {
-            return res.status(400).json("Time must be in increments of 20 minutes");
+        if (parseInt(time.split(":")[1]) % 30 != 0) {
+            return res.status(400).json("Time must be in increments of 30 minutes");
         }
         const weekDayWorkingHours = JSON.parse(vetCalender[weekDay]);
         if (weekDayWorkingHours === "closed")
@@ -642,8 +642,8 @@ const updateAppointmentVet = (req, res, prisma) => __awaiter(void 0, void 0, voi
         });
         if (!JSON.parse(vetCalender[weekDay]))
             return res.status(400).json("Vet is not available on this day");
-        if (parseInt(time.split(":")[1]) % 20 != 0) {
-            return res.status(400).json("Time must be in increments of 20 minutes");
+        if (parseInt(time.split(":")[1]) % 30 != 0) {
+            return res.status(400).json("Time must be in increments of 30 minutes");
         }
         const weekDayWorkingHours = JSON.parse(vetCalender[weekDay]);
         if (weekDayWorkingHours === "closed")
@@ -750,4 +750,67 @@ const cancelAppointmentVet = (req, res, prisma) => __awaiter(void 0, void 0, voi
     }
 });
 exports.cancelAppointmentVet = cancelAppointmentVet;
+const getAvailableAppointments = (req, res, prisma) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const { id } = req.params;
+        if (!id)
+            return res.status(400).json("Missing fields");
+        const { logged_in_id, date } = req.headers;
+        if (!logged_in_id)
+            return res.status(400).json("Missing logged in id");
+        if (!date)
+            return res.status(400).json("Missing date");
+        if (!(0, moment_1.default)(date).isValid())
+            return res.status(400).json("Invalid date");
+        if ((0, moment_1.default)(date).diff((0, moment_1.default)(), "days") < 0)
+            return res.status(400).json("Cannot schedule past dates");
+        const payload = (0, authentication_1.handleTokenVerification)(req, res);
+        if (payload.userId != logged_in_id) {
+            return res.status(401).json("Unauthorized");
+        }
+        const vetProfile = yield prisma.vet.findUnique({
+            where: {
+                id,
+            },
+            include: {
+                appointments: {
+                    where: {
+                        date: date,
+                    },
+                },
+                calendar: true,
+            },
+        });
+        const dateValue = new Date(date);
+        const day = dateValue.getDay();
+        console.log("day", day);
+        console.log("Week day", helps_1.weekDays[day]);
+        const weekDay = helps_1.weekDays[day];
+        if (!vetProfile)
+            return res.status(404).json("Vet does not exist");
+        if (!JSON.parse(vetProfile.calendar[0]["thursday"]))
+            return res.status(400).json("Vet is not available on this day");
+        const weekDayWorkingHours = JSON.parse(vetProfile.calendar[0][weekDay]);
+        if (weekDayWorkingHours === "closed")
+            return res.status(400).json("Vet is not available on this day");
+        const morningHours = eachHalfHour(weekDayWorkingHours.morning.start_at, weekDayWorkingHours.morning.end_at);
+        const afternoonHours = eachHalfHour(weekDayWorkingHours.afternoon.start_at, weekDayWorkingHours.afternoon.end_at);
+        const dayHours = [...morningHours, ...afternoonHours];
+        let availableHours = [];
+        dayHours.forEach((hour) => {
+            const isHourAvailable = vetProfile.appointments.every((appointment) => appointment.time !== hour);
+            if (isHourAvailable)
+                availableHours.push(hour);
+        });
+        return res.status(200).json(dayHours);
+    }
+    catch (e) {
+        console.log(e);
+        res.status(500).json(e);
+    }
+});
+exports.getAvailableAppointments = getAvailableAppointments;
+var toInt = (time) => ((h, m) => h * 2 + m / 30)(...time.split(":").map(parseFloat)), toTime = (int) => [Math.floor(int / 2), int % 2 ? "30" : "00"].join(":"), range = (from, to) => Array(to - from + 1)
+    .fill(0)
+    .map((_, i) => from + i), eachHalfHour = (t1, t2) => range(...[t1, t2].map(toInt)).map(toTime);
 //# sourceMappingURL=appointment.js.map
