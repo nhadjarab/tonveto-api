@@ -48,6 +48,7 @@ CREATE TABLE "Vet" (
     "is_approved" BOOLEAN NOT NULL DEFAULT false,
     "type" TEXT NOT NULL DEFAULT 'vet',
     "bank_details" TEXT NOT NULL,
+    "balance" DOUBLE PRECISION NOT NULL DEFAULT 0,
 
     CONSTRAINT "Vet_pkey" PRIMARY KEY ("id")
 );
@@ -81,6 +82,7 @@ CREATE TABLE "Clinic" (
     "country" TEXT NOT NULL,
     "phone_number" TEXT NOT NULL,
     "owner_id" TEXT NOT NULL,
+    "zip_code" TEXT NOT NULL DEFAULT '00000',
     "is_approved" BOOLEAN NOT NULL DEFAULT false,
 
     CONSTRAINT "Clinic_pkey" PRIMARY KEY ("id")
@@ -146,6 +148,7 @@ CREATE TABLE "CommentVet" (
     "text" TEXT NOT NULL,
     "vet_id" TEXT NOT NULL,
     "owner_id" TEXT NOT NULL,
+    "rating_id" TEXT NOT NULL,
 
     CONSTRAINT "CommentVet_pkey" PRIMARY KEY ("id")
 );
@@ -156,6 +159,7 @@ CREATE TABLE "CommentClinic" (
     "text" TEXT NOT NULL,
     "clinic_id" TEXT NOT NULL,
     "owner_id" TEXT NOT NULL,
+    "rating_id" TEXT NOT NULL,
 
     CONSTRAINT "CommentClinic_pkey" PRIMARY KEY ("id")
 );
@@ -202,6 +206,18 @@ CREATE TABLE "CommentVetReport" (
     "report_type" TEXT NOT NULL DEFAULT 'vet',
 
     CONSTRAINT "CommentVetReport_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "PendingPayment" (
+    "id" TEXT NOT NULL,
+    "amount" DOUBLE PRECISION NOT NULL,
+    "vet_id" TEXT NOT NULL,
+    "user_id" TEXT NOT NULL,
+    "appointment_id" TEXT NOT NULL,
+    "payment_id" TEXT NOT NULL,
+
+    CONSTRAINT "PendingPayment_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateIndex
@@ -270,6 +286,9 @@ CREATE UNIQUE INDEX "CommentClinicReport_id_key" ON "CommentClinicReport"("id");
 -- CreateIndex
 CREATE UNIQUE INDEX "CommentVetReport_id_key" ON "CommentVetReport"("id");
 
+-- CreateIndex
+CREATE UNIQUE INDEX "PendingPayment_id_key" ON "PendingPayment"("id");
+
 -- AddForeignKey
 ALTER TABLE "Pet" ADD CONSTRAINT "Pet_owner_id_fkey" FOREIGN KEY ("owner_id") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
@@ -313,10 +332,16 @@ ALTER TABLE "CommentVet" ADD CONSTRAINT "CommentVet_vet_id_fkey" FOREIGN KEY ("v
 ALTER TABLE "CommentVet" ADD CONSTRAINT "CommentVet_owner_id_fkey" FOREIGN KEY ("owner_id") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
+ALTER TABLE "CommentVet" ADD CONSTRAINT "CommentVet_rating_id_fkey" FOREIGN KEY ("rating_id") REFERENCES "RatingVet"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
 ALTER TABLE "CommentClinic" ADD CONSTRAINT "CommentClinic_clinic_id_fkey" FOREIGN KEY ("clinic_id") REFERENCES "Clinic"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "CommentClinic" ADD CONSTRAINT "CommentClinic_owner_id_fkey" FOREIGN KEY ("owner_id") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "CommentClinic" ADD CONSTRAINT "CommentClinic_rating_id_fkey" FOREIGN KEY ("rating_id") REFERENCES "RatingClinic"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "RatingVet" ADD CONSTRAINT "RatingVet_vet_id_fkey" FOREIGN KEY ("vet_id") REFERENCES "Vet"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
@@ -335,3 +360,6 @@ ALTER TABLE "CommentClinicReport" ADD CONSTRAINT "CommentClinicReport_comment_id
 
 -- AddForeignKey
 ALTER TABLE "CommentVetReport" ADD CONSTRAINT "CommentVetReport_comment_id_fkey" FOREIGN KEY ("comment_id") REFERENCES "CommentVet"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "PendingPayment" ADD CONSTRAINT "PendingPayment_vet_id_fkey" FOREIGN KEY ("vet_id") REFERENCES "Vet"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

@@ -102,7 +102,7 @@ const addAppointment = (req, res, prisma) => __awaiter(void 0, void 0, void 0, f
         });
         const msg = {
             to: doesUserExist.email,
-            from: "info@aimensahnoun.com",
+            from: "info@tonveto.com",
             subject: "VetoLib Appointment",
             html: `<div><strong>Dear ${doesUserExist.first_name} ${doesUserExist.last_name}</strong> <span> Has booked an appointment with Doctor ${doesVetExist.first_name} ${doesVetExist.last_name} on ${date} ${time} for pet: ${doesPetExist.name}</span></div>
     `,
@@ -208,7 +208,7 @@ const updateAppointment = (req, res, prisma) => __awaiter(void 0, void 0, void 0
         });
         const msg = {
             to: doesUserExist.email,
-            from: "info@aimensahnoun.com",
+            from: "info@tonveto.com",
             subject: "VetoLib Appointment Update",
             html: `<div><strong>Dear ${doesUserExist.first_name} ${doesUserExist.last_name}</strong> <span> Has booked an appointment with Doctor ${doesVetExist.first_name} ${doesVetExist.last_name} on ${date} ${time} for pet: ${doesPetExist.name}</span></div>
     `,
@@ -310,7 +310,7 @@ const cancelAppointments = (req, res, prisma) => __awaiter(void 0, void 0, void 
             return res.status(404).json("Appointment not found");
         const msg = {
             to: doesUserExist.email,
-            from: "info@aimensahnoun.com",
+            from: "info@tonveto.com",
             subject: "VetoLib Appointment Cancelled",
             html: `<div><strong>Dear ${doesUserExist.first_name} ${doesUserExist.last_name}</strong> <span> Has canceled an appointment with id ${appointment.id} successfully </span></div>
     `,
@@ -390,7 +390,7 @@ const closeTimeSlot = (req, res, prisma) => __awaiter(void 0, void 0, void 0, fu
             });
             const msg = {
                 to: user === null || user === void 0 ? void 0 : user.email,
-                from: "info@aimensahnoun.com",
+                from: "info@tonveto.com",
                 subject: "VetoLib Appointment Cancelled By Vet",
                 html: `<div><strong>Dear ${user === null || user === void 0 ? void 0 : user.first_name} ${user === null || user === void 0 ? void 0 : user.last_name}</strong> <span> Has been canclled by the vet, you are welcome to book another appointment at another time.</span></div>
       `,
@@ -560,7 +560,7 @@ const addAppointmentVet = (req, res, prisma) => __awaiter(void 0, void 0, void 0
         });
         const msg = {
             to: doesUserExist.email,
-            from: "info@aimensahnoun.com",
+            from: "info@tonveto.com",
             subject: "VetoLib Appointment",
             html: `<div><strong>Dear ${doesUserExist.first_name} ${doesUserExist.last_name}</strong> <span> Has booked an appointment with Doctor ${doesVetExist.first_name} ${doesVetExist.last_name} on ${date} ${time} for pet: ${doesPetExist.name}</span></div>
     `,
@@ -666,7 +666,7 @@ const updateAppointmentVet = (req, res, prisma) => __awaiter(void 0, void 0, voi
         });
         const msg = {
             to: doesUserExist.email,
-            from: "info@aimensahnoun.com",
+            from: "info@tonveto.com",
             subject: "VetoLib Appointment Update",
             html: `<div><strong>Dear ${doesUserExist.first_name} ${doesUserExist.last_name}</strong> <span> Has booked an appointment with Doctor ${doesVetExist.first_name} ${doesVetExist.last_name} on ${date} ${time} for pet: ${doesPetExist.name}</span></div>
     `,
@@ -738,7 +738,7 @@ const cancelAppointmentVet = (req, res, prisma) => __awaiter(void 0, void 0, voi
             return res.status(404).json("Appointment not found");
         const msg = {
             to: doesUserExist.email,
-            from: "info@aimensahnoun.com",
+            from: "info@tonveto.com",
             subject: "VetoLib Appointment Cancelled",
             html: `<div><strong>Dear ${doesUserExist.first_name} ${doesUserExist.last_name}</strong> <span> Has canceled an appointment with id ${appointment.id} successfully </span></div>
     `,

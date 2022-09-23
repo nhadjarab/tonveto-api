@@ -166,36 +166,42 @@ model CommentVet {
   vet              Vet                @relation(fields: [vet_id], references: [id])
   owner_id         String
   owner            User               @relation(fields: [owner_id], references: [id])
+  rating           RatingVet          @relation(fields: [rating_id], references: [id])
+  rating_id        String
   CommentVetReport CommentVetReport[]
 }
 
 model CommentClinic {
-  id        String @id @unique @default(cuid())
+  id        String       @id @unique @default(cuid())
   text      String
   clinic_id String
-  clinic    Clinic @relation(fields: [clinic_id], references: [id])
+  clinic    Clinic       @relation(fields: [clinic_id], references: [id])
   owner_id  String
-  owner     User   @relation(fields: [owner_id], references: [id])
+  owner     User         @relation(fields: [owner_id], references: [id])
+  rating_id String
+  rating    RatingClinic @relation(fields: [rating_id], references: [id])
 
   CommentClinicReport CommentClinicReport[]
 }
 
 model RatingVet {
-  id       String @id @unique @default(cuid())
-  rating   Float
-  vet_id   String
-  vet      Vet    @relation(fields: [vet_id], references: [id])
-  owner_id String
-  owner    User   @relation(fields: [owner_id], references: [id])
+  id         String       @id @unique @default(cuid())
+  rating     Float
+  vet_id     String
+  vet        Vet          @relation(fields: [vet_id], references: [id])
+  owner_id   String
+  owner      User         @relation(fields: [owner_id], references: [id])
+  CommentVet CommentVet[]
 }
 
 model RatingClinic {
-  id        String @id @unique @default(cuid())
-  rating    Float
-  clinic_id String
-  clinic    Clinic @relation(fields: [clinic_id], references: [id])
-  owner_id  String
-  owner     User   @relation(fields: [owner_id], references: [id])
+  id            String          @id @unique @default(cuid())
+  rating        Float
+  clinic_id     String
+  clinic        Clinic          @relation(fields: [clinic_id], references: [id])
+  owner_id      String
+  owner         User            @relation(fields: [owner_id], references: [id])
+  CommentClinic CommentClinic[]
 }
 
 model CommentClinicReport {

@@ -151,6 +151,7 @@ export const getVet = async (
         CommentVet: {
           include: {
             owner: true,
+            rating: true,
           },
         },
         clinics: {

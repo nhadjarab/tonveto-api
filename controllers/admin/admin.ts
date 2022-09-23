@@ -8,9 +8,9 @@ export const getAllUsers = async (
   prisma: PrismaClient
 ) => {
   try {
-     const { logged_in_id } = req.headers;
+    const { logged_in_id } = req.headers;
 
-    if(!logged_in_id) return res.status(400).json("Missing logged in id")
+    if (!logged_in_id) return res.status(400).json("Missing logged in id");
 
     const payload: JWTPayload = handleTokenVerification(req, res) as JWTPayload;
 
@@ -49,9 +49,9 @@ export const getAllVets = async (
   prisma: PrismaClient
 ) => {
   try {
-     const { logged_in_id } = req.headers;
+    const { logged_in_id } = req.headers;
 
-    if(!logged_in_id) return res.status(400).json("Missing logged in id")
+    if (!logged_in_id) return res.status(400).json("Missing logged in id");
 
     const payload: JWTPayload = handleTokenVerification(req, res) as JWTPayload;
 
@@ -92,9 +92,9 @@ export const getAllClinics = async (
   prisma: PrismaClient
 ) => {
   try {
-     const { logged_in_id } = req.headers;
+    const { logged_in_id } = req.headers;
 
-    if(!logged_in_id) return res.status(400).json("Missing logged in id")
+    if (!logged_in_id) return res.status(400).json("Missing logged in id");
 
     const payload: JWTPayload = handleTokenVerification(req, res) as JWTPayload;
 
@@ -131,9 +131,9 @@ export const getAllAppointments = async (
   prisma: PrismaClient
 ) => {
   try {
-     const { logged_in_id } = req.headers;
+    const { logged_in_id } = req.headers;
 
-    if(!logged_in_id) return res.status(400).json("Missing logged in id")
+    if (!logged_in_id) return res.status(400).json("Missing logged in id");
 
     const payload: JWTPayload = handleTokenVerification(req, res) as JWTPayload;
 
@@ -168,9 +168,9 @@ export const getAllPayments = async (
   prisma: PrismaClient
 ) => {
   try {
-     const { logged_in_id } = req.headers;
+    const { logged_in_id } = req.headers;
 
-    if(!logged_in_id) return res.status(400).json("Missing logged in id")
+    if (!logged_in_id) return res.status(400).json("Missing logged in id");
 
     const payload: JWTPayload = handleTokenVerification(req, res) as JWTPayload;
 
@@ -197,7 +197,6 @@ export const getAllPayments = async (
   }
 };
 
-
 export const approveClinic = async (
   req: Request,
   res: Response,
@@ -210,9 +209,9 @@ export const approveClinic = async (
       return res.status(400).json("Missing id");
     }
 
-     const { logged_in_id } = req.headers;
+    const { logged_in_id } = req.headers;
 
-    if(!logged_in_id) return res.status(400).json("Missing logged in id")
+    if (!logged_in_id) return res.status(400).json("Missing logged in id");
 
     const payload: JWTPayload = handleTokenVerification(req, res) as JWTPayload;
 
@@ -262,9 +261,9 @@ export const approveVet = async (
       return res.status(400).json("Missing id");
     }
 
-     const { logged_in_id } = req.headers;
+    const { logged_in_id } = req.headers;
 
-    if(!logged_in_id) return res.status(400).json("Missing logged in id")
+    if (!logged_in_id) return res.status(400).json("Missing logged in id");
 
     const payload: JWTPayload = handleTokenVerification(req, res) as JWTPayload;
 
@@ -308,9 +307,9 @@ export const getCommentReports = async (
   prisma: PrismaClient
 ) => {
   try {
-     const { logged_in_id } = req.headers;
+    const { logged_in_id } = req.headers;
 
-    if(!logged_in_id) return res.status(400).json("Missing logged in id")
+    if (!logged_in_id) return res.status(400).json("Missing logged in id");
 
     const payload: JWTPayload = handleTokenVerification(req, res) as JWTPayload;
 
@@ -327,13 +326,21 @@ export const getCommentReports = async (
 
     const vetCommentReports = await prisma.commentVetReport.findMany({
       include: {
-        comment: true,
+        comment: {
+          include: {
+            rating: true,
+          },
+        },
       },
     });
 
     const clinicCommentReports = await prisma.commentClinicReport.findMany({
       include: {
-        comment: true,
+        comment: {
+          include: {
+            rating: true,
+          },
+        },
       },
     });
 
@@ -357,11 +364,10 @@ export const approveCommentReport = async (
       return res.status(400).json("Missing id");
     }
 
-     const { logged_in_id , commentType, commentId} = req.headers;
+    const { logged_in_id, commentType, commentId } = req.headers;
 
-    if(!logged_in_id) return res.status(400).json("Missing logged in id")
+    if (!logged_in_id) return res.status(400).json("Missing logged in id");
 
-  
     if (commentType == undefined || commentId == undefined)
       return res.status(400).json("Missing comment fields");
 
@@ -389,6 +395,12 @@ export const approveCommentReport = async (
       commentReport = await prisma.commentVetReport.delete({
         where: {
           id,
+        },
+      });
+
+      await prisma.ratingVet.delete({
+        where: {
+          id: comment.rating_id,
         },
       });
 
@@ -437,9 +449,9 @@ export const rejectCommentReport = async (
       return res.status(400).json("Missing id");
     }
 
-     const { logged_in_id , commentType, commentId  } = req.headers;
+    const { logged_in_id, commentType, commentId } = req.headers;
 
-    if(!logged_in_id) return res.status(400).json("Missing logged in id")
+    if (!logged_in_id) return res.status(400).json("Missing logged in id");
 
     if (commentType == undefined || commentId == undefined)
       return res.status(400).json("Missing comment fields");
@@ -501,9 +513,9 @@ export const getAllVetApplications = async (
   prisma: PrismaClient
 ) => {
   try {
-     const { logged_in_id } = req.headers;
+    const { logged_in_id } = req.headers;
 
-    if(!logged_in_id) return res.status(400).json("Missing logged in id")
+    if (!logged_in_id) return res.status(400).json("Missing logged in id");
 
     const payload: JWTPayload = handleTokenVerification(req, res) as JWTPayload;
 
@@ -536,9 +548,9 @@ export const getAllClinicApplications = async (
   prisma: PrismaClient
 ) => {
   try {
-     const { logged_in_id } = req.headers;
+    const { logged_in_id } = req.headers;
 
-    if(!logged_in_id) return res.status(400).json("Missing logged in id")
+    if (!logged_in_id) return res.status(400).json("Missing logged in id");
 
     const payload: JWTPayload = handleTokenVerification(req, res) as JWTPayload;
 

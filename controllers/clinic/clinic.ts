@@ -8,7 +8,8 @@ export const createClinic = async (
   prisma: PrismaClient
 ) => {
   try {
-    const { name, address, city, country, phone_number, owner_id , zip_code} = req.body;
+    const { name, address, city, country, phone_number, owner_id, zip_code } =
+      req.body;
 
     if (
       name == undefined ||
@@ -43,7 +44,7 @@ export const createClinic = async (
         country,
         phone_number,
         owner_id,
-        zip_code
+        zip_code,
       },
     });
 
@@ -162,7 +163,11 @@ export const getClinic = async (
         id,
       },
       include: {
-        CommentClinic: true,
+        CommentClinic: {
+          include: {
+            rating: true,
+          },
+        },
         vets: {
           include: {
             vet: true,
