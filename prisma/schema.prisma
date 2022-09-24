@@ -107,6 +107,7 @@ model Clinic {
   vets          VetClinic[]
   CommentClinic CommentClinic[]
   RatingClinic  RatingClinic[]
+  Appointment   Appointment[]
 }
 
 model Appointment {
@@ -119,6 +120,8 @@ model Appointment {
   vet_id        String
   user          User?           @relation(fields: [user_id], references: [id])
   user_id       String?
+  clinic_id     String?         @default(cuid())
+  clinic        Clinic?         @relation(fields: [clinic_id], references: [id])
   MedicalReport MedicalReport[]
 }
 
@@ -211,6 +214,7 @@ model CommentClinicReport {
   reported_by   String
   reporter_type String
   clinic_id     String
+  description   String        @default("No description")
   report_type   String        @default("clinic")
 }
 
@@ -221,6 +225,7 @@ model CommentVetReport {
   reported_by   String
   reporter_type String
   vet_id        String
+  description   String     @default("No description")
   report_type   String     @default("vet")
 }
 

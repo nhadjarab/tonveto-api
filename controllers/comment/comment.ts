@@ -361,9 +361,13 @@ export const reportVetComment = async (
 
     if (!logged_in_id) return res.status(400).json("Missing logged in id");
 
-    const { user_type, vet_id } = req.body;
+    const { user_type, vet_id, description } = req.body;
 
-    if (user_type == undefined || vet_id == undefined)
+    if (
+      user_type == undefined ||
+      vet_id == undefined ||
+      description == undefined
+    )
       return res.status(400).json("Missing fields");
 
     const payload: JWTPayload = handleTokenVerification(req, res) as JWTPayload;
@@ -412,6 +416,7 @@ export const reportVetComment = async (
         reported_by: logged_in_id,
         comment_id: id,
         reporter_type: user_type,
+        description,
         vet_id,
       },
     });
@@ -436,9 +441,13 @@ export const reportClinicComment = async (
 
     if (!logged_in_id) return res.status(400).json("Missing logged in id");
 
-    const { user_type, clinic_id } = req.body;
+    const { user_type, clinic_id, description } = req.body;
 
-    if (user_type == undefined || clinic_id == undefined)
+    if (
+      user_type == undefined ||
+      clinic_id == undefined ||
+      description == undefined
+    )
       return res.status(400).json("Missing fields");
 
     const payload: JWTPayload = handleTokenVerification(req, res) as JWTPayload;
@@ -487,6 +496,7 @@ export const reportClinicComment = async (
         reported_by: logged_in_id,
         comment_id: id,
         reporter_type: user_type,
+        description,
         clinic_id,
       },
     });
@@ -495,4 +505,4 @@ export const reportClinicComment = async (
   } catch (e) {
     console.log(e);
   }
-}; 
+};

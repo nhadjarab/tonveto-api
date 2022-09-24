@@ -94,9 +94,9 @@ export const getUser = async (
 
     if (!id) return res.status(400).json("Missing fields");
 
-     const { logged_in_id } = req.headers;
+    const { logged_in_id } = req.headers;
 
-    if(!logged_in_id) return res.status(400).json("Missing logged in id")
+    if (!logged_in_id) return res.status(400).json("Missing logged in id");
 
     const payload: JWTPayload = handleTokenVerification(req, res) as JWTPayload;
 
@@ -109,7 +109,13 @@ export const getUser = async (
       },
       include: {
         pets: true,
-        appointments: true,
+        appointments: {
+          include: {
+            vet: true,
+            pet: true,
+            clinic: true,
+          },
+        },
       },
     });
 

@@ -20,14 +20,15 @@ export const addAppointment = async (
   prisma: PrismaClient
 ) => {
   try {
-    const { date, time, pet_id, vet_id, user_id } = req.body;
+    const { date, time, pet_id, vet_id, user_id, clinic_id } = req.body;
 
     if (
       date == undefined ||
       time == undefined ||
       pet_id == undefined ||
       vet_id == undefined ||
-      user_id == undefined
+      user_id == undefined ||
+      clinic_id == undefined
     )
       return res.status(400).json("Missing fields");
 
@@ -71,6 +72,18 @@ export const addAppointment = async (
 
     if (!doesVetExist.is_approved)
       return res.status(400).json("Vet is not approved yet");
+
+    const doesClinicExist = await prisma.clinic.findUnique({
+      where: {
+        id: clinic_id,
+      },
+    });
+
+    if (!doesClinicExist)
+      return res.status(404).json(`Clinic with id:${clinic_id} does not exist`);
+
+    if (!doesClinicExist.is_approved)
+      return res.status(400).json("Clinic is not approved yet");
 
     const dateValue = new Date(date);
     const day = dateValue.getDay() as number;
@@ -125,6 +138,7 @@ export const addAppointment = async (
         pet_id,
         vet_id,
         user_id,
+        clinic_id,
       },
     });
 
@@ -132,7 +146,7 @@ export const addAppointment = async (
       to: doesUserExist.email, // Change to your recipient
       from: "info@tonveto.com", // Change to your verified sender
       subject: "VetoLib Appointment",
-      html: `<div><strong>Dear ${doesUserExist.first_name} ${doesUserExist.last_name}</strong> <span> Has booked an appointment with Doctor ${doesVetExist.first_name} ${doesVetExist.last_name} on ${date} ${time} for pet: ${doesPetExist.name}</span></div>
+      html: `<div><strong>Dear ${doesUserExist.first_name} ${doesUserExist.last_name}</strong> <span> Has booked an appointment with Doctor ${doesVetExist.first_name} ${doesVetExist.last_name} on ${date} ${time} for pet: ${doesPetExist.name}, in ${doesClinicExist.name} clinic</span></div>
     `,
     };
 
@@ -322,6 +336,7 @@ export const getAppointment = async (
         pet: true,
         vet: true,
         user: true,
+        clinic: true,
       },
     });
 
@@ -1070,7 +1085,6 @@ export const getAvailableAppointments = async (
     const dayHours = [...morningHours, ...afternoonHours];
 
     let availableHours: string[] = [];
-
 
     dayHours.forEach((hour) => {
       const isHourAvailable = vetProfile.appointments.every(
