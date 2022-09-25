@@ -114,6 +114,7 @@ export const getUser = async (
             vet: true,
             pet: true,
             clinic: true,
+            MedicalReport: true,
           },
         },
       },
