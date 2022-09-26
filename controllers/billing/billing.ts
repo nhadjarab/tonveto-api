@@ -3,6 +3,11 @@ import { Request, Response } from "express";
 import { handleTokenVerification } from "../authentication/authentication";
 import validator from "validator";
 
+import sgMail from "@sendgrid/mail";
+
+
+sgMail.setApiKey(process.env.SENDGRID as string);
+
 export const addPayment = async (
   req: Request,
   res: Response,
@@ -47,6 +52,10 @@ export const addPayment = async (
       where: {
         id: appointment_id,
       },
+      include: {
+        pet: true,
+        clinic: true,
+      },
     });
 
     if (!doesAppointmentExist)
@@ -70,11 +79,33 @@ export const addPayment = async (
       },
     });
 
+    const msg = {
+      to: doesUserExist.email, // Change to your recipient
+      from: "info@tonveto.com", // Change to your verified sender
+      subject: "VetoLib Appointment",
+      html: `<div><strong>Dear ${doesUserExist.first_name} ${
+        doesUserExist.last_name
+      }</strong> <span> Has booked an appointment with Doctor ${
+        doesVetExist.first_name
+      } ${doesVetExist.last_name} on ${doesAppointmentExist.date} ${
+        doesAppointmentExist.time
+      } for pet: ${doesAppointmentExist.pet!.name}, in ${
+        doesAppointmentExist.clinic!.name
+      } clinic</span></div>
+    `,
+    };
+
+    sgMail
+      .send(msg)
+      .then(() => {
+        console.log("Email sent");
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+
     res.status(200).json(newPayment);
   } catch (e) {
     console.log(e);
   }
 };
-
-
-

@@ -142,22 +142,7 @@ export const addAppointment = async (
       },
     });
 
-    const msg = {
-      to: doesUserExist.email, // Change to your recipient
-      from: "info@tonveto.com", // Change to your verified sender
-      subject: "VetoLib Appointment",
-      html: `<div><strong>Dear ${doesUserExist.first_name} ${doesUserExist.last_name}</strong> <span> Has booked an appointment with Doctor ${doesVetExist.first_name} ${doesVetExist.last_name} on ${date} ${time} for pet: ${doesPetExist.name}, in ${doesClinicExist.name} clinic</span></div>
-    `,
-    };
-
-    sgMail
-      .send(msg)
-      .then(() => {
-        console.log("Email sent");
-      })
-      .catch((error) => {
-        console.error(error);
-      });
+    
 
     res.status(201).json(newAppointment);
   } catch (e) {
