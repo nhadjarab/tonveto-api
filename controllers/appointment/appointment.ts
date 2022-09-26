@@ -416,13 +416,24 @@ export const cancelAppointments = async (
 
     if (!appointment) return res.status(404).json("Appointment not found");
 
-    const msg = {
-      to: doesUserExist.email, // Change to your recipient
-      from: "info@tonveto.com", // Change to your verified sender
-      subject: "VetoLib Appointment Cancelled",
-      html: `<div><strong>Dear ${doesUserExist.first_name} ${doesUserExist.last_name}</strong> <span> Has canceled an appointment with id ${appointment.id} successfully </span></div>
-    `,
-    };
+    if (payment) {
+      const msg = {
+        to: doesUserExist.email, // Change to your recipient
+        from: "info@tonveto.com", // Change to your verified sender
+        subject: "VetoLib Appointment Cancelled",
+        html: `<div><strong>Dear ${doesUserExist.first_name} ${doesUserExist.last_name}</strong> <span> Has canceled an appointment with id ${appointment.id} successfully </span></div>
+      `,
+      };
+
+      sgMail
+        .send(msg)
+        .then(() => {
+          console.log("Email sent");
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    }
 
     res.status(200).json("Appointment canceled successfully");
   } catch (e) {
