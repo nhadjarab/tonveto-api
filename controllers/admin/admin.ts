@@ -91,6 +91,78 @@ export const getAllVets = async (
   }
 };
 
+export const updateAdmin = async (
+  req: Request,
+  res: Response,
+  prisma: PrismaClient
+) => {
+  try {
+    const { id } = req.params;
+
+    if (!id) return res.status(400).json("Missing fields");
+
+    const { email, birth_date, first_name, last_name, phone_number } = req.body;
+
+    if (
+      email == undefined ||
+      birth_date == undefined ||
+      first_name == undefined ||
+      last_name == undefined ||
+      phone_number == undefined
+    )
+      return res.status(400).json("Missing fields");
+
+    const payload: JWTPayload = handleTokenVerification(req, res) as JWTPayload;
+
+    if (payload.userId != id) return res.status(401).json("Unauthorized");
+
+    const oldAdmin = await prisma.admin.findUnique({
+      where: {
+        id,
+      },
+    });
+
+    if (!oldAdmin) return res.status(404).json("Admin does not exist");
+
+    if (oldAdmin.email != email) {
+      const doesAuthExist = await prisma.auth.findUnique({
+        where: {
+          email,
+        },
+      });
+
+      if (doesAuthExist)
+        return res.status(400).json("Email already being used");
+
+      const newAuth = await prisma.auth.update({
+        where: {
+          email: oldAdmin.email,
+        },
+        data: {
+          email,
+        },
+      });
+    }
+
+    const adminProfile = await prisma.admin.update({
+      where: {
+        id,
+      },
+      data: {
+        first_name,
+        last_name,
+        email,
+        birth_date,
+        phone_number,
+      },
+    });
+
+    res.status(200).json(adminProfile);
+  } catch (e) {
+    res.status(500).json(e);
+  }
+};
+
 export const getAllClinics = async (
   req: Request,
   res: Response,

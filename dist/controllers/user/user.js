@@ -87,7 +87,14 @@ const getUser = (req, res, prisma) => __awaiter(void 0, void 0, void 0, function
             },
             include: {
                 pets: true,
-                appointments: true,
+                appointments: {
+                    include: {
+                        vet: true,
+                        pet: true,
+                        clinic: true,
+                        MedicalReport: true,
+                    },
+                },
             },
         });
         res.status(200).json(userProfile);

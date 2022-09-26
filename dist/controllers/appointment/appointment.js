@@ -24,12 +24,13 @@ const stripe = new stripe_1.default(process.env.STRIPE_KEY, {
 });
 const addAppointment = (req, res, prisma) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const { date, time, pet_id, vet_id, user_id } = req.body;
+        const { date, time, pet_id, vet_id, user_id, clinic_id } = req.body;
         if (date == undefined ||
             time == undefined ||
             pet_id == undefined ||
             vet_id == undefined ||
-            user_id == undefined)
+            user_id == undefined ||
+            clinic_id == undefined)
             return res.status(400).json("Missing fields");
         const payload = (0, authentication_1.handleTokenVerification)(req, res);
         if (payload.userId != user_id)
@@ -62,6 +63,15 @@ const addAppointment = (req, res, prisma) => __awaiter(void 0, void 0, void 0, f
             return res.status(404).json(`Vet with id:${vet_id} does not exist`);
         if (!doesVetExist.is_approved)
             return res.status(400).json("Vet is not approved yet");
+        const doesClinicExist = yield prisma.clinic.findUnique({
+            where: {
+                id: clinic_id,
+            },
+        });
+        if (!doesClinicExist)
+            return res.status(404).json(`Clinic with id:${clinic_id} does not exist`);
+        if (!doesClinicExist.is_approved)
+            return res.status(400).json("Clinic is not approved yet");
         const dateValue = new Date(date);
         const day = dateValue.getDay();
         const weekDay = helps_1.weekDays[day];
@@ -98,13 +108,14 @@ const addAppointment = (req, res, prisma) => __awaiter(void 0, void 0, void 0, f
                 pet_id,
                 vet_id,
                 user_id,
+                clinic_id,
             },
         });
         const msg = {
             to: doesUserExist.email,
             from: "info@tonveto.com",
             subject: "VetoLib Appointment",
-            html: `<div><strong>Dear ${doesUserExist.first_name} ${doesUserExist.last_name}</strong> <span> Has booked an appointment with Doctor ${doesVetExist.first_name} ${doesVetExist.last_name} on ${date} ${time} for pet: ${doesPetExist.name}</span></div>
+            html: `<div><strong>Dear ${doesUserExist.first_name} ${doesUserExist.last_name}</strong> <span> Has booked an appointment with Doctor ${doesVetExist.first_name} ${doesVetExist.last_name} on ${date} ${time} for pet: ${doesPetExist.name}, in ${doesClinicExist.name} clinic</span></div>
     `,
         };
         mail_1.default
@@ -247,6 +258,7 @@ const getAppointment = (req, res, prisma) => __awaiter(void 0, void 0, void 0, f
                 pet: true,
                 vet: true,
                 user: true,
+                clinic: true,
             },
         });
         if (!appointment)

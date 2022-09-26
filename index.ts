@@ -73,6 +73,7 @@ import {
   getAllVets,
   getCommentReports,
   rejectCommentReport,
+  updateAdmin,
 } from "./controllers/admin/admin";
 import {
   addCommentClinic,
@@ -610,6 +611,14 @@ app.delete("/commentClinic/:id", async (req: Request, res: Response) => {
 });
 
 // ===========Admin ROUTERS============
+app.put("/admin/:id", async (req: Request, res: Response) => {
+  try {
+    updateAdmin(req, res, prisma);
+  } catch (e) {
+    console.log(e);
+  }
+});
+
 app.get("/getAllUsers", async (req: Request, res: Response) => {
   try {
     getAllUsers(req, res, prisma);

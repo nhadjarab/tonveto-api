@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getAllClinicApplications = exports.getAllVetApplications = exports.rejectCommentReport = exports.approveCommentReport = exports.getCommentReports = exports.approveVet = exports.approveClinic = exports.getAllPayments = exports.getAllAppointments = exports.getAllClinics = exports.getAllVets = exports.getAllUsers = void 0;
+exports.getAllClinicApplications = exports.getAllVetApplications = exports.rejectCommentReport = exports.approveCommentReport = exports.getCommentReports = exports.approveVet = exports.approveClinic = exports.getAllPayments = exports.getAllAppointments = exports.getAllClinics = exports.updateAdmin = exports.getAllVets = exports.getAllUsers = void 0;
 const authentication_1 = require("../authentication/authentication");
 const getAllUsers = (req, res, prisma) => __awaiter(void 0, void 0, void 0, function* () {
     try {
@@ -84,6 +84,64 @@ const getAllVets = (req, res, prisma) => __awaiter(void 0, void 0, void 0, funct
     }
 });
 exports.getAllVets = getAllVets;
+const updateAdmin = (req, res, prisma) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const { id } = req.params;
+        if (!id)
+            return res.status(400).json("Missing fields");
+        const { email, birth_date, first_name, last_name, phone_number } = req.body;
+        if (email == undefined ||
+            birth_date == undefined ||
+            first_name == undefined ||
+            last_name == undefined ||
+            phone_number == undefined)
+            return res.status(400).json("Missing fields");
+        const payload = (0, authentication_1.handleTokenVerification)(req, res);
+        if (payload.userId != id)
+            return res.status(401).json("Unauthorized");
+        const oldAdmin = yield prisma.admin.findUnique({
+            where: {
+                id,
+            },
+        });
+        if (!oldAdmin)
+            return res.status(404).json("Admin does not exist");
+        if (oldAdmin.email != email) {
+            const doesAuthExist = yield prisma.auth.findUnique({
+                where: {
+                    email,
+                },
+            });
+            if (doesAuthExist)
+                return res.status(400).json("Email already being used");
+            const newAuth = yield prisma.auth.update({
+                where: {
+                    email: oldAdmin.email,
+                },
+                data: {
+                    email,
+                },
+            });
+        }
+        const adminProfile = yield prisma.admin.update({
+            where: {
+                id,
+            },
+            data: {
+                first_name,
+                last_name,
+                email,
+                birth_date,
+                phone_number,
+            },
+        });
+        res.status(200).json(adminProfile);
+    }
+    catch (e) {
+        res.status(500).json(e);
+    }
+});
+exports.updateAdmin = updateAdmin;
 const getAllClinics = (req, res, prisma) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { logged_in_id } = req.headers;

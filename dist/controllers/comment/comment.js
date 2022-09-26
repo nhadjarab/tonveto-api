@@ -293,8 +293,10 @@ const reportVetComment = (req, res, prisma) => __awaiter(void 0, void 0, void 0,
         const { logged_in_id } = req.headers;
         if (!logged_in_id)
             return res.status(400).json("Missing logged in id");
-        const { user_type, vet_id } = req.body;
-        if (user_type == undefined || vet_id == undefined)
+        const { user_type, vet_id, description } = req.body;
+        if (user_type == undefined ||
+            vet_id == undefined ||
+            description == undefined)
             return res.status(400).json("Missing fields");
         const payload = (0, authentication_1.handleTokenVerification)(req, res);
         if (payload.userId != logged_in_id)
@@ -338,6 +340,7 @@ const reportVetComment = (req, res, prisma) => __awaiter(void 0, void 0, void 0,
                 reported_by: logged_in_id,
                 comment_id: id,
                 reporter_type: user_type,
+                description,
                 vet_id,
             },
         });
@@ -356,8 +359,10 @@ const reportClinicComment = (req, res, prisma) => __awaiter(void 0, void 0, void
         const { logged_in_id } = req.headers;
         if (!logged_in_id)
             return res.status(400).json("Missing logged in id");
-        const { user_type, clinic_id } = req.body;
-        if (user_type == undefined || clinic_id == undefined)
+        const { user_type, clinic_id, description } = req.body;
+        if (user_type == undefined ||
+            clinic_id == undefined ||
+            description == undefined)
             return res.status(400).json("Missing fields");
         const payload = (0, authentication_1.handleTokenVerification)(req, res);
         if (payload.userId != logged_in_id)
@@ -401,6 +406,7 @@ const reportClinicComment = (req, res, prisma) => __awaiter(void 0, void 0, void
                 reported_by: logged_in_id,
                 comment_id: id,
                 reporter_type: user_type,
+                description,
                 clinic_id,
             },
         });
