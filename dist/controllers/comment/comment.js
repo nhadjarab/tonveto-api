@@ -136,12 +136,7 @@ const deleteCommentVet = (req, res, prisma) => __awaiter(void 0, void 0, void 0,
                 id: doesCommentExist.rating_id,
             },
         });
-        const comment = yield prisma.commentVet.delete({
-            where: {
-                id,
-            },
-        });
-        res.status(200).json(comment);
+        res.status(200).json("Deleted");
     }
     catch (e) {
         console.log(e);
@@ -273,12 +268,7 @@ const deleteCommentClinic = (req, res, prisma) => __awaiter(void 0, void 0, void
                 id: doesCommentExist.rating_id,
             },
         });
-        const comment = yield prisma.commentClinic.delete({
-            where: {
-                id,
-            },
-        });
-        res.status(200).json(comment);
+        res.status(200).json("Delted");
     }
     catch (e) {
         console.log(e);

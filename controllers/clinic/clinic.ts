@@ -227,30 +227,6 @@ export const deleteClinic = async (
     if (clinic.owner_id != logged_in_id)
       return res.status(401).json("Unauthorized");
 
-    const deleteRelation = await prisma.vetClinic.deleteMany({
-      where: {
-        clinic_id: id,
-      },
-    });
-
-    const deleteComments = await prisma.commentClinic.deleteMany({
-      where: {
-        clinic_id: id,
-      },
-    });
-
-    const deleteReport = await prisma.commentClinicReport.deleteMany({
-      where: {
-        clinic_id: id,
-      },
-    });
-
-    const deleteRatings = await prisma.ratingClinic.deleteMany({
-      where: {
-        clinic_id: id,
-      },
-    });
-
     const deletedClinic = await prisma.clinic.delete({
       where: { id },
     });

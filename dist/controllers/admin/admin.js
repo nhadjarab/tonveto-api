@@ -359,10 +359,11 @@ const approveCommentReport = (req, res, prisma) => __awaiter(void 0, void 0, voi
         if (!id || id === "") {
             return res.status(400).json("Missing id");
         }
-        const { logged_in_id, commentType, commentId } = req.headers;
+        const { logged_in_id, comment_type, comment_id } = req.headers;
+        console.log(req.headers);
         if (!logged_in_id)
             return res.status(400).json("Missing logged in id");
-        if (commentType == undefined || commentId == undefined)
+        if (comment_type == undefined || comment_id == undefined)
             return res.status(400).json("Missing comment fields");
         const payload = (0, authentication_1.handleTokenVerification)(req, res);
         if (payload.userId !== logged_in_id)
@@ -373,10 +374,10 @@ const approveCommentReport = (req, res, prisma) => __awaiter(void 0, void 0, voi
             },
         });
         let commentReport;
-        if (commentType === "vet") {
+        if (comment_type === "vet") {
             const comment = yield prisma.commentVet.findUnique({
                 where: {
-                    id: commentId,
+                    id: comment_id,
                 },
             });
             if (!comment)
@@ -391,16 +392,11 @@ const approveCommentReport = (req, res, prisma) => __awaiter(void 0, void 0, voi
                     id: comment.rating_id,
                 },
             });
-            yield prisma.commentVet.delete({
-                where: {
-                    id: commentId,
-                },
-            });
         }
-        else if (commentType === "clinic") {
+        else if (comment_type === "clinic") {
             const comment = yield prisma.commentClinic.findUnique({
                 where: {
-                    id: commentId,
+                    id: comment_id,
                 },
             });
             if (!comment)
@@ -410,9 +406,9 @@ const approveCommentReport = (req, res, prisma) => __awaiter(void 0, void 0, voi
                     id,
                 },
             });
-            yield prisma.commentClinic.delete({
+            yield prisma.ratingClinic.delete({
                 where: {
-                    id: commentId,
+                    id: comment.rating_id,
                 },
             });
         }
@@ -432,10 +428,10 @@ const rejectCommentReport = (req, res, prisma) => __awaiter(void 0, void 0, void
         if (!id || id === "") {
             return res.status(400).json("Missing id");
         }
-        const { logged_in_id, commentType, commentId } = req.headers;
+        const { logged_in_id, comment_type, comment_id } = req.headers;
         if (!logged_in_id)
             return res.status(400).json("Missing logged in id");
-        if (commentType == undefined || commentId == undefined)
+        if (comment_type == undefined || comment_id == undefined)
             return res.status(400).json("Missing comment fields");
         const payload = (0, authentication_1.handleTokenVerification)(req, res);
         if (payload.userId !== logged_in_id)
@@ -446,10 +442,10 @@ const rejectCommentReport = (req, res, prisma) => __awaiter(void 0, void 0, void
             },
         });
         let commentReport;
-        if (commentType === "vet") {
+        if (comment_type === "vet") {
             const comment = yield prisma.commentVet.findUnique({
                 where: {
-                    id: commentId,
+                    id: comment_id,
                 },
             });
             if (!comment)
@@ -460,10 +456,10 @@ const rejectCommentReport = (req, res, prisma) => __awaiter(void 0, void 0, void
                 },
             });
         }
-        else if (commentType === "clinic") {
+        else if (comment_type === "clinic") {
             const comment = yield prisma.commentClinic.findUnique({
                 where: {
-                    id: commentId,
+                    id: comment_id,
                 },
             });
             if (!comment)

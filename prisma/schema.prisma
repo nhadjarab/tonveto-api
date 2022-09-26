@@ -24,7 +24,7 @@ model Pet {
   breed         String
   crossbreed    Boolean
   sterilised    Boolean
-  owner         User            @relation(fields: [owner_id], references: [id])
+  owner         User            @relation(fields: [owner_id], references: [id], onDelete: Cascade)
   owner_id      String
   appointments  Appointment[]
   MedicalReport MedicalReport[]
@@ -76,9 +76,9 @@ model Vet {
 
 model VetClinic {
   id        String  @unique @default(cuid())
-  vet       Vet     @relation(fields: [vet_id], references: [id])
+  vet       Vet     @relation(fields: [vet_id], references: [id], onDelete: Cascade)
   vet_id    String
-  clinic    Clinic  @relation(fields: [clinic_id], references: [id])
+  clinic    Clinic  @relation(fields: [clinic_id], references: [id], onDelete: Cascade)
   clinic_id String
   approved  Boolean @default(false)
 
@@ -89,7 +89,7 @@ model Specialty {
   id     String @id @unique @default(cuid())
   name   String
   price  String
-  vet    Vet    @relation(fields: [vet_id], references: [id])
+  vet    Vet    @relation(fields: [vet_id], references: [id], onDelete: Cascade)
   vet_id String
 }
 
@@ -114,14 +114,14 @@ model Appointment {
   id            String          @id @unique @default(cuid())
   date          String
   time          String
-  pet           Pet?            @relation(fields: [pet_id], references: [id])
+  pet           Pet?            @relation(fields: [pet_id], references: [id], onDelete: Cascade)
   pet_id        String?
-  vet           Vet             @relation(fields: [vet_id], references: [id])
+  vet           Vet             @relation(fields: [vet_id], references: [id], onDelete: Cascade)
   vet_id        String
-  user          User?           @relation(fields: [user_id], references: [id])
+  user          User?           @relation(fields: [user_id], references: [id], onDelete: Cascade)
   user_id       String?
   clinic_id     String?         @default(cuid())
-  clinic        Clinic?         @relation(fields: [clinic_id], references: [id])
+  clinic        Clinic?         @relation(fields: [clinic_id], references: [id], onDelete: Cascade)
   MedicalReport MedicalReport[]
 }
 
@@ -141,7 +141,7 @@ model Calendar {
 model MedicalReport {
   id             String      @id @unique @default(cuid())
   appointment_id String
-  appointment    Appointment @relation(fields: [appointment_id], references: [id])
+  appointment    Appointment @relation(fields: [appointment_id], references: [id], onDelete: Cascade)
   reason         String
   diagnosis      String
   treatment      String
@@ -166,23 +166,23 @@ model CommentVet {
   id               String             @id @unique @default(cuid())
   text             String
   vet_id           String
-  vet              Vet                @relation(fields: [vet_id], references: [id])
+  vet              Vet                @relation(fields: [vet_id], references: [id], onDelete: Cascade)
   owner_id         String
-  owner            User               @relation(fields: [owner_id], references: [id])
-  rating           RatingVet          @relation(fields: [rating_id], references: [id])
+  owner            User               @relation(fields: [owner_id], references: [id], onDelete: Cascade)
+  rating           RatingVet?         @relation(fields: [rating_id], references: [id], onDelete: Cascade)
   rating_id        String
   CommentVetReport CommentVetReport[]
 }
 
 model CommentClinic {
-  id        String       @id @unique @default(cuid())
+  id        String        @id @unique @default(cuid())
   text      String
   clinic_id String
-  clinic    Clinic       @relation(fields: [clinic_id], references: [id])
+  clinic    Clinic        @relation(fields: [clinic_id], references: [id], onDelete: Cascade)
   owner_id  String
-  owner     User         @relation(fields: [owner_id], references: [id])
+  owner     User          @relation(fields: [owner_id], references: [id], onDelete: Cascade)
   rating_id String
-  rating    RatingClinic @relation(fields: [rating_id], references: [id])
+  rating    RatingClinic? @relation(fields: [rating_id], references: [id], onDelete: Cascade)
 
   CommentClinicReport CommentClinicReport[]
 }
@@ -191,9 +191,9 @@ model RatingVet {
   id         String       @id @unique @default(cuid())
   rating     Float
   vet_id     String
-  vet        Vet          @relation(fields: [vet_id], references: [id])
+  vet        Vet          @relation(fields: [vet_id], references: [id], onDelete: Cascade)
   owner_id   String
-  owner      User         @relation(fields: [owner_id], references: [id])
+  owner      User         @relation(fields: [owner_id], references: [id], onDelete: Cascade)
   CommentVet CommentVet[]
 }
 
@@ -201,32 +201,32 @@ model RatingClinic {
   id            String          @id @unique @default(cuid())
   rating        Float
   clinic_id     String
-  clinic        Clinic          @relation(fields: [clinic_id], references: [id])
+  clinic        Clinic          @relation(fields: [clinic_id], references: [id], onDelete: Cascade)
   owner_id      String
-  owner         User            @relation(fields: [owner_id], references: [id])
+  owner         User            @relation(fields: [owner_id], references: [id], onDelete: Cascade)
   CommentClinic CommentClinic[]
 }
 
 model CommentClinicReport {
-  id            String        @id @unique @default(cuid())
+  id            String         @id @unique @default(cuid())
   comment_id    String
-  comment       CommentClinic @relation(fields: [comment_id], references: [id])
+  comment       CommentClinic? @relation(fields: [comment_id], references: [id], onDelete: Cascade)
   reported_by   String
   reporter_type String
   clinic_id     String
-  description   String        @default("No description")
-  report_type   String        @default("clinic")
+  description   String         @default("No description")
+  report_type   String         @default("clinic")
 }
 
 model CommentVetReport {
-  id            String     @id @unique @default(cuid())
-  comment       CommentVet @relation(fields: [comment_id], references: [id])
+  id            String      @id @unique @default(cuid())
+  comment       CommentVet? @relation(fields: [comment_id], references: [id], onDelete: Cascade)
   comment_id    String
   reported_by   String
   reporter_type String
   vet_id        String
-  description   String     @default("No description")
-  report_type   String     @default("vet")
+  description   String      @default("No description")
+  report_type   String      @default("vet")
 }
 
 model PendingPayment {

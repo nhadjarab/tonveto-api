@@ -163,13 +163,7 @@ export const deleteCommentVet = async (
       },
     });
 
-    const comment = await prisma.commentVet.delete({
-      where: {
-        id,
-      },
-    });
-
-    res.status(200).json(comment);
+    res.status(200).json("Deleted");
   } catch (e) {
     console.log(e);
   }
@@ -335,13 +329,7 @@ export const deleteCommentClinic = async (
       },
     });
 
-    const comment = await prisma.commentClinic.delete({
-      where: {
-        id,
-      },
-    });
-
-    res.status(200).json(comment);
+    res.status(200).json("Delted");
   } catch (e) {
     console.log(e);
   }

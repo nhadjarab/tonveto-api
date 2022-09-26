@@ -15,6 +15,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.addPayment = void 0;
 const authentication_1 = require("../authentication/authentication");
 const validator_1 = __importDefault(require("validator"));
+const mail_1 = __importDefault(require("@sendgrid/mail"));
+mail_1.default.setApiKey(process.env.SENDGRID);
 const addPayment = (req, res, prisma) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { amount, vet_id, user_id, appointment_id, payment_id } = req.body;
@@ -47,6 +49,10 @@ const addPayment = (req, res, prisma) => __awaiter(void 0, void 0, void 0, funct
             where: {
                 id: appointment_id,
             },
+            include: {
+                pet: true,
+                clinic: true,
+            },
         });
         if (!doesAppointmentExist)
             return res.status(404).json("Appointment does not exist");
@@ -65,6 +71,21 @@ const addPayment = (req, res, prisma) => __awaiter(void 0, void 0, void 0, funct
                 appointment_id,
                 payment_id,
             },
+        });
+        const msg = {
+            to: doesUserExist.email,
+            from: "info@tonveto.com",
+            subject: "VetoLib Appointment",
+            html: `<div><strong>Dear ${doesUserExist.first_name} ${doesUserExist.last_name}</strong> <span> Has booked an appointment with Doctor ${doesVetExist.first_name} ${doesVetExist.last_name} on ${doesAppointmentExist.date} ${doesAppointmentExist.time} for pet: ${doesAppointmentExist.pet.name}, in ${doesAppointmentExist.clinic.name} clinic</span></div>
+    `,
+        };
+        mail_1.default
+            .send(msg)
+            .then(() => {
+            console.log("Email sent");
+        })
+            .catch((error) => {
+            console.error(error);
         });
         res.status(200).json(newPayment);
     }

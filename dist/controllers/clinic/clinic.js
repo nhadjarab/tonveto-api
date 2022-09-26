@@ -191,26 +191,6 @@ const deleteClinic = (req, res, prisma) => __awaiter(void 0, void 0, void 0, fun
             return res.status(404).json("Clinic does not exist");
         if (clinic.owner_id != logged_in_id)
             return res.status(401).json("Unauthorized");
-        const deleteRelation = yield prisma.vetClinic.deleteMany({
-            where: {
-                clinic_id: id,
-            },
-        });
-        const deleteComments = yield prisma.commentClinic.deleteMany({
-            where: {
-                clinic_id: id,
-            },
-        });
-        const deleteReport = yield prisma.commentClinicReport.deleteMany({
-            where: {
-                clinic_id: id,
-            },
-        });
-        const deleteRatings = yield prisma.ratingClinic.deleteMany({
-            where: {
-                clinic_id: id,
-            },
-        });
         const deletedClinic = yield prisma.clinic.delete({
             where: { id },
         });

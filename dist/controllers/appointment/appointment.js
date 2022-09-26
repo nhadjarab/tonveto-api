@@ -111,21 +111,6 @@ const addAppointment = (req, res, prisma) => __awaiter(void 0, void 0, void 0, f
                 clinic_id,
             },
         });
-        const msg = {
-            to: doesUserExist.email,
-            from: "info@tonveto.com",
-            subject: "VetoLib Appointment",
-            html: `<div><strong>Dear ${doesUserExist.first_name} ${doesUserExist.last_name}</strong> <span> Has booked an appointment with Doctor ${doesVetExist.first_name} ${doesVetExist.last_name} on ${date} ${time} for pet: ${doesPetExist.name}, in ${doesClinicExist.name} clinic</span></div>
-    `,
-        };
-        mail_1.default
-            .send(msg)
-            .then(() => {
-            console.log("Email sent");
-        })
-            .catch((error) => {
-            console.error(error);
-        });
         res.status(201).json(newAppointment);
     }
     catch (e) {
@@ -320,13 +305,23 @@ const cancelAppointments = (req, res, prisma) => __awaiter(void 0, void 0, void 
         });
         if (!appointment)
             return res.status(404).json("Appointment not found");
-        const msg = {
-            to: doesUserExist.email,
-            from: "info@tonveto.com",
-            subject: "VetoLib Appointment Cancelled",
-            html: `<div><strong>Dear ${doesUserExist.first_name} ${doesUserExist.last_name}</strong> <span> Has canceled an appointment with id ${appointment.id} successfully </span></div>
-    `,
-        };
+        if (payment) {
+            const msg = {
+                to: doesUserExist.email,
+                from: "info@tonveto.com",
+                subject: "VetoLib Appointment Cancelled",
+                html: `<div><strong>Dear ${doesUserExist.first_name} ${doesUserExist.last_name}</strong> <span> Has canceled an appointment with id ${appointment.id} successfully </span></div>
+      `,
+            };
+            mail_1.default
+                .send(msg)
+                .then(() => {
+                console.log("Email sent");
+            })
+                .catch((error) => {
+                console.error(error);
+            });
+        }
         res.status(200).json("Appointment canceled successfully");
     }
     catch (e) {

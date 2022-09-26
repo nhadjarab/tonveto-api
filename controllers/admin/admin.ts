@@ -441,11 +441,13 @@ export const approveCommentReport = async (
       return res.status(400).json("Missing id");
     }
 
-    const { logged_in_id, commentType, commentId } = req.headers;
+    const { logged_in_id, comment_type, comment_id } = req.headers;
+
+    console.log(req.headers);
 
     if (!logged_in_id) return res.status(400).json("Missing logged in id");
 
-    if (commentType == undefined || commentId == undefined)
+    if (comment_type == undefined || comment_id == undefined)
       return res.status(400).json("Missing comment fields");
 
     const payload: JWTPayload = handleTokenVerification(req, res) as JWTPayload;
@@ -461,10 +463,10 @@ export const approveCommentReport = async (
 
     let commentReport;
 
-    if (commentType === "vet") {
+    if (comment_type === "vet") {
       const comment = await prisma.commentVet.findUnique({
         where: {
-          id: commentId as string,
+          id: comment_id as string,
         },
       });
 
@@ -480,16 +482,10 @@ export const approveCommentReport = async (
           id: comment.rating_id,
         },
       });
-
-      await prisma.commentVet.delete({
-        where: {
-          id: commentId as string,
-        },
-      });
-    } else if (commentType === "clinic") {
+    } else if (comment_type === "clinic") {
       const comment = await prisma.commentClinic.findUnique({
         where: {
-          id: commentId as string,
+          id: comment_id as string,
         },
       });
 
@@ -500,9 +496,9 @@ export const approveCommentReport = async (
         },
       });
 
-      await prisma.commentClinic.delete({
+      await prisma.ratingClinic.delete({
         where: {
-          id: commentId as string,
+          id: comment.rating_id,
         },
       });
     } else {
@@ -526,11 +522,11 @@ export const rejectCommentReport = async (
       return res.status(400).json("Missing id");
     }
 
-    const { logged_in_id, commentType, commentId } = req.headers;
+    const { logged_in_id, comment_type, comment_id } = req.headers;
 
     if (!logged_in_id) return res.status(400).json("Missing logged in id");
 
-    if (commentType == undefined || commentId == undefined)
+    if (comment_type == undefined || comment_id == undefined)
       return res.status(400).json("Missing comment fields");
 
     const payload: JWTPayload = handleTokenVerification(req, res) as JWTPayload;
@@ -546,10 +542,10 @@ export const rejectCommentReport = async (
 
     let commentReport;
 
-    if (commentType === "vet") {
+    if (comment_type === "vet") {
       const comment = await prisma.commentVet.findUnique({
         where: {
-          id: commentId as string,
+          id: comment_id as string,
         },
       });
 
@@ -560,10 +556,10 @@ export const rejectCommentReport = async (
           id,
         },
       });
-    } else if (commentType === "clinic") {
+    } else if (comment_type === "clinic") {
       const comment = await prisma.commentClinic.findUnique({
         where: {
-          id: commentId as string,
+          id: comment_id as string,
         },
       });
 
