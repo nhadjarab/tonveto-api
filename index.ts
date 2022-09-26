@@ -329,6 +329,14 @@ app.post("/appointment", async (req: Request, res: Response) => {
   }
 });
 
+app.put("/appointment/:id", async (req: Request, res: Response) => {
+  try {
+    updateAppointment(req, res, prisma);
+  } catch (e) {
+    console.log(e);
+  }
+});
+
 app.post("/appointmentVet", async (req: Request, res: Response) => {
   try {
     addAppointmentVet(req, res, prisma);
