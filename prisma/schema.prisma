@@ -38,6 +38,7 @@ model User {
   birth_date       String
   phone_number     String
   profile_complete Boolean @default(false)
+  is_subscribed    Boolean @default(false)
   type             String  @default("user")
 
   pets          Pet[]

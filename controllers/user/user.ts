@@ -15,14 +15,22 @@ export const updateUser = async (
 
     if (!id) return res.status(400).json("Missing fields");
 
-    const { first_name, last_name, email, birth_date, phone_number } = req.body;
+    const {
+      first_name,
+      last_name,
+      email,
+      birth_date,
+      phone_number,
+      is_subscribed,
+    } = req.body;
 
     if (
       first_name == undefined ||
       last_name == undefined ||
       email == undefined ||
       birth_date == undefined ||
-      phone_number == undefined
+      phone_number == undefined ||
+      is_subscribed == undefined
     )
       return res.status(400).json("Missing fields");
 
@@ -68,6 +76,7 @@ export const updateUser = async (
         email,
         birth_date,
         phone_number,
+        is_subscribed,
         profile_complete: isProfileComplete(
           first_name,
           last_name,
