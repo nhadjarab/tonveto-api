@@ -532,6 +532,14 @@ app.delete("/commentClinic/:id", (req, res) => __awaiter(void 0, void 0, void 0,
     }
 }));
 // ===========Admin ROUTERS============
+app.get("/admin/:id", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        (0, admin_1.getAdmin)(req, res, prisma);
+    }
+    catch (e) {
+        console.log(e);
+    }
+}));
 app.put("/admin/:id", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         (0, admin_1.updateAdmin)(req, res, prisma);

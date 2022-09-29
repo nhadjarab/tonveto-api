@@ -64,6 +64,7 @@ import {
   approveClinic,
   approveCommentReport,
   approveVet,
+  getAdmin,
   getAllAppointments,
   getAllClinicApplications,
   getAllClinics,
@@ -611,6 +612,15 @@ app.delete("/commentClinic/:id", async (req: Request, res: Response) => {
 });
 
 // ===========Admin ROUTERS============
+
+app.get("/admin/:id", async (req: Request, res: Response) => {
+  try {
+    getAdmin(req, res, prisma);
+  } catch (e) {
+    console.log(e);
+  }
+});
+
 app.put("/admin/:id", async (req: Request, res: Response) => {
   try {
     updateAdmin(req, res, prisma);

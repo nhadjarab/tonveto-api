@@ -9,8 +9,34 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getAllClinicApplications = exports.getAllVetApplications = exports.rejectCommentReport = exports.approveCommentReport = exports.getCommentReports = exports.approveVet = exports.approveClinic = exports.getAllPayments = exports.getAllAppointments = exports.getAllClinics = exports.updateAdmin = exports.getAllVets = exports.getAllUsers = void 0;
+exports.getAllClinicApplications = exports.getAllVetApplications = exports.rejectCommentReport = exports.approveCommentReport = exports.getCommentReports = exports.approveVet = exports.approveClinic = exports.getAllPayments = exports.getAllAppointments = exports.getAllClinics = exports.updateAdmin = exports.getAllVets = exports.getAllUsers = exports.getAdmin = void 0;
 const authentication_1 = require("../authentication/authentication");
+const getAdmin = (req, res, prisma) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const { id } = req.params;
+        if (!id)
+            return res.status(400).json("Missing fields");
+        const { logged_in_id } = req.headers;
+        if (!logged_in_id)
+            return res.status(400).json("Missing logged in id");
+        const payload = (0, authentication_1.handleTokenVerification)(req, res);
+        if (payload.userId != logged_in_id) {
+            return res.status(401).json("Unauthorized");
+        }
+        const adminProfile = yield prisma.admin.findUnique({
+            where: {
+                id,
+            },
+        });
+        if (!adminProfile)
+            return res.status(404).json("Vet does not exist");
+        res.status(200).json(adminProfile);
+    }
+    catch (e) {
+        res.status(500).json(e);
+    }
+});
+exports.getAdmin = getAdmin;
 const getAllUsers = (req, res, prisma) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { logged_in_id } = req.headers;

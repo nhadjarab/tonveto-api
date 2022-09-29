@@ -419,6 +419,7 @@ const closeTimeSlot = (req, res, prisma) => __awaiter(void 0, void 0, void 0, fu
                 pet_id: process.env.DEFAULT_PET_ID,
                 vet_id,
                 user_id: process.env.DEFAULT_USER_ID,
+                clinic_id: "cl8eosxg000800umc64gdhs1j",
             },
         });
         res.status(200).json(newAppointment);

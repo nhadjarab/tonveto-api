@@ -2,6 +2,40 @@ import { PrismaClient } from "@prisma/client";
 import { Request, Response } from "express";
 import { handleTokenVerification } from "../authentication/authentication";
 
+export const getAdmin = async (
+  req: Request,
+  res: Response,
+  prisma: PrismaClient
+) => {
+  try {
+    const { id } = req.params;
+
+    if (!id) return res.status(400).json("Missing fields");
+
+    const { logged_in_id } = req.headers;
+
+    if (!logged_in_id) return res.status(400).json("Missing logged in id");
+
+    const payload: JWTPayload = handleTokenVerification(req, res) as JWTPayload;
+
+    if (payload.userId != logged_in_id) {
+      return res.status(401).json("Unauthorized");
+    }
+
+    const adminProfile = await prisma.admin.findUnique({
+      where: {
+        id,
+      },
+    });
+
+    if (!adminProfile) return res.status(404).json("Vet does not exist");
+
+    res.status(200).json(adminProfile);
+  } catch (e) {
+    res.status(500).json(e);
+  }
+};
+
 export const getAllUsers = async (
   req: Request,
   res: Response,
