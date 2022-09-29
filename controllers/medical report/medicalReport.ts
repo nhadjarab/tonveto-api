@@ -1,4 +1,5 @@
 import { PrismaClient } from "@prisma/client";
+import axios from "axios";
 import { Request, Response } from "express";
 import { handleTokenVerification } from "../authentication/authentication";
 
@@ -98,6 +99,12 @@ export const addMedicalReport = async (
       },
     });
 
+    const aiResult = await axios.post("http://ai.tonveto.com/update", {
+      species: doesPetExist.species,
+      symptoms: [reason],
+      disease: diagnosis,
+    });
+
     res.status(200).json(medicalReport);
   } catch (e) {
     console.log(e);
@@ -161,6 +168,7 @@ export const updateMedicalReport = async (
         pet_id,
       },
     });
+    
 
     res.status(200).json(medicalReport);
   } catch (e) {

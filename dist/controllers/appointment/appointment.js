@@ -288,6 +288,7 @@ const cancelAppointments = (req, res, prisma) => __awaiter(void 0, void 0, void 
                 appointment_id: id,
             },
         });
+        console.log(payment);
         if (payment) {
             yield stripe.refunds.create({
                 payment_intent: payment.payment_id,

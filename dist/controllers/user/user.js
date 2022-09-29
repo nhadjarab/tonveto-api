@@ -16,12 +16,13 @@ const updateUser = (req, res, prisma) => __awaiter(void 0, void 0, void 0, funct
         const { id } = req.params;
         if (!id)
             return res.status(400).json("Missing fields");
-        const { first_name, last_name, email, birth_date, phone_number } = req.body;
+        const { first_name, last_name, email, birth_date, phone_number, is_subscribed, } = req.body;
         if (first_name == undefined ||
             last_name == undefined ||
             email == undefined ||
             birth_date == undefined ||
-            phone_number == undefined)
+            phone_number == undefined ||
+            is_subscribed == undefined)
             return res.status(400).json("Missing fields");
         const payload = (0, authentication_1.handleTokenVerification)(req, res);
         if (payload.userId != id)
@@ -60,6 +61,7 @@ const updateUser = (req, res, prisma) => __awaiter(void 0, void 0, void 0, funct
                 email,
                 birth_date,
                 phone_number,
+                is_subscribed,
                 profile_complete: isProfileComplete(first_name, last_name, email, birth_date, phone_number),
             },
         });

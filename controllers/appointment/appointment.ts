@@ -381,6 +381,8 @@ export const cancelAppointments = async (
       },
     });
 
+    console.log(payment)
+
     if (payment) {
       await stripe.refunds.create({
         payment_intent: payment.payment_id,
