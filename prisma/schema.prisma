@@ -124,6 +124,7 @@ model Appointment {
   clinic_id     String?         @default(cuid())
   clinic        Clinic?         @relation(fields: [clinic_id], references: [id], onDelete: Cascade)
   MedicalReport MedicalReport[]
+  CommentVet    CommentVet[]
 }
 
 model Calendar {
@@ -172,6 +173,9 @@ model CommentVet {
   owner            User               @relation(fields: [owner_id], references: [id], onDelete: Cascade)
   rating           RatingVet?         @relation(fields: [rating_id], references: [id], onDelete: Cascade)
   rating_id        String
+  appointment_id   String             @default(cuid())
+  appointment      Appointment        @relation(fields: [appointment_id], references: [id], onDelete: Cascade)
+  date             DateTime           @default(now())
   CommentVetReport CommentVetReport[]
 }
 
@@ -184,27 +188,32 @@ model CommentClinic {
   owner     User          @relation(fields: [owner_id], references: [id], onDelete: Cascade)
   rating_id String
   rating    RatingClinic? @relation(fields: [rating_id], references: [id], onDelete: Cascade)
+  date      DateTime      @default(now())
 
   CommentClinicReport CommentClinicReport[]
 }
 
 model RatingVet {
-  id         String       @id @unique @default(cuid())
-  rating     Float
-  vet_id     String
-  vet        Vet          @relation(fields: [vet_id], references: [id], onDelete: Cascade)
-  owner_id   String
-  owner      User         @relation(fields: [owner_id], references: [id], onDelete: Cascade)
+  id       String   @id @unique @default(cuid())
+  rating   Float
+  vet_id   String
+  vet      Vet      @relation(fields: [vet_id], references: [id], onDelete: Cascade)
+  owner_id String
+  owner    User     @relation(fields: [owner_id], references: [id], onDelete: Cascade)
+  date     DateTime @default(now())
+
   CommentVet CommentVet[]
 }
 
 model RatingClinic {
-  id            String          @id @unique @default(cuid())
-  rating        Float
-  clinic_id     String
-  clinic        Clinic          @relation(fields: [clinic_id], references: [id], onDelete: Cascade)
-  owner_id      String
-  owner         User            @relation(fields: [owner_id], references: [id], onDelete: Cascade)
+  id        String   @id @unique @default(cuid())
+  rating    Float
+  clinic_id String
+  clinic    Clinic   @relation(fields: [clinic_id], references: [id], onDelete: Cascade)
+  owner_id  String
+  owner     User     @relation(fields: [owner_id], references: [id], onDelete: Cascade)
+  date      DateTime @default(now())
+
   CommentClinic CommentClinic[]
 }
 

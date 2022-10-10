@@ -12,7 +12,7 @@ export const addCommentVet = async (
 
     if (!logged_in_id) return res.status(400).json("Missing logged in id");
 
-    const { text, vet_id, rating } = req.body;
+    const { text, vet_id, rating, appointment_id } = req.body;
 
     if (text == undefined || vet_id == undefined || rating == undefined)
       return res.status(400).json("Missing fields");
@@ -29,6 +29,14 @@ export const addCommentVet = async (
     });
 
     if (!user) return res.status(404).json("User not found");
+
+    const isAlreadyRate = await prisma.commentVet.findFirst({
+      where: {
+        appointment_id: appointment_id,
+      },
+    });
+
+    if (isAlreadyRate) return res.status(400).json("You already rated this vet");
 
     const vet = await prisma.vet.findUnique({
       where: {
@@ -52,6 +60,7 @@ export const addCommentVet = async (
         vet_id,
         owner_id: logged_in_id,
         rating_id: ratingObject.id,
+        appointment_id,
       },
     });
 
